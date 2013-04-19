@@ -39,6 +39,9 @@ int main(int argc, char** argv) {
         	return EXIT_FAILURE;
     	}
 
+
+    	// TEST GIT
+
 	/*Point3D point1 = PointXYZ(1.0, 2.0, 3.0);
 	Point3D point2 = PointXYZ(4.0, 5.0, 6.0);
 	Vector3D vector1 = VectorXYZ(-1, -2, 3);
