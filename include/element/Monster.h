@@ -3,6 +3,9 @@
 
 typedef struct struct_monster {
 
+	//id
+	int id;
+
 	//type de monstre
 	char* type;
 
@@ -17,6 +20,12 @@ typedef struct struct_monster {
 
 	//vitesse de déplacement
 	float pace;
+
+	//Pointer vers l'élément précédent
+	struct struct_monster* p_prev;
+
+	//Pointeur vers l'élément suivant
+	struct struct_monster* p_next;
 
 }Monster;
 

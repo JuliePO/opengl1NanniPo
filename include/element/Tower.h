@@ -3,8 +3,11 @@
 
 typedef struct struct_tower {
 
+	//id
+	int id;
+
 	//Type de la tour : R (rocket) L (laser), M (mitraillette) et H (hybride)
-	char type;
+	char type_tower;
 
 	//puissance de tir
 	float power;
@@ -17,6 +20,12 @@ typedef struct struct_tower {
 
 	//cout de la tour
 	int cost;
+
+	//Pointer vers l'élément précédent
+	struct struct_tower* p_prev;
+
+	//Pointeur vers l'élément suivant
+	struct struct_tower* p_next;
 
 }Tower;
 

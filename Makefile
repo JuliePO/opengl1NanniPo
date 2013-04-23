@@ -24,6 +24,7 @@ $(BIN):$(OBJ)
 	@mkdir -p $(BIN_PATH)
 	$(CC) -o $(BIN_PATH)/$(BIN) $(OBJ) $(LDFLAGS)
 	@echo "******* Compilation OK *******"
+	@echo "******* Pour ouvrir le fichier taper : ./$(BIN_PATH)/$(BIN) *******"
 
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
