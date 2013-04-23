@@ -97,13 +97,17 @@ Vector3D DivVector(float lambda, Vector3D V){
 /* La fonction Norm calculant la norme d’un vecteur */
 double DotProduct(Vector3D V1, Vector3D V2){
 
+	/* c'est pas bon !!!
 	Vector3D N1;
 	Vector3D N2;
 
 	N1 = Normalize(V1);
 	N2 = Normalize(V2);
 
-	return ((N1.x) * (N2.x)) + ((N1.y) * (N2.y)) + ((N1.z) * (N2.z));
+	return ((N1.x) * (N2.x)) + ((N1.y) * (N2.y)) + ((N1.z) * (N2.z));*/
+
+	float result = (V1.x * V2.x) + (V1.y * V2.y) + (V1.z * V2.z);
+	return result;
 }
 
 
@@ -119,7 +123,7 @@ float Norm(Vector3D V) {
 
 /* Normalize : calcule le normalisé d’un vecteur */
 Vector3D Normalize(Vector3D V){
-	
+
 	Vector3D new_vector;
 	float norme = Norm(V);
 	

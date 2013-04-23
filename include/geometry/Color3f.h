@@ -15,5 +15,8 @@ Color3f AddColors(Color3f, Color3f);
 Color3f SubColors(Color3f, Color3f);
 Color3f MultColors(Color3f, Color3f);
 Color3f DivColors(Color3f, Color3f);
+Color3f MultColor(Color3f, float);
+Color3f DivColor(Color3f, float);
+
 
 #endif

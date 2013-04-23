@@ -10,6 +10,7 @@
 #include "geometry/Intersection.h"
 #include "geometry/Union.h"
 #include "geometry/Shape.h"
+#include "geometry/Light.h"
 #include "raytracer/Scene.h"
 
 void SimpleRaytracing(const Scene* scene, SDL_Surface* framebuffer) {
@@ -18,22 +19,66 @@ void SimpleRaytracing(const Scene* scene, SDL_Surface* framebuffer) {
 	Point3D pixelPosition;
 	Ray3D ray;
 	Intersection intersection;
+	Color3f bgColor = ColorRGB(1.0, 1.0, 1.0);
+
+	for(i = 0; i < framebuffer->w; i++) {
+
+		for(j = 0; j < framebuffer->h; j++) {
+
+			pixelPosition = PointXYZ(-1+(2*i)/(float)(framebuffer->w-1.0), 1-(2*j)/(float)(framebuffer->h-1.0), -1.0);
+			ray.direction = Normalize(Vector(ray.origine, pixelPosition));
+
+			if(ThrowRayOnScene(ray, scene, &intersection) == 1) {
+
+				PutPixel(framebuffer, i, j, SDL_MapRGB(framebuffer->format, convert_f32_to_uc8(intersection.color.r), convert_f32_to_uc8(intersection.color.g), convert_f32_to_uc8(intersection.color.b)));
+			}
+			else {
+				PutPixel(framebuffer, i, j, SDL_MapRGB(framebuffer->format, convert_f32_to_uc8(bgColor.r), convert_f32_to_uc8(bgColor.g), convert_f32_to_uc8(bgColor.b)));
+			}
+
+		}
+
+	}
+
+}
+
+void BetaLambertRaytracing(const Scene* scene, SDL_Surface* framebuffer) {
+	
+	int i, j, l;
+	Point3D pixelPosition;
+	Color3f pixelColor;
+	Ray3D ray;
+	Intersection intersection;
+	Vector3D IL; /*(vectorIntersectionToLight)*/
 	Color3f bgColor = ColorRGB(0.0, 0.0, 0.0);
 
 	for(i = 0; i < framebuffer->w; i++) {
 
-		for(j=0; j < framebuffer->h; j++) {
+		for(j = 0; j < framebuffer->h; j++) {
 
-			pixelPosition = PointXYZ(-1+2*i/(float)(framebuffer->w - 1.0), 1-2*i/(float)(framebuffer->h - 1.0), -1.0);
-			ray.origine = PointXYZ(0.0, 0.0, 0.0);
+			pixelPosition = PointXYZ(-1+(2*i)/(float)(framebuffer->w-1.0), 1-(2*j)/(float)(framebuffer->h-1.0), -1.0);
 			ray.direction = Normalize(Vector(ray.origine, pixelPosition));
 
-			ThrowRayOnScene(ray, scene, &intersection);
-	
-			if(ThrowRayOnScene(ray, scene, &intersection) == 1)
-				PutPixel(framebuffer, i, j, SDL_MapRGB(framebuffer->format, intersection.color.r, intersection.color.g, intersection.color.b));
-			else
-				PutPixel(framebuffer, i, j, SDL_MapRGB(framebuffer->format, bgColor.r, bgColor.g, bgColor.b));
+			if(ThrowRayOnScene(ray, scene, &intersection) == 1) {
+
+				pixelColor = MultColor(intersection.color, 0.1);
+
+				for(l = 0; l < scene->nbLight; l++) {
+					
+					IL = Vector(intersection.position, scene->light[l].position);
+					float diffuseCoef = DotProduct(intersection.normal, Normalize(IL))/ (Norm(IL) * Norm(IL));
+					Color3f colorTmp = MultColor(MultColors(intersection.color, scene->light[l].color), diffuseCoef);
+					pixelColor.r += max(0.0, colorTmp.r);
+					pixelColor.g += max(0.0, colorTmp.g);
+					pixelColor.b += max(0.0, colorTmp.b);
+
+					PutPixel(framebuffer, i, j, SDL_MapRGB(framebuffer->format, convert_f32_to_uc8(pixelColor.r), convert_f32_to_uc8(pixelColor.g), convert_f32_to_uc8(pixelColor.b)));
+				}
+
+			}
+			else {
+				PutPixel(framebuffer, i, j, SDL_MapRGB(framebuffer->format, convert_f32_to_uc8(bgColor.r), convert_f32_to_uc8(bgColor.g), convert_f32_to_uc8(bgColor.b)));
+			}
 
 		}
 

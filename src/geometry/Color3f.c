@@ -4,6 +4,9 @@
 
 #include "geometry/Color3f.h"
 
+/*#define max(a,b) (a>=b?a:b)
+#define min(a,b) (a<=b?a:b)*/
+
 /* Color RGB : Couleur à partir des valeurs r, g, b */
 Color3f ColorRGB(float r, float g, float b) {
 
@@ -16,19 +19,13 @@ Color3f ColorRGB(float r, float g, float b) {
 	return new_color;
 }
 
-/* Convertie un float en unsigned char */
-unsigned char convert_f32_to_uc8 (float color) {
-
-	return 255 * max(0, min(1, color));
-}
-
 float max(float limite, float color) {
 	if(color < limite)
 		return limite;
 	else
 		return color;
 
-	/* (1/2)*abs(limite+color)+(1/2)*abs(limite-color) */
+	 /*(1/2)*abs(limite+color)+(1/2)*abs(limite-color)*/
 }
 
 float min(float limite, float color) {
@@ -37,9 +34,15 @@ float min(float limite, float color) {
 	else
 		return color;
 
-	/* (1/2)*abs(limite+color)-(1/2)*abs(limite-color) */
+	 /*(1/2)*abs(limite+color)-(1/2)*abs(limite-color) */
 }
 
+/* Convertie un float en unsigned char */
+unsigned char convert_f32_to_uc8 (float color) {
+	/*unsigned char c = 255 * max(0, min(1, color));
+	return c;*/
+	return 255 * max(0, min(1, color));
+}
 
 /*AddColors : La fonction d’addition de couleur */
 Color3f AddColors(Color3f C1, Color3f C2){
@@ -92,4 +95,42 @@ Color3f DivColors(Color3f C1, Color3f C2){
 	new_color.b = (C1.b) / (C2.b);
 
 	return new_color;
+}
+
+/* Fonction de multiplication d'un couleur par un scalaire */
+Color3f MultColor(Color3f c1, float scal) {
+    float r = c1.r * scal;
+    float g = c1.g * scal;
+    float b = c1.b * scal;
+
+    Color3f c = ColorRGB(r, g, b);
+    return c;
+}
+
+/* Fonction de division d'une couleur par un scalaire */
+Color3f DivColor(Color3f c1, float scal) {
+	float r, g, b;
+	if(scal != 0.0) {
+		r = c1.r / scal;
+	}
+    else {
+    	r = 0.0;
+    }
+    
+    if(scal != 0.0) {
+    	g = c1.g / scal;
+    }
+    else {
+    	g = 0.0;
+    }
+    
+    if(scal != 0) {
+    	b = c1.b / scal;
+    }
+    else {
+    	b = 0.0;
+    }
+    
+    Color3f c = ColorRGB(r, g, b);
+    return c;
 }

@@ -10,9 +10,11 @@
 #include "geometry/Intersection.h"
 #include "geometry/Union.h"
 #include "geometry/Shape.h"
+#include "geometry/Light.h"
 #include "raytracer/Scene.h"
+#include "raytracer/SimpleRaytracer.h"
 
-static unsigned int WINDOW_WIDTH = 800;
+static unsigned int WINDOW_WIDTH = 600;
 static unsigned int WINDOW_HEIGHT = 600;
 static const unsigned int BIT_PER_PIXEL = 32;
 
@@ -94,18 +96,22 @@ int main(int argc, char** argv) {
 
 	Scene scene;
 	scene.nbObjects = 0;
+	scene.nbLight = 0;
 
-	Point3D centre1 = PointXYZ(1.0, 2.0, -5.0);
-	Color3f rouge = ColorRGB(1, 0, 0);
+	Point3D centre1 = PointXYZ(0.0, 0.0, -5.0);
+	Color3f bleu = ColorRGB(0.0, 0.0, 1.0);
 
 	Sphere sphere1;
 	Shape shape1;
+	sphere1 = SphereInit(centre1, 1.5, bleu);
 	shape1.sphere = sphere1;
-	shape1.type = SPHERE_SHAPE;
-	sphere1 = SphereInit(centre1, 1.5, rouge);
+
+	Light light1;
+	light1.position = PointXYZ(0.0, 0.0, 0.0);
+	light1.color = ColorRGB(10.0, 10.0, 10.0);
 
 	AddSceneShape(&scene, shape1);
-	
+	AddSceneLight(&scene, light1);
     
     	int loop = 1;
     	while(loop) {
@@ -114,7 +120,7 @@ int main(int argc, char** argv) {
         
         	/* Placer ici le code de dessin */
 		/*colorier un pixel de framebuffer*/
-        	/*PutPixel(framebuffer, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, SDL_MapRGB(framebuffer->format, 255, 255, 255));
+        	/*PutPixel(framebuffer, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, SDL_MapRGB(framebuffer->format, 255, 255, 255));*/
 		/* 300 et 400 => (410, 290) (410, 310) (390, 310) (390, 290) */
 		/*int i, j, color=255;
 		for(i=390; i <= 410; i++){
@@ -125,7 +131,8 @@ int main(int argc, char** argv) {
 			color = 255;
 		}*/
 
-		SimpleRaytracing(&scene, &framebuffer);
+		/*SimpleRaytracing(&scene, framebuffer);*/
+		BetaLambertRaytracing(&scene, framebuffer);
         
         	/* On copie le framebuffer à l'écran */
         	SDL_BlitSurface(framebuffer, NULL, screen, NULL);
