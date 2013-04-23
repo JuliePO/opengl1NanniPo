@@ -1,5 +1,5 @@
-#ifndef LDR_TOWER___
-#define LDR_TOWER___
+#ifndef LDR_TOWER_H_
+#define LDR_TOWER_H_
 
 typedef struct struct_tower {
 

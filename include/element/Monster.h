@@ -1,5 +1,5 @@
-#ifndef LDR_MONSTER___
-#define LDR_MONSTER___
+#ifndef LDR_MONSTER_H_
+#define LDR_MONSTER_H_
 
 typedef struct struct_monster {
 
