@@ -5,9 +5,9 @@
 //Appel de la structures
 #include "element/Tower.h"
 
-/************* Création d'une nouvelle liste de calque *************/
-/* Initialisation de la liste de calque et allocation de mémoire pour la liste de calques	*
-*  Retourne la liste de calques									*/
+/************* Création d'une nouvelle liste de tours *************/
+/* Initialisation de la liste de tours et allocation de mémoire pour la liste de tours		*
+*  Retourne la liste de tours									*/
 
 LTower* new_LTower(void) {
 	

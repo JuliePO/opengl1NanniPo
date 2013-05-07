@@ -4,8 +4,8 @@ CC = gcc
 BIN = itd
 BIN_PATH = bin
 # FLAG
-CFLAGS = -Wall -g
-LDFLAGS= -lglut -lGL -lGLU -lm -lSDL
+CFLAGS = -Wall -O2 -g
+LDFLAGS= -lglut -lGL -lGLU -lm -lSDL -lSDL_image
 # INCLUDES
 INC_PATH = -I include
 # LIB

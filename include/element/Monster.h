@@ -1,9 +1,13 @@
 #ifndef LDR_MONSTER_H_
 #define LDR_MONSTER_H_
 
+/************* STRUCTURE DU MONSTRE *************/
+/* Liste doublement chainée pour pouvoir naviger dans la liste de monstres	*
+*  et récupérer facile n'importe quel monstre dans la liste 			*/
+
 typedef struct struct_monster {
 
-	//id
+	//id (commence à 1)
 	int id;
 
 	//type de monstre
@@ -29,7 +33,7 @@ typedef struct struct_monster {
 
 }Monster;
 
-//liste de monstre
+/************* STRUCTURE DE LA LISTE DE MONSTRES *************/
 typedef struct struct_lmonster {
 
 	//Taille de la liste
@@ -39,5 +43,10 @@ typedef struct struct_lmonster {
 	Monster *p_head; //pointeur vers le premier element
 	Monster *p_tail; //pointeur vers le dernier element
 }LMonster;
+
+/************* Appel de fonction *************/
+LMonster* new_LMonster(void);
+int addMonster(LMonster*, char*, float, float, char, float);
+LMonster* removeMonster(LMonster*, Monster*);
 
 #endif

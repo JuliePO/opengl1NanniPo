@@ -1,9 +1,12 @@
 #ifndef LDR_TOWER_H_
 #define LDR_TOWER_H_
 
+/************* STRUCTURE DU TOUR *************/
+/* Liste doublement chainée pour pouvoir naviger dans la liste de tours	*
+*  et récupérer facile n'importe quelle tour dans la liste 		*/
 typedef struct struct_tower {
 
-	//id
+	//id (commence à 1)
 	int id;
 
 	//Type de la tour : R (rocket) L (laser), M (mitraillette) et H (hybride)
@@ -29,7 +32,7 @@ typedef struct struct_tower {
 
 }Tower;
 
-//liste de tour
+/************* STRUCTURE DE LA LISTE DE TOURS *************/
 typedef struct struct_ltower {
 
 	//Taille de la liste
@@ -39,5 +42,10 @@ typedef struct struct_ltower {
 	Tower *p_head; //pointeur vers le premier element
 	Tower *p_tail; //pointeur vers le dernier element
 }LTower;
+
+/************* Appel de fonction *************/
+LTower* new_LTower(void);
+int addTower(LTower*, float, float, char, float, int);
+LTower* removeTower(LTower*, Tower*);
 
 #endif

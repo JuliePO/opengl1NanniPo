@@ -1,157 +1,193 @@
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <SDL/SDL.h>
+#include <math.h>
 
 #include "sdl_tools.h"
-#include "geometry/Vector3D.h"
-#include "geometry/Point3D.h"
 #include "geometry/Color3f.h"
-#include "geometry/Ray3D.h"
-#include "geometry/Intersection.h"
-#include "geometry/Union.h"
-#include "geometry/Shape.h"
-#include "geometry/Light.h"
-#include "raytracer/Scene.h"
-#include "raytracer/SimpleRaytracer.h"
+#include "ihm/Map.h"
+#include "ihm/Image.h"
+#include "ihm/Node.h"
 
 static unsigned int WINDOW_WIDTH = 600;
 static unsigned int WINDOW_HEIGHT = 600;
 static const unsigned int BIT_PER_PIXEL = 32;
+static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
 
 int main(int argc, char** argv) {
 
-   	if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
+	if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
         	fprintf(stderr, "Impossible d'initialiser la SDL. Fin du programme.\n");
         	return EXIT_FAILURE;
     	}
-    
-    	SDL_Surface* screen = NULL;
+
+	SDL_Surface* screen = NULL;
     	if(NULL == (screen = SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, 
-        	SDL_DOUBLEBUF))) {
+        	SDL_OPENGL))) { //SDL_DOUBLEBUF
         	fprintf(stderr, "Impossible d'ouvrir la fenetre. Fin du programme.\n");
         	return EXIT_FAILURE;
     	}
-    	SDL_WM_SetCaption("Raytracing powa :D", NULL);
-    
-    	/* Création d'une surface SDL dans laquelle le raytracer dessinera */
-    	SDL_Surface* framebuffer = NULL;
+    	SDL_WM_SetCaption("Tower Defense IMAC La classe !!", NULL);
+
+	/* Création d'une surface SDL dans laquelle le raytracer dessinera */
+    	/*SDL_Surface* framebuffer = NULL;
     	if(NULL == (framebuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, WINDOW_WIDTH, 
         	WINDOW_HEIGHT, BIT_PER_PIXEL, 0, 0, 0, 0))) {
         	fprintf(stderr, "Erreur d'allocation pour le framebuffer. Fin du programme.\n");
         	return EXIT_FAILURE;
-    	}
+    	}*/
+
+	GLuint texture;
+	Map* map = malloc(sizeof(Map));
+	verificationMap(map,argv[1]);
+	SDL_Surface* image = IMG_Load(map->img->path);
+	if(image == NULL) {
+		fprintf(stderr, "impossible de charger l'image %s\n", map->img->path);
+		return EXIT_FAILURE;
+	}
+
+	//Fait une copie de la texture pour la stocker
+	glGenTextures(1, &texture);
+	//dire qu'on fait des modification sur cette texture
+	glBindTexture(GL_TEXTURE_2D, &texture);
+	//dit qu'on utilise un filtre linéaire : fait une moyenne des couleurs
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	//choisi le bon format selon l'image
+	GLenum format;
+	switch(image->format->BytesPerPixel) {
+		case 1:
+			format = GL_RED;
+			break;
+		case 3:
+			/* Ne gere pas les machines big-endian (a confirmer...) */
+			format = GL_RGB;
+			break;
+		case 4:
+			/* Ne gere pas les machines big-endian (a confirmer...) */
+			format = GL_RGBA;
+			break;
+		default:
+			/* On ne traite pas les autres cas */
+			fprintf(stderr, "Format des pixels de l’image %s non pris en charge\n", image);
+			return EXIT_FAILURE;
+	}
+
+	//
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, format, GL_UNSIGNED_BYTE, image->pixels);
+
+	int loop = 1;
+
+	/**** Main loop ***/
+  	while(loop) {
+   		Uint32 startTime = SDL_GetTicks();
+
+	    	/* dessin */
+
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		//Active le texturage 2D
+		glEnable(GL_TEXTURE_2D);
+		//appel de la texture
+		glBindTexture(GL_TEXTURE_2D, &texture);
+
+		glBegin(GL_QUADS);
+		//couleur neutre
+		glColor3ub(255,255,255);
+		//coordonée de la texture
+		glTexCoord2f(1, 0);
+		//Cordonnée du quadrilatère 
+		glVertex2f(1, 1);
+
+		glTexCoord2f(1, 1);
+		glVertex2f(1, -1);
+
+		glTexCoord2f(0, 1);
+		glVertex2f(-1, -1);
+
+		glTexCoord2f(0, 0);
+		glVertex2f(-1, 1);
+
+		glEnd();
+
+		//appel de la texture => changement texture
+		glBindTexture(GL_TEXTURE_2D, 0);
+		//Désactive le texturage 2D
+		glDisable(GL_TEXTURE_2D);
+
+		float x, y;
+		Node* tmp = map->list_node->p_head;
 
 
-    	// TEST GIT
+		while(tmp->p_next != NULL){
 
-	/*Point3D point1 = PointXYZ(1.0, 2.0, 3.0);
-	Point3D point2 = PointXYZ(4.0, 5.0, 6.0);
-	Vector3D vector1 = VectorXYZ(-1, -2, 3);
-	Vector3D vector2 = VectorXYZ(1, 1, 1);
-	Vector3D vector3 = Vector(point1, point2);
 
-	printf("vector3 : %f %f %f \n", vector3.x, vector3.y, vector3.z);
-	printf("vector1 : %f %f %f \n", vector1.x, vector1.y, vector1.z);
+			glBegin(GL_LINES);
+				glColor3ub(0,0,255);
+				x = tmp->x / 600.0;
+				y = tmp->y / 600.0;
+				glVertex2d(x,y);
 
-	Point3D point3 = PointPlusVector(point1, vector1);
-	printf("point3 : %f %f %f \n", point3.x, point3.y, point3.z);
-	
-	Vector3D vector4 = AddVectors(vector1, vector2);
-	printf("vector4 : %f %f %f \n", vector4.x, vector4.y, vector4.z);
+				x = tmp->p_next->x / 600.0;
+				y = tmp->p_next->y / 600.0;
+				glVertex2d(x,y);
+			glEnd();
 
-	vector4 = SubVectors(vector1, vector2);
-	printf("vector4 : %f %f %f \n", vector4.x, vector4.y, vector4.z);
+			glBegin(GL_POINTS);
+				glColor3ub(255,0,0);
+				x = tmp->x / 600.0;
+				y = tmp->y / 600.0;
+				glVertex2d(x,y);
+			glEnd();
 
-	vector4 = MultVector(3.0, vector1);
-	printf("vector4 : %f %f %f \n", vector4.x, vector4.y, vector4.z);
+			tmp = tmp->p_next;		
 
-	vector4 = DivVector(2.0, vector1);
-	printf("vector4 : %f %f %f \n", vector4.x, vector4.y, vector4.z);
+		}
 
-	printf("dot %f \n", DotProduct(vector1, vector2));
-	printf("norm vector1 : %f \n", Norm(vector1));
+		glFlush();
+		 SDL_GL_SwapBuffers();
+		    /* ****** */    
 
-	vector4 = Normalize(vector1);
-	printf("vector4 : %f %f %f \n", vector4.x, vector4.y, vector4.z);
+		    SDL_Event e;
+		    while(SDL_PollEvent(&e)) {
+		      if(e.type == SDL_QUIT) {
+			loop = 0;
+			break;
+		      }
+		      
+		      switch(e.type) {
 
-	unsigned char test;
-	test = convert_f32_to_uc8 (0.7);
-	printf("conversion de 0.7 en unsigned char : %d \n", test);
+			case SDL_KEYDOWN:
+			  switch(e.key.keysym.sym){
+			    case 'q' : 
+			    case SDLK_ESCAPE : 
+				loop = 0;
+				break;
 
-	Color3f rouge = ColorRGB(1, 0, 0);
-	Color3f vert = ColorRGB(0, 1, 0);
-	Color3f bleu = ColorRGB(0, 0, 1);
-
-	Color3f color1 = AddColors(rouge, bleu);
-	printf("addition : %f %f %f \n", color1.r, color1.g, color1.b);
-
-	color1 = SubColors(rouge, bleu);
-	printf("soustraction : %f %f %f \n", color1.r, color1.g, color1.b);
-
-	color1 = MultColors(rouge, bleu);
-	printf("multiplication : %f %f %f \n", color1.r, color1.g, color1.b);
-
-	color1 = DivColors(rouge, bleu);
-	printf("division : %f %f %f \n", color1.r, color1.g, color1.b);
-
-	Intersection inter;
-	testSphereInter(..., &inter);*/
-
-	Scene scene;
-	scene.nbObjects = 0;
-	scene.nbLight = 0;
-
-	Point3D centre1 = PointXYZ(0.0, 0.0, -5.0);
-	Color3f bleu = ColorRGB(0.0, 0.0, 1.0);
-
-	Sphere sphere1;
-	Shape shape1;
-	sphere1 = SphereInit(centre1, 1.5, bleu);
-	shape1.sphere = sphere1;
-
-	Light light1;
-	light1.position = PointXYZ(0.0, 0.0, 0.0);
-	light1.color = ColorRGB(10.0, 10.0, 10.0);
-
-	AddSceneShape(&scene, shape1);
-	AddSceneLight(&scene, light1);
-    
-    	int loop = 1;
-    	while(loop) {
-        	/* Nettoyage du framebuffer (remplir un rectangle) */
-        	SDL_FillRect(framebuffer, NULL, SDL_MapRGB(framebuffer->format, 0, 0, 0));
-        
-        	/* Placer ici le code de dessin */
-		/*colorier un pixel de framebuffer*/
-        	/*PutPixel(framebuffer, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, SDL_MapRGB(framebuffer->format, 255, 255, 255));*/
-		/* 300 et 400 => (410, 290) (410, 310) (390, 310) (390, 290) */
-		/*int i, j, color=255;
-		for(i=390; i <= 410; i++){
-			for(j=290; j <= 310; j++) {
-				PutPixel(framebuffer, i, j, SDL_MapRGB(framebuffer->format, color, color, color));
-				color -= 10;
+			    default : break;
+			  }
+			  break;
+			  
+			default:
+			  break;
 			}
-			color = 255;
-		}*/
+	
+		}
 
-		/*SimpleRaytracing(&scene, framebuffer);*/
-		BetaLambertRaytracing(&scene, framebuffer);
-        
-        	/* On copie le framebuffer à l'écran */
-        	SDL_BlitSurface(framebuffer, NULL, screen, NULL);
-        
-        	SDL_Flip(screen);
-    
-        	SDL_Event e;
-        	while(SDL_PollEvent(&e)) {
-            		if(e.type == SDL_QUIT) {
-            			loop = 0;
-            			break;
-        		}
-        	}
-    	}
-  
-    	SDL_Quit();
-    
-    	return EXIT_SUCCESS;
+		 Uint32 elapsedTime = SDL_GetTicks() - startTime;
+	    if(elapsedTime < FRAMERATE_MILLISECONDS) {
+	      SDL_Delay(FRAMERATE_MILLISECONDS - elapsedTime);
+	    }
+	  }
+
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	SDL_FreeSurface(image);
+	glDeleteTextures(1, &texture);
+	SDL_Quit();
+	return EXIT_SUCCESS;
 }
