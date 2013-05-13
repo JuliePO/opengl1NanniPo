@@ -20,7 +20,7 @@ typedef struct struct_image {
 	int maxValue;
 
 	//Tableau de pixel
-	//unsigned char* tabPixel;
+	unsigned char* tabPixel;
 }Image;
 
 /************* Appel de fonction *************/

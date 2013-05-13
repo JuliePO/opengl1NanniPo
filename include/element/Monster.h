@@ -1,5 +1,7 @@
-#ifndef LDR_MONSTER_H_
-#define LDR_MONSTER_H_
+#ifndef ITD_MONSTER_H_
+#define ITD_MONSTER_H_
+
+#include "ihm/Node.h"
 
 /************* STRUCTURE DU MONSTRE *************/
 /* Liste doublement chainée pour pouvoir naviger dans la liste de monstres	*
@@ -9,6 +11,17 @@ typedef struct struct_monster {
 
 	//id (commence à 1)
 	int id;
+
+	//position du monstre
+	int x;
+	int y;
+	int e; //erreur : calcul dans le cas où il n'avance pas tout droit
+
+	//Noeud précédent
+	Node* node_prev;
+
+	//Noeud suivant
+	Node* node_next;
 
 	//type de monstre
 	char* type;
@@ -46,7 +59,7 @@ typedef struct struct_lmonster {
 
 /************* Appel de fonction *************/
 LMonster* new_LMonster(void);
-int addMonster(LMonster*, char*, float, float, char, float);
+int addMonster(LMonster*, char*, float, float, char*, float, LNode*);
 LMonster* removeMonster(LMonster*, Monster*);
 
 #endif

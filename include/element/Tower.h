@@ -1,5 +1,7 @@
-#ifndef LDR_TOWER_H_
-#define LDR_TOWER_H_
+#ifndef ITD_TOWER_H_
+#define ITD_TOWER_H_
+
+#include "element/Monster.h"
 
 /************* STRUCTURE DU TOUR *************/
 /* Liste doublement chainée pour pouvoir naviger dans la liste de tours	*
@@ -8,6 +10,10 @@ typedef struct struct_tower {
 
 	//id (commence à 1)
 	int id;
+
+	//position de la tour
+	int x;
+	int y;
 
 	//Type de la tour : R (rocket) L (laser), M (mitraillette) et H (hybride)
 	char type_tower;
@@ -45,7 +51,8 @@ typedef struct struct_ltower {
 
 /************* Appel de fonction *************/
 LTower* new_LTower(void);
-int addTower(LTower*, float, float, char, float, int);
+int addTower(LTower*, float, float, char*, float, int);
 LTower* removeTower(LTower*, Tower*);
+int inSight (LMonster*, Tower*);
 
 #endif

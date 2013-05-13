@@ -39,5 +39,11 @@ typedef struct struct_map {
 
 /************* Appel de fonction *************/
 int verificationMap(Map*, char*);
+int ChangeColor(Image*, unsigned char*, Map*);
+int changeColorRoad(Image*, unsigned char*, Map*);
+int changeColorConstruct(Image*, unsigned char*, Map*);
+int changeColorNode(Image*, unsigned char*, Map*);
+int changeColorIn(Image*, unsigned char*, Map*);
+int changeColorOut(Image*, unsigned char*, Map*);
 
 #endif

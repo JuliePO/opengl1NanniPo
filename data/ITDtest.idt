@@ -1,13 +1,13 @@
 @ITD 1 
-carte images/aya_matsuura.ppm
+carte images/map.ppm
 energie 100
-chemin 255 255 255
+chemin 164 113 34
 noeud 0 0 0
-construct 255 200 80
-in 0 200 0
+construct 67 187 40
+in 154 146 123
 out 200 0 0
 5
-10 20
+40 40
 454 103
 300 103
 200 103
