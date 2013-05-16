@@ -24,7 +24,7 @@ int loadMapTexture(Map* map, GLuint* texture) {
 	//Fait une copie de la texture pour la stocker => allocation mémoire
 	glGenTextures(1, texture);
 	//dire qu'on fait des modification sur cette texture
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, *texture);
 
 	//choisi le bon format selon l'image
 	GLenum format;
@@ -68,7 +68,7 @@ int loadTexture(GLuint* texture, char* fileName) {
 	//Fait une copie de la texture pour la stocker
 	glGenTextures(1, texture);
 	//dire qu'on fait des modification sur cette texture
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, *texture);
 
 	//choisi le bon format selon l'image
 	GLenum format;

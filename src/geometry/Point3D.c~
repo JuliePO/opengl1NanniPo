@@ -15,16 +15,3 @@ Point3D PointXYZ(float x, float y, float z) {
 
 	return new_point;
 }
-
-/* PointPlusVector : Fonction d'addition d'un point et d'un vecteur = translation */
-Point3D PointPlusVector(Point3D P, Vector3D V) {
-	
-	Point3D new_point;
-
-	new_point.x = (P.x) + (V.x);
-	new_point.y = (P.y) + (V.y);
-	new_point.z = (P.z) + (V.z);
-
-	return new_point;
-
-}

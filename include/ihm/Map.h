@@ -22,6 +22,8 @@ typedef struct struct_map {
 
 	//couleur à la zone constructible
 	Color3f construct;
+	//liste des pixels de zone constructible
+	LNode* list_pixels;
 
 	//couleur clé de la zone d'entrée
 	Color3f in;

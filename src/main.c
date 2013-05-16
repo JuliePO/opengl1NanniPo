@@ -1,22 +1,26 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
+#include <GL/glut.h>
 
 #include "sdl_tools.h"
 #include "geometry/Color3f.h"
+#include "element/Monster.h"
+#include "element/Tower.h"
+#include "element/Shot.h"
 #include "ihm/Map.h"
 #include "ihm/Texture.h"
 #include "ihm/Image.h"
 #include "ihm/Node.h"
-#include "element/Monster.h"
-#include "element/Tower.h"
+#include "ihm/Draw.h"
+#include "ihm/Menu.h"
 
-static unsigned int WINDOW_WIDTH = 600;
-static unsigned int WINDOW_HEIGHT = 600;
+static unsigned int WINDOW_WIDTH = 800;
+static unsigned int WINDOW_HEIGHT = 660;
 static const unsigned int BIT_PER_PIXEL = 32;
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 10;
 float pi = 3.14;
@@ -25,7 +29,7 @@ void reshape() {
   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluOrtho2D(0., 600., 600., 0.);
+  gluOrtho2D(0., 800., 660., 0.);
 }
 
 void setVideoMode() {
@@ -41,29 +45,10 @@ void setVideoMode() {
   SDL_GL_SwapBuffers();
 }
 
-void dessinCercle(float rayon) {
-	
-	int i, j = 100;
-	float angle, x1, y1;
-	
-	glBegin(GL_TRIANGLE_FAN);
-
-	glVertex2f(0, 0);
-
-	for(i = 0; i < j+2; i++) {
-		angle = (2*pi*i)/j;
-		x1 = rayon*(cos(angle));
-		y1 = rayon*(sin(angle));
-		glVertex2f(x1,y1);
-	}
-
-	glEnd();
-
-}
-
 int main(int argc, char** argv) {
 
 	int testMouse = 0;
+	int play = 0;
 
 	/* Init */
 	if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
@@ -72,6 +57,11 @@ int main(int argc, char** argv) {
     	}
 
 	setVideoMode();
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glutInit(&argc, argv); // initialisation de GLUT
 
     	SDL_WM_SetCaption("Tower Defense IMAC La classe !!", NULL);
 
@@ -83,24 +73,41 @@ int main(int argc, char** argv) {
         	return EXIT_FAILURE;
     	}*/
 
-	Map* map = malloc(sizeof(Map));
+	Map* map = (Map*)malloc(sizeof(Map));
 	verificationMap(map,argv[1]);
 	
 	GLuint texture;
 	loadMapTexture(map, &texture);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	GLuint monster;
 	loadTexture(&monster, "./images/sprite.png");
+
+	GLuint shot;
+	loadTexture(&shot, "./images/shot.png");
+
+	GLuint menu1;
+	loadTexture(&menu1, "./images/menu1.png");
+
+	GLuint menu2;
+	loadTexture(&menu2, "./images/menu2.png");
+
+	GLuint menuNone;
+	loadTexture(&menuNone, "./images/menuNone.png");
+
+	GLuint fondMenu;
+	loadTexture(&fondMenu, "./images/fondMenu.png");
+
+	GLuint spriteButton;
+	loadTexture(&spriteButton, "./images/sprite_button.png");
 
 	LMonster* p_lmonster = new_LMonster();
 	LTower* p_ltower = new_LTower();
 	addMonster(p_lmonster, "c", 10.0, 10.0, "p", 10.0, map->list_node);
 
-	int i = 0;
+	int i = 0; int k = 0;
 	int nb_monster = 1, j = 0;
+
+	Monster* target = NULL;
 
 	int loop = 1;
 
@@ -113,34 +120,9 @@ int main(int argc, char** argv) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		glMatrixMode(GL_MODELVIEW);
 
-		//Active le texturage 2D
-		glEnable(GL_TEXTURE_2D);
-		//appel de la texture
-		glBindTexture(GL_TEXTURE_2D, &texture);
+		drawMap (&texture);
 
-			glBegin(GL_QUADS);
-			//couleur neutre
-			glColor3ub(255,255,255);
-			//coordonée de la texture
-			glTexCoord2f(1, 1);
-			//Cordonnée du quadrilatère 
-			glVertex2f(600, 600);
-
-			glTexCoord2f(1, 0);
-			glVertex2f(600, 0);
-
-			glTexCoord2f(0, 0);
-			glVertex2f(0, 0);
-
-			glTexCoord2f(0, 1);
-			glVertex2f(0, 600);
-
-			glEnd();
-
-		//Déblinder la texture
-		glBindTexture(GL_TEXTURE_2D, 0);
-		//Désactive le texturage 2D
-		glDisable(GL_TEXTURE_2D);
+		drawMenu (&menu1, &menu2, &menuNone, &fondMenu, &spriteButton, play);
 
 		float x1, x2, xt1, xt2;
 
@@ -178,114 +160,15 @@ int main(int argc, char** argv) {
 			}
 		}
 
-		//Création d'une tour temporaire pour parcourir la liste de tours
-		Tower *p_temp = p_ltower->p_tail;
+		if(p_lmonster->length == 0)
+			nb_monster = 0;
 
-		//Parcours la liste de tours
-		while(p_temp != NULL){
-
-			glLoadIdentity();
-			glPushMatrix();
-			glTranslatef(p_temp->x,p_temp->y,0.0);
-			dessinCercle(p_temp->range);
-			glPopMatrix();
-
-			glLoadIdentity();
-			glPushMatrix();
-			//Active le texturage 2D
-			glEnable(GL_TEXTURE_2D);
-			//appel de la texture
-			glBindTexture(GL_TEXTURE_2D, &monster);
-
-				int xm1, xm2, ym1, ym2;
-				xm1 = p_temp->x + 20;
-				xm2 = p_temp->x - 20;
-				ym1 = p_temp->y + 20;
-				ym2 = p_temp->y - 20;
-
-				glBegin(GL_QUADS);
-				//coordonée de la texture
-				glTexCoord2f(xt2, 0.625);
-				//Cordonnée du quadrilatère 
-				glVertex2f(xm1, ym1);
-
-				glTexCoord2f(xt2, 0.5);
-				glVertex2f(xm1, ym2);
-
-				glTexCoord2f(xt1, 0.5);
-				glVertex2f(xm2, ym2);
-
-				glTexCoord2f(xt1, 0.625);
-				glVertex2f(xm2, ym1);
-
-				glEnd();
-
-			//Déblinder la texture
-			glBindTexture(GL_TEXTURE_2D, 0);
-			//Désactive le texturage 2D
-			glDisable(GL_TEXTURE_2D);
-
-			glPopMatrix();
-
-			if(inSight (p_lmonster, p_temp) == 1)
-				printf("Collision\n");
-
-			p_temp = p_temp->p_prev;
-		}
+		k = drawTower(&monster, &shot, p_ltower, p_lmonster, target, xt1, xt2, testMouse, k);
+		if(drawMonster(&monster, p_lmonster, map->list_node->p_tail, x1, x2) == 2)
+			loop = 0;
 
 
-		//Création d'un monstre temporaire pour parcourir la liste de monstres
-		Monster *p_tmp = p_lmonster->p_tail;
-
-		//Parcours la liste de monstres
-		while(p_tmp != NULL){
-
-			glLoadIdentity();
-			glPushMatrix();
-			//Active le texturage 2D
-			glEnable(GL_TEXTURE_2D);
-			//appel de la texture
-			glBindTexture(GL_TEXTURE_2D, &monster);
-
-				int xm1, xm2, ym1, ym2;
-				xm1 = p_tmp->x + 20;
-				xm2 = p_tmp->x - 20;
-				ym1 = p_tmp->y + 20;
-				ym2 = p_tmp->y - 20;
-			
-			
-
-				glBegin(GL_QUADS);
-				//coordonée de la texture
-				glTexCoord2f(x2, 0.375);
-				//Cordonnée du quadrilatère 
-				glVertex2f(xm1, ym1);
-
-				glTexCoord2f(x2, 0.25);
-				glVertex2f(xm1, ym2);
-
-				glTexCoord2f(x1, 0.25);
-				glVertex2f(xm2, ym2);
-
-				glTexCoord2f(x1, 0.375);
-				glVertex2f(xm2, ym1);
-
-				glEnd();
-
-			//Déblinder la texture
-			glBindTexture(GL_TEXTURE_2D, 0);
-			//Désactive le texturage 2D
-			glDisable(GL_TEXTURE_2D);
-
-			glPopMatrix();
-
-			p_tmp = p_tmp->p_prev;
-		}
-
-		moveMonster(p_lmonster);
-
-
-		/*Node* tmp = map->list_node->p_head;
+		/*Node* tmp = map->list_pixels->p_head;
 
 
 		while(tmp->p_next != NULL){
@@ -302,9 +185,15 @@ int main(int argc, char** argv) {
 				glVertex2d(tmp->x, tmp->y);
 			glEnd();
 
+			printf("%d %d\n", tmp->x, tmp->y);
+
 			tmp = tmp->p_next;		
 
 		}*/
+
+		/*writeString(100, 100,  "aaa");
+		writeString(200, 200,  "bbb");
+		writeString(300, 300,  "ccc");*/
 
 		glFlush();
 		 SDL_GL_SwapBuffers();
@@ -327,10 +216,9 @@ int main(int argc, char** argv) {
 
 			case SDL_MOUSEBUTTONDOWN :
 				if(e.button.button == SDL_BUTTON_LEFT) {
-					if(testMouse == 0 && p_ltower->p_tail != NULL) {
-						p_ltower->p_tail->x = e.button.x;
-						p_ltower->p_tail->y = e.button.y;
-						testMouse = 1;
+					if(testMouse == 0) {
+						if(clickMenuTour(p_ltower, e.button.x, e.button.y) == 1)
+							testMouse = 1;
 					}
 					else
 						testMouse = 0;
@@ -339,8 +227,7 @@ int main(int argc, char** argv) {
 
 			case SDL_MOUSEMOTION :
 				if(testMouse == 1) {
-					p_ltower->p_tail->x = e.button.x;
-					p_ltower->p_tail->y = e.button.y;
+					moveTower(p_ltower->p_tail, e.button.x, e.button.y);
 				}
 				break;
 
@@ -352,7 +239,7 @@ int main(int argc, char** argv) {
 				break;
 				
 			    case 'a' :
-				addTower(p_ltower, 10.0, 10.0, "c", 50., 10.0);
+				addTower(p_ltower, 3.0, 10.0, "c", 50., 10.0, 200, 60);
 				break;
 
 			    default : break;
@@ -375,6 +262,7 @@ int main(int argc, char** argv) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	/*SDL_FreeSurface(image);*/
+	glDeleteTextures(1, &shot);
 	glDeleteTextures(1, &texture);
 	glDeleteTextures(1, &monster);
 	SDL_Quit();

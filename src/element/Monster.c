@@ -1,6 +1,10 @@
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include <math.h>
 
 //Appel de la structures
 #include "element/Monster.h"
@@ -8,18 +12,48 @@
 
 /************* Création d'une nouvelle liste de monstres *************/
 /* Initialisation de la liste de monstres et allocation de mémoire pour la liste de monstres	*
-*  Retourne la liste de monstres									*/
+*  Retourne le pointeur sur la liste de monstres						*/
 
 LMonster* new_LMonster(void) {
 	
 	//Alloue de la mémoire 
 	LMonster *p_lmonster = malloc(sizeof(LMonster));
-	if (p_lmonster != NULL) {
+	if (p_lmonster) {
 		p_lmonster->length = 0;
 		p_lmonster->p_head = NULL;
 		p_lmonster->p_tail = NULL;
 	}
+	else
+		return NULL;
+
 	return p_lmonster;
+}
+
+/************* Création d'une monstre avec les coordonnées *************/
+/* Initialisation du monstre et allocation de mémoire pour la liste de monstres				*
+*  Retourne le pointeur sur le monstre									*/
+Monster* new_Monster(int x, int y) {
+
+	//Alloue mémoire
+	Monster *p_monster = (Monster*)malloc(sizeof(Monster));
+	if(p_monster){
+		p_monster->x = x;
+		p_monster->y = y;
+		
+		p_monster->type = "v";
+		p_monster->pvMax = 0;
+		p_monster->pv = 0;
+		p_monster->resistance = 0;
+		p_monster->type_tower = "v";
+		p_monster->pace = 0;
+		p_monster->node_prev = NULL;
+		p_monster->node_next = NULL;
+	}
+	else
+		return NULL;
+
+	return p_monster;
+
 }
 
 /************* Ajouter un monstre en fin de liste *************/
@@ -27,19 +61,20 @@ LMonster* new_LMonster(void) {
 *  Prend en paramètre la liste de monstres, le type de monstre, les points de vie, la résistance	*
 *  un type de tour et la vitesse de déplacement. Retourne 0 en cas d'erreur et 1 sinon.			*/
 
-int addMonster(LMonster* p_lmonster, char* type, float pv, float resistance, char* type_tower, float pace, LNode* p_lnode) {
+int addMonster(LMonster* p_lmonster, char* type, float pvMax, float resistance, char* type_tower, float pace, LNode* p_lnode) {
 
 	// On vérifie si notre liste a été allouée
 	if (p_lmonster != NULL) {
 
 		//Création d'un nouveau monstre
-		Monster* new_monster = malloc(sizeof(Monster)); 
+		Monster* new_monster = (Monster*)malloc(sizeof(Monster)); 
 		
 		// On vérifie si le malloc n'a pas échoué
-		if (new_monster != NULL) {
+		if (new_monster) {
 
 			new_monster->type = type;
-			new_monster->pv = pv;
+			new_monster->pvMax = pvMax;
+			new_monster->pv = pvMax;
 			new_monster->resistance = resistance;
 			new_monster->type_tower = type_tower;
 			new_monster->pace = pace;
@@ -142,9 +177,10 @@ int addMonster(LMonster* p_lmonster, char* type, float pv, float resistance, cha
 }
 
 /************* Deplacer les monstres *************/
-/* Deplace les monstre	 	*
-*  Prend en paramètre la liste de monstres et le monstre à supprimer et retourne la liste de monstres.					*/
-int moveMonster(LMonster* p_lmonster){
+/* Deplace les monstre : Vérifie s'il se déplace à l'horizontal, vertical ou autrement puis le déplace. Prend en paramètre la liste de	*
+*  monstres et le monstre à supprimer et retourne la liste de monstres.	Retourne 0 en cas d'erreur et 1 sinon et 2 s'il est arrivé à 	*
+*  la fin. 																*/
+int moveMonster(LMonster* p_lmonster, Node* p_tail){
 
 	// On vérifie si notre liste a été allouée
 	if (p_lmonster != NULL) {	
@@ -349,6 +385,9 @@ int moveMonster(LMonster* p_lmonster){
 
 			}
 
+			if(verificationEnd(p_tmp, p_tail) == 2)
+				return 2;
+
 			p_tmp = p_tmp->p_next;
 
 		}
@@ -361,6 +400,33 @@ int moveMonster(LMonster* p_lmonster){
 	return 1;
 }
 
+/************* Vérification si le monstre arrive au point d'arrivé *************/
+/* Vérifie si le monstre est arrivé : vérifie si les coordonnées du monstre correspond au point 	*
+*  d'arrivé. Prend en paramètre un monstre et la liste de noeud. Retourne 2 s'il est arrivé, 0 sinon.	*/
+
+int verificationEnd(Monster* monster, Node* p_tail) {
+	
+	if(monster != NULL) {
+
+		if(p_tail != NULL) {
+
+			if(monster->x == p_tail->x && monster->y == p_tail->y)
+				return 2;
+
+		}
+		else {
+			printf("Erreur : il y a un problème avec le dernier noeud\n");
+			return 0;
+		}
+
+	}
+	else {
+		printf("Erreur : il y a un problème avec le monstre\n");
+		return 0;
+	}
+
+	return 0;
+}
 
 /************* Supprimer un monstre selon sa position *************/
 /* Supprime un monstre selon sa position, vérifie si c'est le premier, le dernier ou un monstre dans la liste puis le supprime	 	*
@@ -378,8 +444,11 @@ LMonster* removeMonster(LMonster* p_lmonster, Monster* p_courant) {
 			
 				//Pointe la fin de la liste sur le monstre précédent
 				p_lmonster->p_tail = p_courant->p_prev;
-				//Lien du dernier monstre vers le monstre suivant est NULL
-				p_lmonster->p_tail->p_next = NULL;
+			
+				if(p_lmonster->p_tail) {
+					//Lien du dernier monstre vers le monstre suivant est NULL
+					p_lmonster->p_tail->p_next = NULL;
+				}
 				
 			}
 	
@@ -387,8 +456,11 @@ LMonster* removeMonster(LMonster* p_lmonster, Monster* p_courant) {
 			else if (p_courant->p_prev == NULL) {
 				//Pointe la tête de la liste vers le monstre suivant
 				p_lmonster->p_head = p_courant->p_next;
-				//Le lien vers du deuxième monstre vers le monstre précédent est NULL
-		 		p_lmonster->p_head->p_prev = NULL;
+
+				if(p_lmonster->p_head != NULL) {
+					//Le lien vers du deuxième monstre vers le monstre précédent est NULL
+			 		p_lmonster->p_head->p_prev = NULL;
+				}
 				p_lmonster->p_head->id = 1;
 				
 				//Création d'un monstre temporaire pour parcourir la liste de monstres
@@ -425,11 +497,15 @@ LMonster* removeMonster(LMonster* p_lmonster, Monster* p_courant) {
 			p_lmonster->length--;
 
 		}
-		else
+		else {
 			printf("Ce monstre n'existe pas");
+			return NULL;
+		}
 	}
-	else 
+	else {
 		printf("Cette liste de monstres n'existe pas");
+		return NULL;
+	}
 
 	// on retourne notre nouvelle liste
 	return p_lmonster; 

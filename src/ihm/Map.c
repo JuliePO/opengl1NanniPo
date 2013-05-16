@@ -94,6 +94,9 @@ int verificationMap(Map* map, char* nameITD){
 																		//Récupère la couleur du chemin
 																		if(fscanf(itd, "%d %d %d\n", &r, &v, &b) == 3){
 
+//Créer la liste de pixel
+LNode* list_pixels = new_LNode();
+map->list_pixels = list_pixels;
 																			(map->construct).r = r/255.0;
 																			(map->construct).g = v/255.0;
 																			(map->construct).b = b/255.0;
@@ -139,7 +142,7 @@ int verificationMap(Map* map, char* nameITD){
 
 												//Vérifie que le noeud se trouve dans l'image
 												if(x <= map->img->widthImg && x >= 0 && y <= map->img->heightImg && y >= 0){
-					
+													x += 200; y += 60;
 													//Vérifie que le noeud à bien été ajouté à la liste de noeud
 													if(addNode(map->list_node, x, y) != 1) {
 														printf("Erreur, ce n'est pas les coordonées d'un noeud");
@@ -352,27 +355,39 @@ int changeColorRoad(Image* img, unsigned char* tabPixels, Map* map) {
 /* Change la couleur du chemin : parcours le tableau de pixel et vérifie la couleur. SI c'est du bleu 	*
 *  alors change la couleur en la couleur définie dans le fichier IDT. Prend en paramètre l'image pour	*
 *  connaitre la taille de cette dernière, le tableau de pixel et la map pour savoir en quelle couleur	*
-*  Il faut changer pour les zones constructibles. Retourne 0 en cas d'erreur sinon retourne 1		*/
+*  Il faut changer pour les zones constructibles. Il prend également les coordonnées de chaque pixel 	*
+*  bleu et les ajoute dans la liste des pixels des zones constructibles de la map. Retourne 0 en cas 	*
+*  d'erreur sinon retourne 1										*/
 							
 int changeColorConstruct(Image* img, unsigned char* tabPixels, Map* map) {
 
 	int i, j;
+	
+	if(map->list_pixels != NULL) {
 
-	// On parcourt les lignes du tableau
-	for(i=0; i<(img->heightImg); i++) {
+		// On parcourt les lignes du tableau
+		for(i=0; i<(img->heightImg); i++) {
 
-		// puis on parcourt les colonnes du tableau
-		for(j=0; j<(img->widthImg); j++) {
+			// puis on parcourt les colonnes du tableau
+			for(j=0; j<(img->widthImg); j++) {
 			
-			//On vérifie la couleur
-			if(tabPixels[i*(img->widthImg)*3+j*3] == 6 && tabPixels[i*(img->widthImg)*3+j*3+1] == 0 && tabPixels[i*(img->widthImg)*3+j*3+2] == 255){
+				//On vérifie la couleur
+				if(tabPixels[i*(img->widthImg)*3+j*3] == 6 && tabPixels[i*(img->widthImg)*3+j*3+1] == 0 && tabPixels[i*(img->widthImg)*3+j*3+2] == 255){
 
-				//Change de couleur
-				tabPixels[i*(img->widthImg)*3+j*3] = ((map->construct).r)*255;
-				tabPixels[i*(img->widthImg)*3+j*3+1] = ((map->construct).g)*255;
-				tabPixels[i*(img->widthImg)*3+j*3+2] = ((map->construct).b)*255;
+					//Change de couleur
+					tabPixels[i*(img->widthImg)*3+j*3] = ((map->construct).r)*255;
+					tabPixels[i*(img->widthImg)*3+j*3+1] = ((map->construct).g)*255;
+					tabPixels[i*(img->widthImg)*3+j*3+2] = ((map->construct).b)*255;
+
+					//Ajoute le noeud à la liste de pixels avec les coordonnées
+					addNode(map->list_pixels, j, i);
+				}
 			}
 		}
+	}
+	else {
+		printf("Erreur : problème au moment de l'allocation pour la liste de pixels de la zone constructible\n");
+		return 0;
 	}
 
 	return 1;

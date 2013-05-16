@@ -2,13 +2,13 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "geometry/Vector3D.h"
-#include "geometry/Point3D.h"
+#include "geometry/Vector2D.h"
+#include "geometry/Point2D.h"
 
 /* Vector XYZ : Contruit un vecteur à partir de x, y */
-Vector3D VectorXYZ(float x, float y) {
+Vector2D VectorXY(float x, float y) {
 
-	Vector3D new_vector;
+	Vector2D new_vector;
 
 	new_vector.x = x;
 	new_vector.y = y;
@@ -17,9 +17,9 @@ Vector3D VectorXYZ(float x, float y) {
 }
 
 /* Vector : Contruit un vecteur à partir de deux points */
-Vector3D Vector(Point3D A, Point3D B) {
+Vector2D Vector(Point2D A, Point2D B) {
 	
-	Vector3D new_vector;
+	Vector2D new_vector;
 
 	new_vector.x = (B.x) - (A.x);
 	new_vector.y = (B.y) - (A.y);
@@ -30,9 +30,9 @@ Vector3D Vector(Point3D A, Point3D B) {
 
 
 /*AddVectors : La fonction d’addition de vecteurs */
-Vector3D AddVectors(Vector3D V1, Vector3D V2){
+Vector2D AddVectors(Vector2D V1, Vector2D V2){
 
-	Vector3D new_vector;
+	Vector2D new_vector;
 
 	new_vector.x = (V1.x) + (V2.x);
 	new_vector.y = (V1.y) + (V2.y);
@@ -41,9 +41,9 @@ Vector3D AddVectors(Vector3D V1, Vector3D V2){
 }
 
 /*SubVectors : La fonction de soustraction de vecteurs */
-Vector3D SubVectors(Vector3D V1, Vector3D V2){
+Vector2D SubVectors(Vector2D V1, Vector2D V2){
 
-	Vector3D new_vector;
+	Vector2D new_vector;
 
 	new_vector.x = (V1.x) - (V2.x);
 	new_vector.y = (V1.y) - (V2.y);
@@ -52,12 +52,12 @@ Vector3D SubVectors(Vector3D V1, Vector3D V2){
 }
 
 /* MultVector : La fonction de la multiplication d’un vecteur par un scalaire */
-Vector3D MultVector(float lamba, Vector3D V){
+Vector2D MultVector(float lamba, Vector2D V){
 
 	if(lamba == 1) 
 		return V;
 
-	Vector3D new_vector;
+	Vector2D new_vector;
 
 	new_vector.x = lamba * (V.x);
 	new_vector.y = lamba * (V.y);
@@ -67,9 +67,9 @@ Vector3D MultVector(float lamba, Vector3D V){
 }
 
 /* DivVector : La fonction de la division d’un vecteur par un scalaire */
-Vector3D DivVector(float lambda, Vector3D V){
+Vector2D DivVector(float lambda, Vector2D V){
 
-	Vector3D new_vector;
+	Vector2D new_vector;
 
 	if(lambda == 0) {
 		printf("Erreur impossible de faire une division par 0");
@@ -89,7 +89,7 @@ Vector3D DivVector(float lambda, Vector3D V){
 
 
 /* La fonction Norm calculant la norme d’un vecteur */
-double DotProduct(Vector3D V1, Vector3D V2){
+double DotProduct(Vector2D V1, Vector2D V2){
 
 	float result = (V1.x * V2.x) + (V1.y * V2.y);
 	return result;
@@ -97,19 +97,19 @@ double DotProduct(Vector3D V1, Vector3D V2){
 
 
 /* La fonction Norm calculant la norme d’un vecteur */
-float Norm(Vector3D V) {
+float Norm(Vector2D V) {
 	float norme;
 
-	norme = ((V.x) * (V.x)) + ((V.y) * (V.y)));
+	norme = ((V.x) * (V.x)) + ((V.y) * (V.y));
 	norme = sqrt(norme);
 
 	return norme;
 }
 
 /* Normalize : calcule le normalisé d’un vecteur */
-Vector3D Normalize(Vector3D V){
+Vector2D Normalize(Vector2D V){
 
-	Vector3D new_vector;
+	Vector2D new_vector;
 	float norme = Norm(V);
 	
 	new_vector.x = (V.x) / norme;
@@ -119,9 +119,9 @@ Vector3D Normalize(Vector3D V){
 }
 
 /* PointPlusVector : Fonction d'addition d'un point et d'un vecteur = translation */
-Point3D PointPlusVector(Point3D P, Vector3D V) {
+Point2D PointPlusVector(Point2D P, Vector2D V) {
 	
-	Point3D new_point;
+	Point2D new_point;
 
 	new_point.x = (P.x) + (V.x);
 	new_point.y = (P.y) + (V.y);

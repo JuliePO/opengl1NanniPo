@@ -28,12 +28,13 @@ typedef struct struct_monster {
 
 	//point de vie
 	float pv;
+	float pvMax;
 
 	//résistance
 	float resistance;
 
 	//résistance plus élevé pour un type de tour
-	char type_tower;
+	char* type_tower;
 
 	//vitesse de déplacement
 	float pace;
@@ -59,7 +60,10 @@ typedef struct struct_lmonster {
 
 /************* Appel de fonction *************/
 LMonster* new_LMonster(void);
+Monster* new_Monster(int, int);
 int addMonster(LMonster*, char*, float, float, char*, float, LNode*);
+int moveMonster(LMonster*, Node*);
+int verificationEnd(Monster*, Node*);
 LMonster* removeMonster(LMonster*, Monster*);
 
 #endif
