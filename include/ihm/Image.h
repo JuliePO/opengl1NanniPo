@@ -19,8 +19,6 @@ typedef struct struct_image {
 	//Valeur maximal de la couleur, résolution de la couleur
 	int maxValue;
 
-	//Tableau de pixel
-	unsigned char* tabPixel;
 }Image;
 
 /************* Appel de fonction *************/

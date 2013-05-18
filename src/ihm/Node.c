@@ -27,7 +27,7 @@ LNode* new_LNode(void) {
 *  Vérifie si la liste est vide ou non pour attribuer les pointeurs. Prend en paramètre la 	*
 *  liste de noeud, les coordonées du noeud. Retourne 0 en cas d'erreur sinon retourne 1		*/
 
-int addNode(LNode* p_lnode, int x, int y) {
+int addNode(LNode* p_lnode, float x, float y) {
 
 	// On vérifie si notre liste a été allouée
 	if (p_lnode != NULL) {

@@ -9,18 +9,24 @@
 
 typedef struct struct_monster {
 
-	//id (commence à 1)
-	int id;
-
 	//position du monstre
-	int x;
-	int y;
-	int e; //erreur : calcul dans le cas où il n'avance pas tout droit
+	float x;
+	float y;
+	float e; //erreur : calcul dans le cas où il n'avance pas tout droit
 
-	//Noeud précédent
+	//nombre pour savoir dans quelle sens il avance pour les sprites
+	/* 1 = haut 	*
+	*  2 = droite 	*
+	*  3 = bas	*
+	*  4 = gauche	*/
+	int sens;
+	//un chiffre pour l'animation du monstre
+	int animation;
+
+	//Noeud précédent (carte)
 	Node* node_prev;
 
-	//Noeud suivant
+	//Noeud suivant (carte)
 	Node* node_next;
 
 	//type de monstre
@@ -32,6 +38,12 @@ typedef struct struct_monster {
 
 	//résistance
 	float resistance;
+
+	//Nombre de point gagner à chaque fois q'un monstre meurt
+	int points;
+
+	//Le gain (monnaie)
+	int gain;
 
 	//résistance plus élevé pour un type de tour
 	char* type_tower;
@@ -56,14 +68,19 @@ typedef struct struct_lmonster {
 	//Pointeur
 	Monster *p_head; //pointeur vers le premier element
 	Monster *p_tail; //pointeur vers le dernier element
+
 }LMonster;
 
-/************* Appel de fonction *************/
+/************* Prototypes des fonctions *************/
+//Initialisation de la liste de monstre
 LMonster* new_LMonster(void);
-Monster* new_Monster(int, int);
-int addMonster(LMonster*, char*, float, float, char*, float, LNode*);
-int moveMonster(LMonster*, Node*);
-int verificationEnd(Monster*, Node*);
+//Ajouter un monstre en fin de liste
+int addMonster(LMonster* , char* , float , float , char* , float , int, int, Node*);
+//Fait bouger le monstre
+int moveMonster(LMonster* , Node*);
+//Calcule l'erreur de déplacement
+void calculErreur(Monster*);
+//Supprime le monstre
 LMonster* removeMonster(LMonster*, Monster*);
 
 #endif

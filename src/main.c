@@ -49,8 +49,9 @@ int main(int argc, char** argv) {
 
 	int testMouse = 0;
 	int play = 0;
+	int testTower = 0;
 
-	/* Init */
+	/* Initialisation */
 	if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
         	fprintf(stderr, "Impossible d'initialiser la SDL. Fin du programme.\n");
         	return EXIT_FAILURE;
@@ -65,44 +66,39 @@ int main(int argc, char** argv) {
 
     	SDL_WM_SetCaption("Tower Defense IMAC La classe !!", NULL);
 
-	/* Création d'une surface SDL dans laquelle le raytracer dessinera */
-    	/*SDL_Surface* framebuffer = NULL;
-    	if(NULL == (framebuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, WINDOW_WIDTH, 
-        	WINDOW_HEIGHT, BIT_PER_PIXEL, 0, 0, 0, 0))) {
-        	fprintf(stderr, "Erreur d'allocation pour le framebuffer. Fin du programme.\n");
-        	return EXIT_FAILURE;
-    	}*/
+	/* Variables */
 
+	//La carte
 	Map* map = (Map*)malloc(sizeof(Map));
 	verificationMap(map,argv[1]);
-	
+	//Texture de la carte
 	GLuint texture;
-	loadMapTexture(map, &texture);
-
+	SDL_Surface* imgMap;
+	loadMapTexture(map, &texture, imgMap);
+	//Texture des monstres
 	GLuint monster;
-	loadTexture(&monster, "./images/sprite.png");
-
+	SDL_Surface* imgMonster;
+	loadTexture("./images/sprite.png", &monster, imgMonster);
+	
 	GLuint shot;
-	loadTexture(&shot, "./images/shot.png");
-
-	GLuint menu1;
-	loadTexture(&menu1, "./images/menu1.png");
-
-	GLuint menu2;
-	loadTexture(&menu2, "./images/menu2.png");
-
-	GLuint menuNone;
-	loadTexture(&menuNone, "./images/menuNone.png");
-
+	SDL_Surface* imgShot;
+	loadTexture("./images/shot.png", &shot, imgShot);
+	//Texture menu
+	GLuint spriteMenu;
+	SDL_Surface* imgButtonMenu;
+	loadTexture("./images/sprite_menu.png", &spriteMenu, imgButtonMenu);
+	//Texture fond menu
 	GLuint fondMenu;
-	loadTexture(&fondMenu, "./images/fondMenu.png");
-
+	SDL_Surface* imgFondMenu;
+	loadTexture("./images/fondMenu.png", &fondMenu, imgFondMenu);
+	//Texture pour les boutons
 	GLuint spriteButton;
-	loadTexture(&spriteButton, "./images/sprite_button.png");
+	SDL_Surface* imgSpriteButton;
+	loadTexture("./images/sprite_button.png", &spriteButton, imgSpriteButton);
 
 	LMonster* p_lmonster = new_LMonster();
 	LTower* p_ltower = new_LTower();
-	addMonster(p_lmonster, "c", 10.0, 10.0, "p", 10.0, map->list_node);
+	LShot* p_lshot = new_LShot();
 
 	int i = 0; int k = 0;
 	int nb_monster = 1, j = 0;
@@ -122,53 +118,65 @@ int main(int argc, char** argv) {
 
 		drawMap (&texture);
 
-		drawMenu (&menu1, &menu2, &menuNone, &fondMenu, &spriteButton, play);
-
-		float x1, x2, xt1, xt2;
-
-		if(i == 0) {
-			i++;
-			x1 = 0.5;
-			x2 = 0.583;
-
-			xt1 = 0.25;
-			xt2 = 0.333;
-		}
-		else if (i == 1) {
-			i++;
-			x1 = 0.583;
-			x2 = 0.666;
-
-			xt1 = 0.333;
-			xt2 = 0.416;
-		}
-		else {
-			i = 0;
-			x1 = 0.666;
-			x2 = 0.75;
-
-			xt1 = 0.416;
-			xt2 = 0.5;
-		}
+		drawMenu (&spriteMenu, &fondMenu, &spriteButton, play);
 
 		j++;
 		if(j == 50){
 			j=0;
 			if(nb_monster <= 10) {
-				addMonster(p_lmonster, "c", 10.0, 10.0, "p", 10.0, map->list_node);
+				addMonster(p_lmonster, "c", 10.0, 10.0, "p", 10.0, 10.0, 10.0, map->list_node->p_head);
 				nb_monster ++;
 			}
 		}
 
-		if(p_lmonster->length == 0)
-			nb_monster = 0;
+		/*if(p_lmonster->length == 0)
+			nb_monster = 0;*/
+		//Création d'un pointeur tour temporaire pour parcourir la liste de tours
+		Tower *p_temp = p_ltower->p_head;
 
-		k = drawTower(&monster, &shot, p_ltower, p_lmonster, target, xt1, xt2, testMouse, k);
-		if(drawMonster(&monster, p_lmonster, map->list_node->p_tail, x1, x2) == 2)
-			loop = 0;
+		//Parcours la liste de tours
+		while(p_temp != NULL){
+
+			if(testMouse == 0) {
+				if(k%20 == 0) {
+					target = inSight (p_lmonster, p_temp);
+					if(target != NULL) {
+						addShot(p_lshot, target, p_temp);
+						k=0;
+					}
+				}
+			}
+
+			p_temp = p_temp->p_next;
+		}
+		k++;
 
 
-		/*Node* tmp = map->list_pixels->p_head;
+		drawTower(&monster, p_ltower, p_lmonster, target, testMouse, testTower);
+
+
+		drawMonster(&monster, p_lmonster);
+		//Bouger le monstre
+		if(moveMonster(p_lmonster, map->list_node->p_tail) == 2)
+			p_lmonster = removeMonster(p_lmonster, p_lmonster->p_head);
+
+		drawShot(&shot, p_lshot);
+		moveShot(p_lshot);
+		collisionMissile(p_lshot, p_lmonster);
+
+		//printf("%d \n", p_lmonster->length);
+			//loop = 0;
+
+		/*int nb = 0;
+		Monster* m = p_lmonster->p_head;
+		while(m != NULL) {
+			nb++;
+			m = m->p_next;
+		}
+
+		fprintf(stderr, "nombre monstre : %d\n", nb);*/
+
+		/*Node* tmp = map->list_node->p_head;
 
 
 		while(tmp->p_next != NULL){
@@ -185,12 +193,12 @@ int main(int argc, char** argv) {
 				glVertex2d(tmp->x, tmp->y);
 			glEnd();
 
-			printf("%d %d\n", tmp->x, tmp->y);
+			printf("%f %f\n", tmp->x, tmp->y);
 
 			tmp = tmp->p_next;		
 
 		}*/
-
+		
 		/*writeString(100, 100,  "aaa");
 		writeString(200, 200,  "bbb");
 		writeString(300, 300,  "ccc");*/
@@ -220,14 +228,19 @@ int main(int argc, char** argv) {
 						if(clickMenuTour(p_ltower, e.button.x, e.button.y) == 1)
 							testMouse = 1;
 					}
-					else
-						testMouse = 0;
+					else {
+						if(testTower != 0)
+							testMouse = 0;
+					}
 				}
 			break;
 
 			case SDL_MOUSEMOTION :
 				if(testMouse == 1) {
-					moveTower(p_ltower->p_tail, e.button.x, e.button.y);
+					if(moveTower(p_ltower, p_ltower->p_tail, map->list_pixels, e.button.x, e.button.y) == 1)
+						testTower = 1;
+					else
+						testTower = 0;
 				}
 				break;
 
@@ -239,7 +252,8 @@ int main(int argc, char** argv) {
 				break;
 				
 			    case 'a' :
-				addTower(p_ltower, 3.0, 10.0, "c", 50., 10.0, 200, 60);
+				addTower(p_ltower, 2.0, 10.0, "c", 50., 10.0, 200, 60);
+				testMouse = 1;
 				break;
 
 			    default : break;
@@ -262,9 +276,9 @@ int main(int argc, char** argv) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	/*SDL_FreeSurface(image);*/
-	glDeleteTextures(1, &shot);
+	/*glDeleteTextures(1, &shot);
 	glDeleteTextures(1, &texture);
-	glDeleteTextures(1, &monster);
+	glDeleteTextures(1, &monster);*/
 	SDL_Quit();
 	return EXIT_SUCCESS;
 }

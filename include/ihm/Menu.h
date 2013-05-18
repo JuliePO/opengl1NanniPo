@@ -1,13 +1,12 @@
 #ifndef ITD_MENU_H_
 #define ITD_MENU_H_
 
+#include "element/Tower.h"
+
 /************ Structure du menu **************/
 /* Liste chainée pour pouvoir naviger dans la liste de menu	*
 *  et récupérer facile n'importe quelle menu dans la liste 	*/
 typedef struct struct_menu {
-
-	//id (commence à 1)
-	int id;
 
 	//position de l'une des extremité
 	int x1;
@@ -40,6 +39,6 @@ typedef struct struct_menu {
 
 
 /************* Appel de fonction *************/
-int clickMenuTour(LTower*, int, int);
+int clickMenuTour(LTower*, float, float);
 
 #endif

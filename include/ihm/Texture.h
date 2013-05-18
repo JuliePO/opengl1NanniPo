@@ -1,8 +1,10 @@
 #ifndef ITD_TEXTURE_H_
 #define ITD_TEXTURE_H_
 
-/************* Appel de fonction *************/
-int loadMapTexture(Map*, GLuint*);
-int loadTexture(GLuint*, char*);
+/************* Prototype des fonctions *************/
+//Chargement de la texture de la carte
+int loadMapTexture(Map*, GLuint*, SDL_Surface*);
+//Chargement de texture
+int loadTexture(char*, GLuint*, SDL_Surface*);
 
 #endif

@@ -10,12 +10,13 @@
 #include "ihm/Texture.h"
 
 /************* Chargement de la texture de la map *************/
-/* Initialisation de la liste de noeuds et allocation de mémoire pour la liste de noeuds	*
-*  Retourne la liste de noeuds									*/
+/* Charge l'image, attribut l'image à la texture, change les couleurs de la map (fonction ChangeColor)	*
+*  Prend en paramètre un pointeur vers la carte, un pointeur vers la texture, et un pointeur vers la 	*
+*  surface SDLRetourne 1 si la carte et charger.							*/
 
-int loadMapTexture(Map* map, GLuint* texture) {
+int loadMapTexture(Map* map, GLuint* texture, SDL_Surface* image) {
 
-	SDL_Surface* image = IMG_Load(map->img->path);
+	image = IMG_Load(map->img->path);
 	if(image == NULL) {
 		fprintf(stderr, "impossible de charger l'image %s\n", map->img->path);
 		return EXIT_FAILURE;
@@ -57,9 +58,13 @@ int loadMapTexture(Map* map, GLuint* texture) {
 	return 1;
 }
 
-int loadTexture(GLuint* texture, char* fileName) {
+/************* Chargement de textures *************/
+/* Charge l'image, attribut l'image à la texture. Prend en paramètre un pointeur vers la carte, 	*
+*  un pointeur vers la texture, et un pointeur vers la surface SDLRetourne 1 si la carte et charger.	*/
+
+int loadTexture(char* fileName, GLuint* texture, SDL_Surface* img) {
 	
-	SDL_Surface* img = IMG_Load(fileName);
+	img = IMG_Load(fileName);
 	if(img == NULL) {
 		fprintf(stderr, "impossible de charger l'image %s\n", fileName);
 		return 0;

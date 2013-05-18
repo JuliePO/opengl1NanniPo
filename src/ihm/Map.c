@@ -20,7 +20,7 @@ int verificationMap(Map* map, char* nameITD){
 	itd = fopen(nameITD, "r");	
 
 	if(itd == NULL){
-		printf("Erreur : Impossible d'ouvrir le fichier\n");
+		fprintf(stderr, "Erreur : Impossible d'ouvrir le fichier\n");
 		return 0;
 	}
 	else{
@@ -142,152 +142,153 @@ map->list_pixels = list_pixels;
 
 												//Vérifie que le noeud se trouve dans l'image
 												if(x <= map->img->widthImg && x >= 0 && y <= map->img->heightImg && y >= 0){
-													x += 200; y += 60;
+													float x1 = x + 200.0;
+													float y1 = y + 60.0;
 													//Vérifie que le noeud à bien été ajouté à la liste de noeud
-													if(addNode(map->list_node, x, y) != 1) {
-														printf("Erreur, ce n'est pas les coordonées d'un noeud");
+													if(addNode(map->list_node, x1, y1) != 1) {
+														fprintf(stderr, "Erreur, ce n'est pas les coordonées d'un noeud");
 														return 0;
 													}
 												}
 												else{
-													printf("Erreur, le noeud ne se trouve pas sur la carte");
+													fprintf(stderr, "Erreur, le noeud ne se trouve pas sur la carte");
 													return 0;
 												}
 											}
 											else {
-												printf("Erreur, ce n'est pas les coordonées d'un noeud");
+												fprintf(stderr, "Erreur, ce n'est pas les coordonées d'un noeud");
 												return 0;
 											}
 										}
 										if(fscanf(itd, "%d %d\n", &x, &y) == 2){
-											printf("Erreur, il y a trop de noeuds");
+											fprintf(stderr, "Erreur, il y a trop de noeuds");
 											return 0;
 										}
 									}
 								}
 								else {
-									printf("Erreur, ce n'est pas un nombre de noeud");
+									fprintf(stderr, "Erreur, ce n'est pas un nombre de noeud");
 									return 0;
 								}													
 
 																								}
 																								else {
-																									printf("Erreur, Ce ne sont pas les valeurs de couleurs\n");
+																									fprintf(stderr, "Erreur, Ce ne sont pas les valeurs de couleurs\n");
 																									return 0;
 																								}
 																							}
 																							else {
-																								printf("Erreur, la huitième ligne ne correspond pas à la sortie\n");
+																								fprintf(stderr, "Erreur, la huitième ligne ne correspond pas à la sortie\n");
 																								return 0;
 																							}
 																														}
 																							else {
-																								printf("Erreur, la huitième ligne ne correspond pas à la sortie\n");
+																								fprintf(stderr, "Erreur, la huitième ligne ne correspond pas à la sortie\n");
 																								return 0;
 																							}
 
 																					}
 																					else {
-																						printf("Erreur, Ce ne sont pas les valeurs de couleurs\n");
+																						fprintf(stderr, "Erreur, Ce ne sont pas les valeurs de couleurs\n");
 																						return 0;
 																					}
 																				}
 																				else {
-																					printf("Erreur, la septième ligne ne correspond pas à l'entrée\n");
+																					fprintf(stderr, "Erreur, la septième ligne ne correspond pas à l'entrée\n");
 																					return 0;
 																				}
 																			}
 																																						else {
-																				printf("Erreur, la septième ligne ne correspond pas à l'entrée\n");
+																				fprintf(stderr, "Erreur, la septième ligne ne correspond pas à l'entrée\n");
 																				return 0;
 																			}
 
 																		}
 																		else {
-																			printf("Erreur, Ce ne sont pas les valeurs de couleurs\n");
+																			fprintf(stderr, "Erreur, Ce ne sont pas les valeurs de couleurs\n");
 																			return 0;
 																		}
 																	}
 																	else {
-																		printf("Erreur, la sixième ligne ne correspond pas à la zone constructible\n");
+																		fprintf(stderr, "Erreur, la sixième ligne ne correspond pas à la zone constructible\n");
 																		return 0;
 																	}
 																}
 																else {
-																	printf("Erreur, la sixième ligne ne correspond pas à la zone constructible\n");
+																	fprintf(stderr, "Erreur, la sixième ligne ne correspond pas à la zone constructible\n");
 																	return 0;
 																}
 
 															}
 															else {
-																printf("Erreur, Ce ne sont pas les valeurs de couleurs\n");
+																fprintf(stderr, "Erreur, Ce ne sont pas les valeurs de couleurs\n");
 																return 0;
 															}
 														}
 														else {
-															printf("Erreur, la cinquième ligne ne correspond pas au noeud\n");
+															fprintf(stderr, "Erreur, la cinquième ligne ne correspond pas au noeud\n");
 															return 0;
 														}
 													}
 													else {
-														printf("Erreur, la cinquième ligne ne correspond pas au noeud\n");
+														fprintf(stderr, "Erreur, la cinquième ligne ne correspond pas au noeud\n");
 														return 0;
 													}
 
 												}
 												else {
-													printf("Erreur, Ce ne sont pas les valeurs de couleurs\n");
+													fprintf(stderr, "Erreur, Ce ne sont pas les valeurs de couleurs\n");
 													return 0;
 												}
 											}
 											else {
-												printf("Erreur, la quatrième ligne ne correspond pas au chemin\n");
+												fprintf(stderr, "Erreur, la quatrième ligne ne correspond pas au chemin\n");
 												return 0;
 											}
 										}
 										else {
-											printf("Erreur, la quatrième ligne ne correspond pas au chemin\n");
+											fprintf(stderr, "Erreur, la quatrième ligne ne correspond pas au chemin\n");
 											return 0;
 										}
 
 									}
 									else {
-										printf("Erreur, Ce n'est pas une valeur d'énergie\n");
+										fprintf(stderr, "Erreur, Ce n'est pas une valeur d'énergie\n");
 										return 0;
 									}
 								}
 								else {
-									printf("Erreur, la troisième ligne ne correspond pas à l'énergie\n");
+									fprintf(stderr, "Erreur, la troisième ligne ne correspond pas à l'énergie\n");
 									return 0;
 								}
 							}
 							else {
-								printf("Erreur, la troisième ligne ne correspond pas à l'énergie\n");
+								fprintf(stderr, "Erreur, la troisième ligne ne correspond pas à l'énergie\n");
 								return 0;
 							}
 						}
 						else {
-							printf("Erreur, ce n'est pas le chemin vers la carte\n");
+							fprintf(stderr, "Erreur, ce n'est pas le chemin vers la carte\n");
 							return 0;
 						}
 					}
 					else {
-						printf("Erreur, la deuxième ligne ne correspond pas au chemin vers la carte\n");
+						fprintf(stderr, "Erreur, la deuxième ligne ne correspond pas au chemin vers la carte\n");
 						return 0;
 					}
 				}
 				else {
-					printf("Erreur, la deuxième ligne ne correspond pas au chemin vers la carte\n");
+					fprintf(stderr, "Erreur, la deuxième ligne ne correspond pas au chemin vers la carte\n");
 					return 0;
 				}
 			}
 			else {
-				printf("Ce n'est pas un fichier ITD\n");
+				fprintf(stderr, "Ce n'est pas un fichier ITD\n");
 				return 0;
 			}
 		}
 		else {
-			printf("Ce n'est pas un fichier ITD\n");
+			fprintf(stderr, "Ce n'est pas un fichier ITD\n");
 			return 0;
 		}
 				
@@ -380,13 +381,13 @@ int changeColorConstruct(Image* img, unsigned char* tabPixels, Map* map) {
 					tabPixels[i*(img->widthImg)*3+j*3+2] = ((map->construct).b)*255;
 
 					//Ajoute le noeud à la liste de pixels avec les coordonnées
-					addNode(map->list_pixels, j, i);
+					addNode(map->list_pixels, j + 200, i + 60);
 				}
 			}
 		}
 	}
 	else {
-		printf("Erreur : problème au moment de l'allocation pour la liste de pixels de la zone constructible\n");
+		fprintf(stderr, "Erreur : problème au moment de l'allocation pour la liste de pixels de la zone constructible\n");
 		return 0;
 	}
 

@@ -72,7 +72,7 @@ Vector2D DivVector(float lambda, Vector2D V){
 	Vector2D new_vector;
 
 	if(lambda == 0) {
-		printf("Erreur impossible de faire une division par 0");
+		fprintf(stderr, "Erreur impossible de faire une division par 0");
 		return new_vector;
 	}
 	else if(lambda == 1)

@@ -2,6 +2,7 @@
 #define ITD_SHOT_H_
 
 #include "element/Monster.h"
+#include "element/Tower.h"
 #include "geometry/Point2D.h"
 #include "geometry/Vector2D.h"
 
@@ -10,15 +11,15 @@
 *  et récupérer facile n'importe quelle tour dans la liste 		*/
 typedef struct struct_shot {
 
-	//id (commence à 1)
-	int id;
-
 	//position du missile
-	int x;
-	int y;
+	float x;
+	float y;
 
 	//Ennemie visé
 	Monster* target;
+
+	//Tour d'origine
+	Tower* tower;
 
 	//Pointer vers l'élément précédent
 	struct struct_shot* p_prev;
@@ -31,9 +32,6 @@ typedef struct struct_shot {
 /************* STRUCTURE DE LA LISTE DE TOURS *************/
 typedef struct struct_lshot {
 
-	//puissance de tir
-	float power;
-
 	//Taille de la liste
 	size_t length;
 
@@ -42,12 +40,16 @@ typedef struct struct_lshot {
 	Shot *p_tail; //pointeur vers le dernier element
 }LShot;
 
-/************* Appel de fonction *************/
-LShot* new_LShot(float);
-int addShot(LShot* p_lshot, Monster* target, int, int);
+/************* Prototypes des fonctions *************/
+//Initialisation de la liste de missiles
+LShot* new_LShot(void);
+//Ajout d'un missile à la liste
+int addShot(LShot*, Monster*, Tower*);
+//Bouger le missile
 int moveShot(LShot*);
+//Vérifie s'il y a une collision avec le missile
 int collisionMissile(LShot*, LMonster*);
+//Supprimer un missile à la liste
 LShot* removeShot(LShot*, Shot*);
-
 
 #endif

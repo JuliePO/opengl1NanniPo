@@ -7,10 +7,10 @@
 #include <stdio.h>
 #include <math.h>
 
-//Appel de la structures
 #include "element/Monster.h"
 #include "element/Tower.h"
 #include "element/Shot.h"
+
 #include "ihm/Node.h"
 #include "ihm/Draw.h"
 
@@ -53,7 +53,7 @@ int drawMap (GLuint* texture) {
 		glDisable(GL_TEXTURE_2D);
 	}
 	else {
-		printf("Erreur la texture de la map n'existe pas\n");
+		fprintf(stderr, "Erreur la texture de la map n'existe pas\n");
 		return 0;
 	}
 
@@ -64,9 +64,9 @@ int drawMap (GLuint* texture) {
 /*********************** Dessiner le menu ***********************/
 /* Dessine le menu. Prend en paramètre la texture pour le menu. Retourne 0 en cas d'erreur 1 sinon.	*/
 
-int drawMenu (GLuint* menu1, GLuint* menu2, GLuint* menuNone, GLuint* fondMenu, GLuint* spriteButton, int play) {
-	if(menu1 != NULL && menu2 != NULL) {
+int drawMenu (GLuint* spriteMenu, GLuint* fondMenu, GLuint* spriteButton, int play) {
 
+	if(spriteMenu != NULL && fondMenu != NULL && spriteButton != NULL) {
 		
 		/** Bouton fermer **/
 
@@ -265,13 +265,13 @@ int drawMenu (GLuint* menu1, GLuint* menu2, GLuint* menuNone, GLuint* fondMenu, 
 		//Active le texturage 2D
 		glEnable(GL_TEXTURE_2D);
 		//appel de la texture
-		glBindTexture(GL_TEXTURE_2D, *menu2);
+		glBindTexture(GL_TEXTURE_2D, *spriteMenu);
 
 			glBegin(GL_QUADS);
 			//couleur neutre
 			glColor3ub(255,255,255);
 			//coordonée de la texture
-			glTexCoord2f(1, 1);
+			glTexCoord2f(1, 0.3333);
 			//Cordonnée du quadrilatère 
 			glVertex2f(190, 120);
 
@@ -281,7 +281,7 @@ int drawMenu (GLuint* menu1, GLuint* menu2, GLuint* menuNone, GLuint* fondMenu, 
 			glTexCoord2f(0, 0);
 			glVertex2f(10, 70);
 
-			glTexCoord2f(0, 1);
+			glTexCoord2f(0, 0.3333);
 			glVertex2f(10, 120);
 
 			glEnd();
@@ -295,23 +295,23 @@ int drawMenu (GLuint* menu1, GLuint* menu2, GLuint* menuNone, GLuint* fondMenu, 
 		//Active le texturage 2D
 		glEnable(GL_TEXTURE_2D);
 		//appel de la texture
-		glBindTexture(GL_TEXTURE_2D, *menu1);
+		glBindTexture(GL_TEXTURE_2D, *spriteMenu);
 
 			glBegin(GL_QUADS);
 			//couleur neutre
 			glColor3ub(255,255,255);
 			//coordonée de la texture
-			glTexCoord2f(1, 1);
+			glTexCoord2f(1, 0.6666);
 			//Cordonnée du quadrilatère 
 			glVertex2f(190, 175);
 
-			glTexCoord2f(1, 0);
+			glTexCoord2f(1, 0.3333);
 			glVertex2f(190, 125);
 
-			glTexCoord2f(0, 0);
+			glTexCoord2f(0, 0.3333);
 			glVertex2f(10, 125);
 
-			glTexCoord2f(0, 1);
+			glTexCoord2f(0, 0.6666);
 			glVertex2f(10, 175);
 
 			glEnd();
@@ -324,7 +324,7 @@ int drawMenu (GLuint* menu1, GLuint* menu2, GLuint* menuNone, GLuint* fondMenu, 
 		//Active le texturage 2D
 		glEnable(GL_TEXTURE_2D);
 		//appel de la texture
-		glBindTexture(GL_TEXTURE_2D, *menuNone);
+		glBindTexture(GL_TEXTURE_2D, *spriteMenu);
 
 			glBegin(GL_QUADS);
 			//couleur neutre
@@ -334,10 +334,10 @@ int drawMenu (GLuint* menu1, GLuint* menu2, GLuint* menuNone, GLuint* fondMenu, 
 			//Cordonnée du quadrilatère 
 			glVertex2f(190, 230);
 
-			glTexCoord2f(1, 0);
+			glTexCoord2f(1, 0.6666);
 			glVertex2f(190, 180);
 
-			glTexCoord2f(0, 0);
+			glTexCoord2f(0, 0.6666);
 			glVertex2f(10, 180);
 
 			glTexCoord2f(0, 1);
@@ -352,7 +352,7 @@ int drawMenu (GLuint* menu1, GLuint* menu2, GLuint* menuNone, GLuint* fondMenu, 
 
 	}
 	else {
-		printf("Erreur il y un problème avec les textures.\n");
+		fprintf(stderr, "Erreur il y un problème avec les textures.\n");
 		return 0;
 	}
 
@@ -360,12 +360,12 @@ int drawMenu (GLuint* menu1, GLuint* menu2, GLuint* menuNone, GLuint* fondMenu, 
 }
 
 /*********************** Dessiner les tours ***********************/
-/* Dessine les tours. Prend en paramètre la texture de la tour, la texture des shots, la liste de tours,	*
-*  la liste de monstres, le monstre target et les variables xt1, xt2, testMouse et k. Retourne k.		*/
+/* Dessine les tours. Prend en paramètre la texture de la tour, la liste de tours, la liste de monstres,	*
+*  le monstre target et les variables xt1, xt2, testMouse. Retourne 0 en cas d'erreur, 1 sinon. 		*/
 
-int drawTower (GLuint* monster, GLuint* shot, LTower* p_ltower, LMonster* p_lmonster, Monster* target, float xt1, float xt2, int testMouse, int k) {
+int drawTower (GLuint* monster, LTower* p_ltower, LMonster* p_lmonster, Monster* target, int testMouse, int testTower) {
 
-	if(monster != NULL && shot != NULL && p_ltower != NULL && p_lmonster != NULL) {
+	if(monster != NULL && p_ltower != NULL && p_lmonster != NULL) {
 
 		//Création d'un pointeur tour temporaire pour parcourir la liste de tours
 		Tower *p_temp = p_ltower->p_tail;
@@ -373,12 +373,26 @@ int drawTower (GLuint* monster, GLuint* shot, LTower* p_ltower, LMonster* p_lmon
 			//Parcours la liste de tours
 			while(p_temp != NULL){
 
-				glPushMatrix();
-				glTranslatef(p_temp->x,p_temp->y,0.0);
-				//if(testMouse == 1)
-					drawDisque(p_temp->range);
-				glPopMatrix();
+				//if(testMouse == 1) {
+					glPushMatrix();
+					glTranslatef(p_temp->x,p_temp->y, 0.0);
 
+						//Choisie la couleur
+						if(p_temp == p_ltower->p_tail) {
+							if(testTower == 1) 
+								glColor4f(0,255,0, 0.2);
+							else
+								glColor4f(255,0,0, 0.2);
+						}
+						else
+							glColor4f(255,255,255, 0.2);
+						//Affiche le périmètre d'action
+						drawDisque(p_temp->range);
+				
+					glPopMatrix();
+				//}
+				
+				glColor3ub(255,255,255);
 				glPushMatrix();
 				//Active le texturage 2D
 				glEnable(GL_TEXTURE_2D);
@@ -393,17 +407,17 @@ int drawTower (GLuint* monster, GLuint* shot, LTower* p_ltower, LMonster* p_lmon
 
 					glBegin(GL_QUADS);
 					//coordonée de la texture
-					glTexCoord2f(xt2, 0.625);
+					glTexCoord2f(0.416, 0.625);
 					//Cordonnée du quadrilatère 
 					glVertex2f(xm1, ym1);
 
-					glTexCoord2f(xt2, 0.5);
+					glTexCoord2f(0.416, 0.5);
 					glVertex2f(xm1, ym2);
 
-					glTexCoord2f(xt1, 0.5);
+					glTexCoord2f(0.333, 0.5);
 					glVertex2f(xm2, ym2);
 
-					glTexCoord2f(xt1, 0.625);
+					glTexCoord2f(0.333, 0.625);
 					glVertex2f(xm2, ym1);
 
 					glEnd();
@@ -414,32 +428,15 @@ int drawTower (GLuint* monster, GLuint* shot, LTower* p_ltower, LMonster* p_lmon
 				glDisable(GL_TEXTURE_2D);
 				glPopMatrix();
 
-				if(testMouse == 0) {
-					if(k%20 == 0) {
-						target = inSight (p_lmonster, p_temp);
-						if(target != NULL) {
-							addShot(p_temp->p_lshot, target, p_temp->x, p_temp->y);
-							k=0;
-						}
-					}
-					k++;
-				}
-
-				if(p_temp->p_lshot->p_head != NULL) {
-
-					moveShot(p_temp->p_lshot);
-					collisionMissile(p_temp->p_lshot, p_lmonster);
-					drawShot (shot, p_temp->p_lshot);
-				
-				}
-
 				p_temp = p_temp->p_prev;
 			}
 		}
-		else
-			printf("Erreur un des élements n'est pas alloué\n");
+		else {
+			fprintf(stderr, "Erreur un des élements n'est pas alloué\n");
+			return 0;
+		}
 
-		return k;
+		return 1;
 }
 
 /*********************** Dessiner les missiles ***********************/
@@ -453,7 +450,6 @@ int drawShot (GLuint* shot, LShot* p_lshot) {
 		Shot* tmp_shot = p_lshot->p_head;
 
 		while(tmp_shot != NULL) {
-
 		
 			//Active le texturage 2D
 			glEnable(GL_TEXTURE_2D);
@@ -494,7 +490,7 @@ int drawShot (GLuint* shot, LShot* p_lshot) {
 		}
 	}
 	else {
-		printf("Erreur : al texture du shot ou la liste de shot n'existe pas\n");
+		fprintf(stderr, "Erreur : al texture du shot ou la liste de shot n'existe pas\n");
 		return 0;
 	}
 
@@ -503,46 +499,91 @@ int drawShot (GLuint* shot, LShot* p_lshot) {
 }
 
 /*********************** Dessiner les monstres ***********************/
-/* Dessine les monstres. Prend en paramètre la texture des monstres, la liste de monstre, les variables x1 et 	*
-*  x2. Retourne 0 en cas d'erreur et 1 sinon.									*/
+/* Dessine les monstres. Prend en paramètre la texture des monstres, la liste de monstre, le dernier noeud. 	*
+*  Retourne 0 en cas d'erreur et 1 sinon.									*/
 
-int drawMonster(GLuint* monster, LMonster* p_lmonster, Node* p_tail, float x1, float x2) {
+int drawMonster(GLuint* monster, LMonster* p_lmonster) {
 
+	//Vérifie qu'il existe
 	if(monster != NULL && p_lmonster != NULL) {
 	
-		//Création d'un monstre temporaire pour parcourir la liste de monstres
+		//Création d'un pointeur monstre temporaire pour parcourir la liste de monstres
 		Monster *p_tmp = p_lmonster->p_tail;
 
 		//Parcours la liste de monstres
 		while(p_tmp != NULL){
+
+			float xm1, xm2, ym1, ym2;
+			xm1 = p_tmp->x + 20;
+			xm2 = p_tmp->x - 20;
+			ym1 = p_tmp->y + 20;
+			ym2 = p_tmp->y - 20;
+
+			float x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+
+			switch(p_tmp->sens) {
+				//haut
+				case 1 :
+					y1 = 0.375;
+					y2 = 0.5;
+					break;
+				//doite
+				case 2 :
+					y1 = 0.25;
+					y2 = 0.375;
+					break;
+				//bas
+				case 3 :
+					y1 = 0;
+					y2 = 0.125;
+					break;
+				//gauche
+				case 4 :
+					y1 = 0.125;
+					y2 = 0.25;
+					break;
+
+			}
+			
+			switch(p_tmp->animation) {
+				case 0 :
+					x1 = 0.5;
+					x2 = 0.583;
+					p_tmp->animation ++;
+					break;
+				case 1: 
+					x1 = 0.583;
+					x2 = 0.666;
+					p_tmp->animation ++;
+					break;
+				case 2 :
+					x1 = 0.666;
+					x2 = 0.75;
+					p_tmp->animation = 0;
+					break;
+				
+			}
 		
 			//Active le texturage 2D
 			glEnable(GL_TEXTURE_2D);
 			//appel de la texture
 			glBindTexture(GL_TEXTURE_2D, *monster);
-
-				int xm1, xm2, ym1, ym2;
-				xm1 = p_tmp->x + 20;
-				xm2 = p_tmp->x - 20;
-				ym1 = p_tmp->y + 20;
-				ym2 = p_tmp->y - 20;
-		
 		
 				glPushMatrix();
 					glBegin(GL_QUADS);
-					//coordonée de la texture
-					glTexCoord2f(x2, 0.375);
-					//Cordonnée du quadrilatère 
-					glVertex2f(xm1, ym1);
+						//coordonée de la texture
+						glTexCoord2f(x2, y2);
+						//Cordonnée du quadrilatère 
+						glVertex2f(xm1, ym1);
 
-					glTexCoord2f(x2, 0.25);
-					glVertex2f(xm1, ym2);
+						glTexCoord2f(x2, y1);
+						glVertex2f(xm1, ym2);
 
-					glTexCoord2f(x1, 0.25);
-					glVertex2f(xm2, ym2);
+						glTexCoord2f(x1, y1);
+						glVertex2f(xm2, ym2);
 
-					glTexCoord2f(x1, 0.375);
-					glVertex2f(xm2, ym1);
+						glTexCoord2f(x1, y2);
+						glVertex2f(xm2, ym1);
 
 					glEnd();
 				glPopMatrix();
@@ -556,9 +597,6 @@ int drawMonster(GLuint* monster, LMonster* p_lmonster, Node* p_tail, float x1, f
 		}
 		//Afficher les pv
 		drawPVMonster(p_lmonster);
-		//Bouger le monstre
-		if(moveMonster(p_lmonster, p_tail) == 2)
-			return 2;
 	}
 	else {
 		printf("Erreur : la texture du monstre ou la liste de monstre n'existe pas\n");
@@ -571,6 +609,7 @@ int drawMonster(GLuint* monster, LMonster* p_lmonster, Node* p_tail, float x1, f
 /************* Dessiner la barre de vie du monstre *************/
 /* Dessine la barre de vie du monstre. Descend en fonction du nombre de vie restant et change de 	*
 *  couleur. Prend en paramètre la liste de monstres. Retourne 0 en cas d'erreur et 1 sinon.		*/
+
 int drawPVMonster(LMonster* p_lmonster) {
 
 	//On vérifie si notre liste a été allouée
@@ -578,23 +617,26 @@ int drawPVMonster(LMonster* p_lmonster) {
 	
 		float pourcentagePV, x;
 
-		//Création d'un monstre temporaire pour parcourir la liste de monstres
+		//Création d'un pointeur monstre temporaire pour parcourir la liste de monstres
 		Monster *p_tmp = p_lmonster->p_head;
 
 		//Parcours la liste de monstres
 		while(p_tmp != NULL){
 
+			//Calcule le pourcentage de pv restant
 			pourcentagePV = p_tmp->pv / p_tmp->pvMax;
 			x = pourcentagePV * 40;
 
 			glPushMatrix();
-				int xm1, xm2, ym1, ym2;
+				float xm1, xm2, ym1, ym2;
 				
+				//Calcule des coordonées du rectangle
 				xm1 = p_tmp->x - 20 + x;
 				xm2 = p_tmp->x - 20;
 				ym1 = p_tmp->y - 22;
 				ym2 = p_tmp->y - 26;
 
+				//Choix de la couleur du rectangle en fonction du poucentage de pv restant
 				if(pourcentagePV <= 0.1)
 					glColor3ub(255,0,0);
 				else if(pourcentagePV <= 0.3)
@@ -606,12 +648,15 @@ int drawPVMonster(LMonster* p_lmonster) {
 				else
 					glColor3ub(27,101,10);
 
+				//Dessine le rectangle
 				glBegin(GL_QUADS);
 					glVertex2f(xm1, ym1);
 					glVertex2f(xm1, ym2);
 					glVertex2f(xm2, ym2);
 					glVertex2f(xm2, ym1);
 				glEnd();
+				
+				//Remet la couleur neutre (blanc)
 				glColor3ub(255,255,255);
 
 			glPopMatrix();
@@ -641,7 +686,7 @@ void drawDisque(float rayon) {
 
 	glVertex2f(0, 0);
 
-	for(i = 0; i < j+2; i++) {
+	for(i = 0; i <= j; i++) {
 		angle = (2*pi*i)/j;
 		x1 = rayon*(cos(angle));
 		y1 = rayon*(sin(angle));
@@ -662,7 +707,7 @@ void drawCercle(float rayon) {
 	
 	glBegin(GL_LINE_STRIP);
 
-	for(i = 0; i < j+2; i++) {
+	for(i = 0; i <= j; i++) {
 		angle = (2*pi*i)/j;
 		x1 = rayon*(cos(angle));
 		y1 = rayon*(sin(angle));

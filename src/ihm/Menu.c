@@ -7,20 +7,19 @@
 #include <stdio.h>
 #include <math.h>
 
-//Appel de la structures
-#include "element/Monster.h"
+//#include "element/Monster.h"
 #include "element/Tower.h"
-#include "element/Shot.h"
+//#include "element/Shot.h"
 #include "ihm/Menu.h"
 
 /*********************** Clique sur le menu : achat de tour ***********************/
 /* Achat d'une tour losqu'on clique sur le menu puis affiche la tour. 	*/
 
-int clickMenuTour(LTower* p_ltower, int x, int y) {
+int clickMenuTour(LTower* p_ltower, float x, float y) {
 
 	if(x <= 180 && x >= 20 && y <= 130 && y >= 80) {
 
-		addTower(p_ltower, 3.0, 10.0, "c", 50., 10.0, x, y);
+		addTower(p_ltower, 2.0, 10.0, "c", 50., 10.0, x, y);
 		return 1;
 	}
 

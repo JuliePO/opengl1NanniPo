@@ -9,9 +9,9 @@
 typedef struct struct_node {
 
 	//Coordonée x du noeud
-	int x;
+	float x;
 	//Coordonnée y du noeud
-	int y;
+	float y;
 
 	//Noeud suivant
 	struct struct_node *p_next;
@@ -31,6 +31,6 @@ typedef struct struct_lnode {
 
 /************* Appel de fonction *************/
 LNode* new_LNode(void);
-int addNode(LNode*, int, int);
+int addNode(LNode*, float, float);
 
 #endif

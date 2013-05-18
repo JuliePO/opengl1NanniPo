@@ -39,13 +39,20 @@ typedef struct struct_map {
 
 }Map;
 
-/************* Appel de fonction *************/
+/************* Prototypes des fonctions *************/
+//Vérification de la carte
 int verificationMap(Map*, char*);
+//Change les couleurs de la carte
 int ChangeColor(Image*, unsigned char*, Map*);
+//Change les couleurs du chemin de la carte
 int changeColorRoad(Image*, unsigned char*, Map*);
+//Change les couleur des zones constructibles
 int changeColorConstruct(Image*, unsigned char*, Map*);
+//Change la couleur des noeuds
 int changeColorNode(Image*, unsigned char*, Map*);
+//Change la couleur de l'entrée
 int changeColorIn(Image*, unsigned char*, Map*);
+//Change la couleur de la sortie
 int changeColorOut(Image*, unsigned char*, Map*);
 
 #endif
