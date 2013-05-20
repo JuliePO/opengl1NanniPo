@@ -61,7 +61,7 @@ int verificationMap(Map* map, char* nameITD){
 		int testCommentaire;
 		char* test = (char*)malloc(20*sizeof(char));
 		
-		//Récupérer le commentaire du fichier itd
+		//Récupérer le code du fichier itd
 		if(fscanf(itd, "%s %d\n", test,  &testCommentaire) == 2) {
 
 			if(strcmp("@ITD", test) == 0 && 1 == testCommentaire){

@@ -12,19 +12,68 @@
 //#include "element/Shot.h"
 #include "ihm/Menu.h"
 #include "ihm/Interface.h"
+#include "file/FileTower.h"
 
 /*********************** Clique sur le menu : achat de tour ***********************/
 /* Achat d'une tour losqu'on clique sur le menu puis affiche la tour. 	*/
 
-int clickMenuTour(LTower* p_ltower, Interface* interface, float x, float y) {
+int clickMenuTour(LTower* p_ltower, LFileTower* p_lfileTower, Interface* interface, float x, float y) {
 
-	if(x <= 180 && x >= 20 && y <= 130 && y >= 80) {
+	//Vérifie si les elements ont été alloué
+	if(p_ltower != NULL && p_lfileTower != NULL && interface != NULL) {
 
-		if((interface->money) >= 50) {
-			addTower(p_ltower, 2.0, 10.0, "c", 50., 10.0, x, y);
-			updateMoney(interface, 50.);
-			return 1;
+		char* type = "None";
+
+		//Vérifie qu'on clique sur le bon bouton : tour hybride
+		if(x <= 190 && x >= 10 && y <= 120 && y >= 70)
+			type = "H";
+
+		// Tour rocket
+		else if(x <= 190 && x >= 10 && y <= 175 && y >= 125)
+			type = "L";
+
+		//Si le niveau est suppérieur à 3
+		if(interface->lvl >= 3) {
+			if(x <= 190 && x >= 10 && y <= 230 && y >= 180)
+				type = "L";
 		}
+
+		//Si le niveau est suppérieur à 5
+		if(interface->lvl >= 5) {
+			if(x <= 190 && x >= 10 && y <= 285 && y >= 235)
+				type = "R";
+		}
+
+
+		//Vérifie qu'il y a un type, sinon pas de clique sur l'un des boutons
+		if(strcmp("None", type) != 0) {
+
+			//Pointeur temporaire pour parcourir la liste
+			FileTower* tmp = p_lfileTower->p_head;
+	
+			//Parcours la liste
+			while(tmp != NULL) {
+				//Si c'est l'hybride 
+				if(strcmp(type, tmp->type_tower) == 0)
+					break;
+
+				tmp = tmp->p_next;
+			}
+
+			//S'il le joueur a assez d'argent
+			if((interface->money) >= tmp->cost) {
+				//Ajoute une tour
+				addTower(p_ltower, tmp->power, tmp->rate, tmp->type_tower, tmp->range, tmp->cost, x, y);
+				//Met a jour l'agent
+				updateMoney(interface, tmp->cost);
+				return 1;
+			}
+		}
+		
+	}
+	else {
+		fprintf(stderr, "Erreur : liste de tour, liste de fileTour ou interface non alloué\n");
+		return 0;
 	}
 
 	return 0;

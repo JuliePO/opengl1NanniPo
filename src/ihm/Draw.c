@@ -457,10 +457,10 @@ int drawInterface (Interface* interface) {
 
 
 /*********************** Dessiner les tours ***********************/
-/* Dessine les tours. Prend en paramètre la texture de la tour, la liste de tours, la liste de monstres,	*
-*  le monstre target et les variables xt1, xt2, testMouse. Retourne 0 en cas d'erreur, 1 sinon. 		*/
+/* Dessine les tours. Prend en paramètre la texture de la tour, la liste de tours, la liste de monstres		*
+*  et les variables xt1, xt2, testMouse. Retourne 0 en cas d'erreur, 1 sinon. 					*/
 
-int drawTower (GLuint* monster, LTower* p_ltower, LMonster* p_lmonster, Monster* target, int testMouse, int testTower) {
+int drawTower (GLuint* monster, LTower* p_ltower, LMonster* p_lmonster, int testMouse, int testTower) {
 
 	if(monster != NULL && p_ltower != NULL && p_lmonster != NULL) {
 

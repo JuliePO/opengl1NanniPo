@@ -3,10 +3,11 @@
 
 #include "element/Tower.h"
 #include "ihm/Interface.h"
+#include "file/FileTower.h"
 
 /************* Appel de fonction *************/
 //click pour l'achat d'une tour
-int clickMenuTour(LTower*, Interface*, float, float);
+int clickMenuTour(LTower*, LFileTower*, Interface*, float, float);
 //click avance rapide
 int clickAvanceRapide(float, float, int);
 //click fermer

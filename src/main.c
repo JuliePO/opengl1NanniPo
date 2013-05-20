@@ -19,6 +19,7 @@
 #include "ihm/Draw.h"
 #include "ihm/Menu.h"
 #include "ihm/Interface.h"
+#include "file/FileTower.h"
 
 static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 660;
@@ -109,10 +110,18 @@ int main(int argc, char** argv) {
 	//Initialisation de la liste de shots
 	LShot* p_lshot = new_LShot();
 
+	//Initialisation de la liste de tours (file)
+	LFileTower* p_lfileTower =  newFileTower ("./data/IDTtower.idt");
+
 	int i = 0; int k = 0;
 	int nb_monster = 0, j = 0;
 
-	Monster* target = NULL;
+	int pvMax, resistance, pace, points, gain;
+	pvMax = 50;
+	resistance = 5;
+	pace = 50;
+	points = 10;
+	gain = 5;
 
 	int loop = 1;
 
@@ -132,11 +141,10 @@ int main(int argc, char** argv) {
 
 		drawInterface (interface);
 
-		j++;
-		if(j == 50){
+		if(j%pace == 0){
 			j=0;
 			if(nb_monster < 10) {
-				addMonster(p_lmonster, "c", 10.0, 10.0, "p", 10.0, 10.0, 10.0, map->list_node->p_head);
+				addMonster(p_lmonster, "C", pvMax, resistance, "M", pace, points, gain, map->list_node->p_head);
 				nb_monster ++;
 			}
 			else if(nb_monster == 10 && p_lmonster->length == 0) {
@@ -145,12 +153,18 @@ int main(int argc, char** argv) {
 			}
 			else if(nb_monster > 10 && nb_monster <= 15) 
 				nb_monster ++;
-			else if(nb_monster == 16)
+			else if(nb_monster == 16) {
 				nb_monster = 0;
-		}
+				pvMax += 20;
+				resistance += 2;
+				pace -= 2;
+				points += 5;
+				gain += 5;
 
-		/*if(p_lmonster->length == 0)
-			nb_monster = 0;*/
+			}
+		}
+		j++;
+
 		//Création d'un pointeur tour temporaire pour parcourir la liste de tours
 		Tower *p_temp = p_ltower->p_head;
 
@@ -158,21 +172,18 @@ int main(int argc, char** argv) {
 		while(p_temp != NULL){
 
 			if(testMouse == 0) {
-				if(k%20 == 0) {
-					target = inSight (p_lmonster, p_temp);
-					if(target != NULL) {
-						addShot(p_lshot, target, p_temp);
-						k=0;
+				if((p_temp->compteur)%(p_temp->rate) == 0) {
+					if(inSight (p_lshot, p_lmonster, p_temp) != 0) {
+						(p_temp->compteur)=0;
 					}
 				}
 			}
-
+			(p_temp->compteur)++;
 			p_temp = p_temp->p_next;
 		}
-		k++;
 
 
-		drawTower(&monster, p_ltower, p_lmonster, target, testMouse, testTower);
+		drawTower(&monster, p_ltower, p_lmonster, testMouse, testTower);
 
 
 		drawMonster(&monster, p_lmonster);
@@ -181,49 +192,14 @@ int main(int argc, char** argv) {
 			p_lmonster = removeMonster(p_lmonster, p_lmonster->p_head);
 			udapteLife(interface);
 		}
-
-		drawShot(&shot, p_lshot);
-		moveShot(p_lshot);
-		collisionMissile(p_lshot, p_lmonster, interface);
-
-		//printf("%d \n", p_lmonster->length);
-			//loop = 0;
-
-		/*int nb = 0;
-		Monster* m = p_lmonster->p_head;
-		while(m != NULL) {
-			nb++;
-			m = m->p_next;
-		}
-
-		fprintf(stderr, "nombre monstre : %d\n", nb);*/
-
-		/*Node* tmp = map->list_node->p_head;
-
-
-		while(tmp->p_next != NULL){
-
-
-			glBegin(GL_LINES);
-				glColor3ub(0,0,255);
-				glVertex2d(tmp->x, tmp->y);
-				glVertex2d(tmp->p_next->x, tmp->p_next->y);
-			glEnd();
-
-			glBegin(GL_POINTS);
-				glColor3ub(255,0,0);
-				glVertex2d(tmp->x, tmp->y);
-			glEnd();
-
-			printf("%f %f\n", tmp->x, tmp->y);
-
-			tmp = tmp->p_next;		
-
-		}*/
 		
-		/*writeString(100, 100,  "aaa");
-		writeString(200, 200,  "bbb");
-		writeString(300, 300,  "ccc");*/
+		while(i < 3) {
+			drawShot(&shot, p_lshot);
+			moveShot(p_lshot);
+			collisionMissile(p_lshot, p_lmonster, interface);
+			i++;
+		}
+		i = 0;
 
 		glFlush();
 		 SDL_GL_SwapBuffers();
@@ -247,7 +223,7 @@ int main(int argc, char** argv) {
 			case SDL_MOUSEBUTTONDOWN :
 				if(e.button.button == SDL_BUTTON_LEFT) {
 					if(testMouse == 0) {
-						if(clickMenuTour(p_ltower, interface, e.button.x, e.button.y) == 1)
+						if(clickMenuTour(p_ltower, p_lfileTower, interface, e.button.x, e.button.y) == 1)
 							testMouse = 1;
 					}
 					else {

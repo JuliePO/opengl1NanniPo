@@ -46,6 +46,8 @@ typedef struct struct_lshot {
 LShot* new_LShot(void);
 //Ajout d'un missile à la liste
 int addShot(LShot*, Monster*, Tower*);
+//Vérifie si un monstre entre dans le périmètre d'action de la tour
+int inSight (LShot*, LMonster*, Tower*);
 //Bouger le missile
 int moveShot(LShot*);
 //Vérifie s'il y a une collision avec le missile

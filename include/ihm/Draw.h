@@ -13,8 +13,10 @@ int drawMap (GLuint*);
 int drawMenuUp (GLuint*, int);
 //Dessin du menu de gauche
 int drawMenuLeft(GLuint*, GLuint*, Interface*);
+//Dessiner l'interface (score, argent, vie, nb de monstre tués
+int drawInterface (Interface*);
 //Dessin des tours
-int drawTower (GLuint*, LTower*, LMonster*, Monster*, int, int);
+int drawTower (GLuint*, LTower*, LMonster*, int, int);
 //Dessin des missiles
 int drawShot (GLuint*, LShot*);
 //Dessine les monstres

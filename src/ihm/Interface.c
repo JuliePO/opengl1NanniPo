@@ -72,8 +72,8 @@ int updateLvl(Interface* interface) {
 	if(interface != NULL) {
 	
 		interface->lvl ++;
-		interface->money += (interface->lvl) * 10;
-		interface->score += (interface->lvl) * 10;
+		interface->money += (interface->lvl) * 20;
+		interface->score += (interface->lvl) * 20;
 
 		//Augmente la vie tous les 5 niveaux
 		if((interface->lvl) % 5 == 0)

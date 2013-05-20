@@ -5,6 +5,7 @@
 #include "element/Tower.h"
 #include "element/Monster.h"
 #include "geometry/Intersection.h"
+#include "ihm/Interface.h"
 
 /************* Création d'une nouvelle liste de tours *************/
 /* Initialisation de la liste de tours et allocation de mémoire pour la liste de tours		*
@@ -29,9 +30,9 @@ LTower* new_LTower(void) {
 /************* Ajouter une tour en fin de liste *************/
 /* Ajoute une tour à la liste. Alloue la place mémoire pour la tour et attribue les valeurs	*
 *  Prend en paramètre la liste de tours, la puissance d'attaque, la vitesse d'attaque, le type 	*
-*  le périmétre d'action et le cout. Retourne 0 en cas d'erreur et 1 sinon			*/
+*  le périmétre d'action, le cout et la position. Retourne 0 en cas d'erreur et 1 sinon		*/
 
-int addTower(LTower* p_ltower, float power, float rate, char* type_tower, float range, int cost, float x, float y) {
+int addTower(LTower* p_ltower, int power, int rate, char* type_tower, int range, int cost, float x, float y) {
 
 	// On vérifie si notre liste a été allouée
 	if (p_ltower != NULL) {
@@ -42,10 +43,12 @@ int addTower(LTower* p_ltower, float power, float rate, char* type_tower, float 
 		if (new_tower !=  NULL) {
 
 			new_tower->rate = rate;
+			new_tower->compteur = 0;
 			new_tower->range = range;
 			new_tower->type_tower = type_tower;
 			new_tower->cost = cost;
 			new_tower->power = power;
+			new_tower->lvl = 1;
 			new_tower->x = x;
 			new_tower->y = y;
 	
@@ -90,82 +93,182 @@ int addTower(LTower* p_ltower, float power, float rate, char* type_tower, float 
 	return 1; 
 }
 
-/************* Vérification si un monstre entre dans le périmètre d'action de la tour *************/
-/* Vérifie si un monstre entre dans le périmètre d'action => vérifie l'équation :		*
-*  (x - x1)² + (y - y1)² <= R² avec (x1, y1) pour centre du cercle et R son rayon	 	*
-*  x et y sont les coordonées des 4 points du quadrilatère qui contient le monstre.		*
-*  Prend en paramètre la liste de monstre, la tour. Retourne NULL s'il n'y a pas d'intersection,*
-*  ou en cas d'erreur et retourne le pointeur monstre sinon					*/
+/**************************** Augmenter le niveau d'une tour ********************************/
+/* Augmente le niveau, l'attage, la vitesse de tire et le périmètre d'action d'une tour. 	*
+*  Prend en paramètre un pointeur vers la tour que l'on souhaite modifier.			*
+*  Retourne 0 en cas d'erreur et 1 sinon.							*/
 
-Monster* inSight (LMonster* p_lmonster, Tower* p_courant) {
+int upgrateTower(Tower* p_courant, Interface* interface) {
 
-	if(p_lmonster != NULL){
+	if(p_courant != NULL) {
 
-		if(p_courant != NULL) {
-
-			Monster *p_proche = NULL;
-
-			//Variables pour savoir qui est le plus proche
-			Point2D pointIntersection, pointProche, point1, point2;
-			Vector2D vectorIntersection, vectorProche;
-			float normeIntersection, normeProche = -1;
-
-			//Création d'un monstre temporaire pour parcourir la liste de monstres
-			Monster *p_tmp = p_lmonster->p_head;
-
-			//Parcours la liste de monstres
-			while(p_tmp != NULL){
-
-				Point2D point;
-				point.x = p_courant->x; point.y = p_courant->y; //centre
-
-				point1.x = p_tmp->x + 20; point1.y = p_tmp->y + 20;
-				point2.x = p_tmp->x - 20; point2.y = p_tmp->y - 20;
-
-				//Vérifie s'il y a une intersection
-				if(intersectionCarreDisque (point1, point2, p_courant->range, point) == 1) {
-
-					pointIntersection.x = p_tmp->x; pointIntersection.y = p_tmp->y;
-					vectorIntersection = Vector(point, pointIntersection);
-					normeIntersection = Norm(vectorIntersection);
-				
-					//S'il n'y a pas de point d'intersection avant
-					if(normeProche == -1) {
-						vectorProche = Vector(point, pointProche);
-						normeProche = Norm(vectorProche);
-						p_proche = p_tmp;
-					}
-					//Si la distance du nouveau point d'intersection est plus proche que celle stocker
-					if(normeIntersection < normeProche) {
-						vectorProche = vectorIntersection;
-						normeProche = normeIntersection;
-						p_proche = p_tmp;
-					}
-
-				}
-
-
-				p_tmp = p_tmp->p_next;
-
+		if(interface != NULL) {
+			
+			//Si c'est une tour hybride
+			if(strcmp("H", p_courant->type_tower) == 0) {
+				interface->money -= 20;
+				p_courant->power += 5;
+				p_courant->rate += 2;
+				p_courant->range += 3;
+			}
+			//Si c'est une tour mitrailette 
+			else if(strcmp("M", p_courant->type_tower) == 0) {
+				interface->money -= 30;
+				p_courant->power += 2;
+				p_courant->rate += 4;
+				p_courant->range += 3;
+			}
+			//Si c'est une tour laser 
+			else if(strcmp("L", p_courant->type_tower) == 0) {
+				interface->money -= 40;
+				p_courant->power += 4;
+				p_courant->rate += 4;
+				p_courant->range += 2;
+			}
+			//Si c'est une tour rocket 
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				interface->money -= 50;
+				p_courant->power += 5;
+				p_courant->rate += 2;
+				p_courant->range += 2;
 			}
 
-			//retourne le pointeur vers le monstre le plus proche
-			return p_proche;
+			p_courant->lvl ++;
 
 		}
 		else {
-			fprintf(stderr, "Cette tour n'existe pas\n");
-			return NULL;
+			fprintf(stderr, "Erreur : cette interface n'existe pas\n");
+			return 0;
 		}
 
 	}
 	else {
-		fprintf(stderr, "Cette liste de monstre n'existe pas\n");
-		return NULL;
+		fprintf(stderr, "Erreur : cette tour n'existe pas\n");
+		return 0;
 	}
 
-	return NULL;
+	return 1;
 
+}
+
+/**************************** Augmenter l'attaque d'une tour ********************************/
+/* Augmente l'attaque d'une tour. Prend en paramètre un pointeur vers la tour que l'on 		*
+*  souhaite modifier. Retourne 0 en cas d'erreur et 1 sinon.					*/
+
+int upgradePowerT(Tower* p_courant, Interface* interface) {
+	
+	if(p_courant != NULL) {
+
+		if(interface != NULL) {
+			p_courant->power += 5;
+
+			//Si c'est une tour hybride
+			if(strcmp("H", p_courant->type_tower) == 0) {
+				interface->money -= 20;
+			}
+			//Si c'est une tour mitrailette 
+			else if(strcmp("M", p_courant->type_tower) == 0) {
+				interface->money -= 30;
+			}
+			//Si c'est une tour laser 
+			else if(strcmp("L", p_courant->type_tower) == 0) {
+				interface->money -= 20;
+			}
+			//Si c'est une tour rocket 
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				interface->money -= 30;
+			}
+		}
+		else {
+			fprintf(stderr, "Erreur : cette interface n'existe pas\n");
+			return 0;
+		}
+	}	
+	else {
+		fprintf(stderr, "Erreur cette tour n'existe pas\n");
+		return 0;
+	}
+	return 1;
+}
+
+/**************************** Augmenter la vitesse de tir d'une tour ********************************/
+/* Augmente la vitesse de tir d'une tour. Prend en paramètre un pointeur vers la tour que l'on 		*
+*  souhaite modifier. Retourne 0 en cas d'erreur et 1 sinon.						*/
+
+int upgradeRateT(Tower* p_courant, Interface* interface) {
+	
+	if(p_courant != NULL) {
+
+		if(interface != NULL) {
+			p_courant->rate += 2;
+
+			//Si c'est une tour hybride
+			if(strcmp("H", p_courant->type_tower) == 0) {
+				interface->money -= 20;
+			}
+			//Si c'est une tour mitrailette 
+			else if(strcmp("M", p_courant->type_tower) == 0) {
+				interface->money -= 40;
+			}
+			//Si c'est une tour laser 
+			else if(strcmp("L", p_courant->type_tower) == 0) {
+				interface->money -= 40;
+			}
+			//Si c'est une tour rocket 
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				interface->money -= 50;
+			}
+		}
+		else {
+			fprintf(stderr, "Erreur : cette interface n'existe pas\n");
+			return 0;
+		}
+	}	
+	else {
+		fprintf(stderr, "Erreur cette tour n'existe pas\n");
+		return 0;
+	}
+	return 1;
+}
+
+/**************************** Augmenter le périmètre d'action d'une tour ********************************/
+/* Augmente le périmètre d'action d'une tour. Prend en paramètre un pointeur vers la tour que l'on 		*
+*  souhaite modifier. Retourne 0 en cas d'erreur et 1 sinon.							*/
+
+int upgradeRangeT(Tower* p_courant, Interface* interface) {
+	
+	if(p_courant != NULL) {
+
+		if(interface != NULL) {
+			p_courant->range += 3;
+
+			//Si c'est une tour hybride
+			if(strcmp("H", p_courant->type_tower) == 0) {
+				interface->money -= 20;
+			}
+			//Si c'est une tour mitrailette 
+			else if(strcmp("M", p_courant->type_tower) == 0) {
+				interface->money -= 50;
+			}
+			//Si c'est une tour laser 
+			else if(strcmp("L", p_courant->type_tower) == 0) {
+				interface->money -= 30;
+			}
+			//Si c'est une tour rocket 
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				interface->money -= 50;
+			}
+		}
+		else {
+			fprintf(stderr, "Erreur : cette interface n'existe pas\n");
+			return 0;
+		}
+	}	
+	else {
+		fprintf(stderr, "Erreur cette tour n'existe pas\n");
+		return 0;
+	}
+	return 1;
 }
 
 /****************** Vérifier si la tour est sur un zone constructible ***********************/

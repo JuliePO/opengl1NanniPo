@@ -106,6 +106,121 @@ int addShot(LShot* p_lshot, Monster* target, Tower* tower) {
 	return 1; 
 }
 
+/************* Vérification si un monstre entre dans le périmètre d'action de la tour *************/
+/* Vérifie si un monstre entre dans le périmètre d'action => vérifie l'équation :		*
+*  (x - x1)² + (y - y1)² <= R² avec (x1, y1) pour centre du cercle et R son rayon	 	*
+*  x et y sont les coordonées des 4 points du quadrilatère qui contient le monstre.		*
+*  Prend en paramètre la liste de shot, la liste de monstre, la tour. Retourne 0 s'il n'y a 	*
+*  pas d'intersection, ou en cas d'erreur et retourne 1 sinon					*/
+
+int inSight (LShot* p_lshot, LMonster* p_lmonster, Tower* p_courant) {
+
+	if(p_lshot != NULL) {
+
+		if(p_lmonster != NULL){
+
+			if(p_courant != NULL) {
+
+				if(strcmp("M", p_courant->type_tower) != 0) {
+
+					Monster *p_proche = NULL;
+
+					//Variables pour savoir qui est le plus proche
+					Point2D pointIntersection, pointProche, point1, point2;
+					Vector2D vectorIntersection, vectorProche;
+					float normeIntersection, normeProche = -1;
+
+					//Création d'un monstre temporaire pour parcourir la liste de monstres
+					Monster *p_tmp = p_lmonster->p_head;
+
+					//Parcours la liste de monstres
+					while(p_tmp != NULL){
+
+						Point2D point;
+						point.x = p_courant->x; point.y = p_courant->y; //centre
+
+						point1.x = p_tmp->x + 20; point1.y = p_tmp->y + 20;
+						point2.x = p_tmp->x - 20; point2.y = p_tmp->y - 20;
+
+						//Vérifie s'il y a une intersection
+						if(intersectionCarreDisque (point1, point2, p_courant->range, point) == 1) {
+
+							pointIntersection.x = p_tmp->x; pointIntersection.y = p_tmp->y;
+							vectorIntersection = Vector(point, pointIntersection);
+							normeIntersection = Norm(vectorIntersection);
+				
+							//S'il n'y a pas de point d'intersection avant
+							if(normeProche == -1) {
+								vectorProche = Vector(point, pointProche);
+								normeProche = Norm(vectorProche);
+								p_proche = p_tmp;
+							}
+							//Si la distance du nouveau point d'intersection est plus proche que celle stocker
+							if(normeIntersection < normeProche) {
+								vectorProche = vectorIntersection;
+								normeProche = normeIntersection;
+								p_proche = p_tmp;
+							}
+
+						}
+
+
+						p_tmp = p_tmp->p_next;
+
+					}
+
+					if(p_proche != NULL)
+						addShot(p_lshot, p_proche, p_courant); //Ajout d'un shot à la liste
+
+					return 1;
+
+				}
+				else {
+				
+					//Création d'un monstre temporaire pour parcourir la liste de monstres
+					Monster *p_tmp = p_lmonster->p_head;
+
+					//Parcours la liste de monstres
+					while(p_tmp != NULL){
+
+						Point2D point, point1, point2;
+						point.x = p_courant->x; point.y = p_courant->y; //centre
+
+						point1.x = p_tmp->x + 20; point1.y = p_tmp->y + 20;
+						point2.x = p_tmp->x - 20; point2.y = p_tmp->y - 20;
+
+						//Vérifie s'il y a une intersection
+						if(intersectionCarreDisque (point1, point2, p_courant->range, point) == 1)
+							addShot(p_lshot, p_tmp, p_courant); //Ajout d'un shot à la liste
+
+						p_tmp = p_tmp->p_next;
+
+					}	
+					return 1;
+
+				}
+
+			}
+			else {
+				fprintf(stderr, "Cette tour n'existe pas\n");
+				return 0;
+			}
+
+		}
+		else {
+			fprintf(stderr, "Cette liste de monstre n'existe pas\n");
+			return 0;
+		}
+	}
+	else {
+		fprintf(stderr, "Cette liste de missiles n'existe pas\n");
+		return 0;
+	}
+
+	return 0;
+
+}
+
 /************* Bouger les missiles en direction de l'ennemi *************/
 /* Change la position des missiles pour qu'ils bouge vers l'ennemi. Prend en paramètre la liste de  	*
 *  missiles. Retourne 0 en cas d'erreur et 1 sinon.						 	*/
@@ -198,8 +313,11 @@ int collisionMissile(LShot* p_lshot, LMonster* p_lmonster, Interface* interface)
 				//Vérifie s'il y a une intersection
 				if(intersectionCarres(point1, point2, pointC1, pointC2) == 1) {
 
-					//retire des points de vie
-					p_tmp->target->pv -= p_tmp->tower->power;
+					//Vériie s'il est plus résistant à ce type de tour
+					if(strcmp(p_tmp->tower->type_tower, p_tmp->target->type_tower) == 0) 
+						p_tmp->target->pv -= ((p_tmp->tower->power) - (p_tmp->target->resistance)); //retire des points de vie en fonction de la résistance
+					else
+						p_tmp->target->pv -= p_tmp->tower->power; //retire des points de vie
 
 					if(p_tmp->target->pv <= 0){
 					
