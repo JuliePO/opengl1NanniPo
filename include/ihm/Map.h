@@ -40,6 +40,8 @@ typedef struct struct_map {
 }Map;
 
 /************* Prototypes des fonctions *************/
+//Initialisation de la map
+Map* newMap (char*);
 //Vérification de la carte
 int verificationMap(Map*, char*);
 //Change les couleurs de la carte

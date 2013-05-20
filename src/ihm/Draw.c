@@ -13,6 +13,7 @@
 
 #include "ihm/Node.h"
 #include "ihm/Draw.h"
+#include "ihm/Interface.h"
 
 #define pi 3.14
 
@@ -61,12 +62,12 @@ int drawMap (GLuint* texture) {
 
 }
 
-/*********************** Dessiner le menu ***********************/
-/* Dessine le menu. Prend en paramètre la texture pour le menu. Retourne 0 en cas d'erreur 1 sinon.	*/
+/*********************** Dessiner le menu haut ***********************/
+/* Dessine le menu. Prend en paramètre la texture pour le menu et la variable play. Retourne 0 en cas d'erreur 1 sinon.	*/
 
-int drawMenu (GLuint* spriteMenu, GLuint* fondMenu, GLuint* spriteButton, int play) {
+int drawMenuUp (GLuint* spriteButton, int play) {
 
-	if(spriteMenu != NULL && fondMenu != NULL && spriteButton != NULL) {
+	if(spriteButton != NULL) {
 		
 		/** Bouton fermer **/
 
@@ -231,6 +232,23 @@ int drawMenu (GLuint* spriteMenu, GLuint* fondMenu, GLuint* spriteButton, int pl
 			glDisable(GL_TEXTURE_2D);
 		}
 
+	}
+	else {
+		fprintf(stderr, "Erreur il y un problème avec les textures.\n");
+		return 0;
+	}
+
+	return 1;
+}
+
+/*********************** Dessiner le menu left ***********************/
+/* Dessine le menu. Prend en paramètre les textures pour le menu et un pointeur vers l'interface.	*
+*  Retourne 0 en cas d'erreur 1 sinon.									*/
+
+int drawMenuLeft (GLuint* spriteMenu, GLuint* fondMenu, Interface* interface) {
+
+	if(spriteMenu != NULL && fondMenu != NULL) {
+		
 		/** Fond du menu de gauche **/
 
 		//Active le texturage 2D
@@ -239,8 +257,6 @@ int drawMenu (GLuint* spriteMenu, GLuint* fondMenu, GLuint* spriteButton, int pl
 		glBindTexture(GL_TEXTURE_2D, *fondMenu);
 
 			glBegin(GL_QUADS);
-			//couleur neutre
-			glColor3ub(255,255,255);
 			//coordonée de la texture
 			glTexCoord2f(1, 1);
 			//Cordonnée du quadrilatère 
@@ -262,14 +278,19 @@ int drawMenu (GLuint* spriteMenu, GLuint* fondMenu, GLuint* spriteButton, int pl
 		//Désactive le texturage 2D
 		glDisable(GL_TEXTURE_2D);
 
+		/*** Première tour ***/
+
 		//Active le texturage 2D
 		glEnable(GL_TEXTURE_2D);
 		//appel de la texture
 		glBindTexture(GL_TEXTURE_2D, *spriteMenu);
 
+			if(interface->money >= 50)
+				glColor4f(255,255,255, 1);
+			else 
+				glColor4f(255,255,255, 0.5);
+
 			glBegin(GL_QUADS);
-			//couleur neutre
-			glColor3ub(255,255,255);
 			//coordonée de la texture
 			glTexCoord2f(1, 0.3333);
 			//Cordonnée du quadrilatère 
@@ -292,14 +313,20 @@ int drawMenu (GLuint* spriteMenu, GLuint* fondMenu, GLuint* spriteButton, int pl
 		glDisable(GL_TEXTURE_2D);
 
 
+		/*** Deuxième tour ***/
+
 		//Active le texturage 2D
 		glEnable(GL_TEXTURE_2D);
 		//appel de la texture
 		glBindTexture(GL_TEXTURE_2D, *spriteMenu);
 
+			if(interface->money >= 100)
+				glColor4f(255,255,255, 1);
+			else 
+				glColor4f(255,255,255, 0.5);
+
+
 			glBegin(GL_QUADS);
-			//couleur neutre
-			glColor3ub(255,255,255);
 			//coordonée de la texture
 			glTexCoord2f(1, 0.6666);
 			//Cordonnée du quadrilatère 
@@ -320,6 +347,8 @@ int drawMenu (GLuint* spriteMenu, GLuint* fondMenu, GLuint* spriteButton, int pl
 		glBindTexture(GL_TEXTURE_2D, 0);
 		//Désactive le texturage 2D
 		glDisable(GL_TEXTURE_2D);
+
+		/*** Aucune tour ***/
 
 		//Active le texturage 2D
 		glEnable(GL_TEXTURE_2D);
@@ -358,6 +387,74 @@ int drawMenu (GLuint* spriteMenu, GLuint* fondMenu, GLuint* spriteButton, int pl
 
 	return 1;
 }
+
+/*********************** Dessiner l'interface (score, argent, vie, nb de monstre tués ***********************/
+/* Dessine l'interface. Prend en paramètre un pointeur vers la texture et un pointeur vers l'interface.	*
+*  Retourne 0 en cas d'erreur, 1 sinon. 								*/
+
+int drawInterface (Interface* interface) {
+
+	if(interface != NULL) {
+
+		//Alloue de la mémoire pour une chaine de caractère
+		char* machaine = malloc(20*sizeof(char));
+
+		//Si la chaine de caracteres à bien été alloué
+		if(machaine != NULL) {
+
+			/**** Niveau ****/
+			//Convertie un int en un string
+			sprintf(machaine,"%d",interface->lvl);
+
+			writeString(20, 35,  "Niveau : ");
+			//Affiche la chaine de caractère
+			writeString(90, 35,  machaine);
+
+			/**** Money ****/
+			//Convertie un int en un string
+			sprintf(machaine,"%d",interface->money);
+
+			writeString(130, 35,  "Argent : ");
+			//Affiche la chaine de caractère
+			writeString(200, 35,  machaine);
+
+			/**** Score ****/
+			//Convertie un int en un string
+			sprintf(machaine,"%d",interface->score);
+
+			writeString(250, 35,  "Score : ");
+			//Affiche la chaine de caractère
+			writeString(315, 35,  machaine);
+
+			/**** nombre de monstre ****/
+			//Convertie un int en un string
+			sprintf(machaine,"%d",interface->nbMonster);
+
+			writeString(360, 35,  "NbMonstre : ");
+			//Affiche la chaine de caractère
+			writeString(470, 35,  machaine);
+
+
+			/**** nombre de monstre ****/
+			//Convertie un int en un string
+			sprintf(machaine,"%d",interface->life);
+
+			writeString(530, 35,  "Vie : ");
+			//Affiche la chaine de caractère
+			writeString(580, 35,  machaine);
+
+		}
+
+	}
+	else {
+		fprintf(stderr, "Il y a un problème avec l'interface\n");
+		return 0;
+	}	
+
+	return 1;
+
+}
+
 
 /*********************** Dessiner les tours ***********************/
 /* Dessine les tours. Prend en paramètre la texture de la tour, la liste de tours, la liste de monstres,	*

@@ -6,6 +6,7 @@
 #include "element/Monster.h"
 #include "element/Shot.h"
 #include "geometry/Intersection.h"
+#include "ihm/Interface.h"
 
 /************* Création d'une nouvelle liste de missiles *************/
 /* Initialisation de la liste de missiles et allocation de mémoire pour la liste de missiles		*
@@ -162,7 +163,7 @@ int moveShot(LShot* p_lshot) {
 *  déduit les points de vie du monstre. Prend en paramètre la liste de monstre et le monstre.   *
 *  Retourne 0 en cas d'erreur et 1 sinon.							*/
 
-int collisionMissile(LShot* p_lshot, LMonster* p_lmonster) {
+int collisionMissile(LShot* p_lshot, LMonster* p_lmonster, Interface* interface) {
 
 	//On vérifie si notre liste a été allouée
 	if(p_lshot != NULL) {
@@ -203,6 +204,9 @@ int collisionMissile(LShot* p_lshot, LMonster* p_lmonster) {
 					if(p_tmp->target->pv <= 0){
 					
 						p_tmp->target->pv = 0;
+
+						//Mets à jours l'interface (money, score, nbmonstre tués)
+						updateInterface(interface, p_tmp->target);
 
 						//Créer un pointeur missile temporaire pour parcourir la liste de missiles
 						Shot *p_temp = p_lshot->p_head;

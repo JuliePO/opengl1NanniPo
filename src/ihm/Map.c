@@ -7,6 +7,40 @@
 #include "ihm/Node.h"
 #include "geometry/Color3f.h"
 
+
+/************* Initialisation de la carte *************/
+/* Alloue de la mémoire pour la carte puis vérifie la carte à l'aide de la fonction verifarificationMap	*
+*  Prend en paramère le chemin vers la carte. Retourne le pointeur vers la map.				*/
+Map* newMap (char* path) {
+
+	if(path != NULL) {
+
+		//Alloue la memoire
+		Map* map = malloc(sizeof(Map));
+		if(map != NULL) {
+
+			if(verificationMap(map, path) == 0) {
+				fprintf(stderr, "Erreur au moment de la vérification de la map\n");
+				return NULL;
+			}
+			return map;
+
+		}
+		else {
+			fprintf(stderr, "Erreur au moment de l'allocation mémoire de la map\n");
+			return NULL;
+		}
+
+	}
+	else {
+		fprintf(stderr, "Erreur : Ce n'est pas le bon chemin\n");
+		return NULL;
+	}
+	
+	return NULL;	
+	
+}
+
 /************* Vérification de la carte *************/
 /* Vérifie si la carte est valide : Présence du bon commentaire (@ITD 1) sur la première ligne 		*
 *  Présence de chacun de 8 paramètres et de leurs valeurs, vérifie si ces dernières sont correctes	*

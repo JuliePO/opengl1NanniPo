@@ -1,5 +1,5 @@
-#ifndef IMAGE_H
-#define IMAGE_H
+#ifndef ITD_IMAGE_H
+#define ITD_IMAGE_H
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -21,7 +21,7 @@ typedef struct struct_image {
 
 }Image;
 
-/************* Appel de fonction *************/
+/************* Prototypes des fonctions *************/
 int openImg(Image*, char*);
 
 #endif

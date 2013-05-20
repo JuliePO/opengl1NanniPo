@@ -3,14 +3,16 @@
 
 #include "element/Monster.h"
 #include "element/Tower.h"
-/*#include "element/Shot.h"*/
+#include "element/Shot.h"
 #include "ihm/Node.h"
 
 /************* Prototypes des fonctions *************/
 //Dessine la carte
 int drawMap (GLuint*);
-//Dessin le menu
-int drawMenu (GLuint*, GLuint*, GLuint*, int);
+//Dessin le menu du haut
+int drawMenuUp (GLuint*, int);
+//Dessin du menu de gauche
+int drawMenuLeft(GLuint*, GLuint*, Interface*);
 //Dessin des tours
 int drawTower (GLuint*, LTower*, LMonster*, Monster*, int, int);
 //Dessin des missiles

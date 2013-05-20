@@ -18,11 +18,13 @@
 #include "ihm/Node.h"
 #include "ihm/Draw.h"
 #include "ihm/Menu.h"
+#include "ihm/Interface.h"
 
 static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 660;
 static const unsigned int BIT_PER_PIXEL = 32;
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 10;
+static const Uint32 FRAMERATE_MILLISECONDS_RAPIDE = 1000 / 50;
 float pi = 3.14;
 
 void reshape() {
@@ -64,17 +66,18 @@ int main(int argc, char** argv) {
 
 	glutInit(&argc, argv); // initialisation de GLUT
 
-    	SDL_WM_SetCaption("Tower Defense IMAC La classe !!", NULL);
+    	SDL_WM_SetCaption("Tower Defense IMAC1", NULL);
 
 	/* Variables */
 
 	//La carte
-	Map* map = (Map*)malloc(sizeof(Map));
-	verificationMap(map,argv[1]);
+	Map* map = newMap (argv[1]);
 	//Texture de la carte
 	GLuint texture;
 	SDL_Surface* imgMap;
 	loadMapTexture(map, &texture, imgMap);
+	if(argc == 3)
+		loadTexture("./images/map2.ppm", &texture, imgMap);
 	//Texture des monstres
 	GLuint monster;
 	SDL_Surface* imgMonster;
@@ -96,12 +99,18 @@ int main(int argc, char** argv) {
 	SDL_Surface* imgSpriteButton;
 	loadTexture("./images/sprite_button.png", &spriteButton, imgSpriteButton);
 
+	//Initialisation de l'interface
+	Interface* interface = newInterface();
+
+	//Initialisation de la liste de monstre
 	LMonster* p_lmonster = new_LMonster();
+	//Initialisation de la liste de tours
 	LTower* p_ltower = new_LTower();
+	//Initialisation de la liste de shots
 	LShot* p_lshot = new_LShot();
 
 	int i = 0; int k = 0;
-	int nb_monster = 1, j = 0;
+	int nb_monster = 0, j = 0;
 
 	Monster* target = NULL;
 
@@ -116,17 +125,28 @@ int main(int argc, char** argv) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		glMatrixMode(GL_MODELVIEW);
 
-		drawMap (&texture);
+		drawMap(&texture);
 
-		drawMenu (&spriteMenu, &fondMenu, &spriteButton, play);
+		drawMenuUp(&spriteButton, play);
+		drawMenuLeft(&spriteMenu, &fondMenu, interface);
+
+		drawInterface (interface);
 
 		j++;
 		if(j == 50){
 			j=0;
-			if(nb_monster <= 10) {
+			if(nb_monster < 10) {
 				addMonster(p_lmonster, "c", 10.0, 10.0, "p", 10.0, 10.0, 10.0, map->list_node->p_head);
 				nb_monster ++;
 			}
+			else if(nb_monster == 10 && p_lmonster->length == 0) {
+				updateLvl(interface);
+				nb_monster ++;
+			}
+			else if(nb_monster > 10 && nb_monster <= 15) 
+				nb_monster ++;
+			else if(nb_monster == 16)
+				nb_monster = 0;
 		}
 
 		/*if(p_lmonster->length == 0)
@@ -157,12 +177,14 @@ int main(int argc, char** argv) {
 
 		drawMonster(&monster, p_lmonster);
 		//Bouger le monstre
-		if(moveMonster(p_lmonster, map->list_node->p_tail) == 2)
+		if(moveMonster(p_lmonster, map->list_node->p_tail) == 2) {
 			p_lmonster = removeMonster(p_lmonster, p_lmonster->p_head);
+			udapteLife(interface);
+		}
 
 		drawShot(&shot, p_lshot);
 		moveShot(p_lshot);
-		collisionMissile(p_lshot, p_lmonster);
+		collisionMissile(p_lshot, p_lmonster, interface);
 
 		//printf("%d \n", p_lmonster->length);
 			//loop = 0;
@@ -225,13 +247,16 @@ int main(int argc, char** argv) {
 			case SDL_MOUSEBUTTONDOWN :
 				if(e.button.button == SDL_BUTTON_LEFT) {
 					if(testMouse == 0) {
-						if(clickMenuTour(p_ltower, e.button.x, e.button.y) == 1)
+						if(clickMenuTour(p_ltower, interface, e.button.x, e.button.y) == 1)
 							testMouse = 1;
 					}
 					else {
 						if(testTower != 0)
 							testMouse = 0;
 					}
+
+					play = clickAvanceRapide(e.button.x, e.button.y, play);
+					loop = clickExit(e.button.x, e.button.y);
 				}
 			break;
 
@@ -250,11 +275,6 @@ int main(int argc, char** argv) {
 			    case SDLK_ESCAPE : 
 				loop = 0;
 				break;
-				
-			    case 'a' :
-				addTower(p_ltower, 2.0, 10.0, "c", 50., 10.0, 200, 60);
-				testMouse = 1;
-				break;
 
 			    default : break;
 			  }
@@ -267,9 +287,16 @@ int main(int argc, char** argv) {
 		}
 
 		 Uint32 elapsedTime = SDL_GetTicks() - startTime;
-	    if(elapsedTime < FRAMERATE_MILLISECONDS) {
-	      SDL_Delay(FRAMERATE_MILLISECONDS - elapsedTime);
-	    }
+		if(play == 0) {
+		    if(elapsedTime < FRAMERATE_MILLISECONDS) {
+		      SDL_Delay(FRAMERATE_MILLISECONDS - elapsedTime);
+		    }
+		}
+		else if(play == 2) {
+			if(elapsedTime < FRAMERATE_MILLISECONDS_RAPIDE) {
+		      		SDL_Delay(FRAMERATE_MILLISECONDS_RAPIDE - elapsedTime);
+		   	}
+		}
 	  }
 
 

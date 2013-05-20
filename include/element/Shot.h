@@ -5,6 +5,7 @@
 #include "element/Tower.h"
 #include "geometry/Point2D.h"
 #include "geometry/Vector2D.h"
+#include "ihm/Interface.h"
 
 /************* STRUCTURE DU SHOT *************/
 /* Liste doublement chainée pour pouvoir naviger dans la liste de tours	*
@@ -48,7 +49,7 @@ int addShot(LShot*, Monster*, Tower*);
 //Bouger le missile
 int moveShot(LShot*);
 //Vérifie s'il y a une collision avec le missile
-int collisionMissile(LShot*, LMonster*);
+int collisionMissile(LShot*, LMonster*, Interface* interface);
 //Supprimer un missile à la liste
 LShot* removeShot(LShot*, Shot*);
 
