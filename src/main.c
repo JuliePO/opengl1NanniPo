@@ -346,13 +346,13 @@ int main(int argc, char** argv) {
 
 								if(random == 1)
 									//Ajoute un monstre c1 (champignon)
-									addMonster(p_lmonster, interface->lvl, "C1", pvMax + 40, resistance, "M", pace, points, gain, map->list_node->p_head);
+									addMonster(p_lmonster, interface->lvl, "C1", pvMax + 100, resistance, "M", pace, points, gain, map->list_node->p_head);
 								else if(random == 2)
 									//Ajoute un monstre c2 (champignon)
 									addMonster(p_lmonster, interface->lvl, "C2", 120, 2, "H", 45, 15, 10, map->list_node->p_head);
 								else
 									//Ajoute un monstre P (puce)
-									addMonster(p_lmonster, interface->lvl, "P", 140, 4, "L", 40, 20, 20, map->list_node->p_head);
+									addMonster(p_lmonster, interface->lvl, "P", 140, 8, "L", 40, 20, 20, map->list_node->p_head);
 
 							}
 							//Si le joueur est à un niveau suppérieur à 5
@@ -362,16 +362,16 @@ int main(int argc, char** argv) {
 
 								if(random == 1)
 									//Ajoute un monstre c1 (champignon)
-									addMonster(p_lmonster, interface->lvl, "C1", pvMax + 60, resistance, "M", pace, points, gain, map->list_node->p_head);
+									addMonster(p_lmonster, interface->lvl, "C1", pvMax + 100, resistance, "M", pace, points, gain, map->list_node->p_head);
 								else if(random == 2)
 									//Ajoute un monstre c2 (champignon)
-									addMonster(p_lmonster, interface->lvl, "C2", 140, 2, "H", 45, 15, 10, map->list_node->p_head);
+									addMonster(p_lmonster, interface->lvl, "C2", 160, 2, "H", 45, 15, 10, map->list_node->p_head);
 								else if(random == 3)
 									//Ajoute un monstre P (puce)
-									addMonster(p_lmonster, interface->lvl, "P", 160, 3, "L", 40, 20, 20, map->list_node->p_head);
+									addMonster(p_lmonster, interface->lvl, "P", 180, 10, "L", 40, 20, 20, map->list_node->p_head);
 								else 
 									//Ajoute un monstre F (fourmi)
-									addMonster(p_lmonster, interface->lvl, "F", 160, 5, "R", 35, 30, 30, map->list_node->p_head);
+									addMonster(p_lmonster, interface->lvl, "F", 200, 10, "R", 35, 30, 30, map->list_node->p_head);
 
 							}
 
@@ -388,6 +388,23 @@ int main(int argc, char** argv) {
 							nb_monster = 0;
 
 					}
+
+					//Si lvl 19 (20 vagues) et plus de monstre alors gagner
+					if(interface->lvl == 20 && p_lmonster->length == 0) {
+
+						freeAll(p_lmonster, p_lshot, p_ltower, p_lfileTower, map, interface);
+						play = 0;
+						testMouse = 0;
+						testTower = 0;
+						j = 0;
+						i = 0;
+						nb_monster = 0;
+						propriete = 0;
+						aide = 0;
+
+						nbMenu = 5;
+					}
+
 					j++;
 
 					//Création d'un pointeur tour temporaire pour parcourir la liste de tours
