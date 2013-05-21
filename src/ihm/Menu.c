@@ -17,7 +17,7 @@
 /*********************** Clique sur le menuPrincipale  ***********************/
 /* action clique menu Principale. Prend en paramètre la position et un pointeur vers nbMenu. Retourne 0 en cas d'erreur et 1 sinon	*/
 
-void clickMenuPrincipale(float x, float y, int* nbMenu, int* nbMap) {
+void clickMenuPrincipale(float x, float y, int* nbMenu, int* nbMap, int* nbTexture) {
 
 	if(*nbMenu == 0) {
 		//map 1
@@ -30,8 +30,17 @@ void clickMenuPrincipale(float x, float y, int* nbMenu, int* nbMap) {
 			*nbMap = 2;
 			*nbMenu = 1;
 		}
+
+		if(*nbTexture == 0) {
+			if(x <= 492 && x >= 300 && y <= 121 && y >= 68)
+				*nbTexture = 1;
+		}
+		else {
+			if(x <= 492 && x >= 300 && y <= 121 && y >= 68)
+				*nbTexture = 0;
+		}
 	}
-	else if(*nbMenu == 1) {
+	else if(*nbMenu == 1 || *nbMenu == 4 || *nbMenu == 5) {
 
 		//bouton play
 		if(x <= 514 && x >= 272 && y <= 352 && y >= 296)

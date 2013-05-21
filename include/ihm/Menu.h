@@ -5,12 +5,12 @@
 #include "element/Monster.h"
 #include "element/Shot.h"
 #include "ihm/Interface.h"
-#include "file/Map.h"
 #include "file/FileTower.h"
+#include "file/Map.h"
 
 /************* Appel de fonction *************/
 //click menu principal
-void clickMenuPrincipale(float, float, int*, int*);
+void clickMenuPrincipale(float, float, int*, int*, int*);
 //click pour l'achat d'une tour
 int clickMenuTour(LTower*, LFileTower*, Interface*, float, float);
 //click supprimer une tour

@@ -22,7 +22,7 @@
 /*********************** Dessiner le menu des map ***********************/
 /* Dessine le menu des map. Prend en paramètre les textures.	*/
 
-int drawMenuMap (GLuint* texture) {
+int drawMenuMap (GLuint* texture, GLuint* bt_texture, int nbTexture) {
 
 	if(texture != NULL) {
 
@@ -54,6 +54,71 @@ int drawMenuMap (GLuint* texture) {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		//Désactive le texturage 2D
 		glDisable(GL_TEXTURE_2D);
+
+		if(nbTexture == 0) {
+
+			//Active le texturage 2D
+			glEnable(GL_TEXTURE_2D);
+			//appel de la texture
+			glBindTexture(GL_TEXTURE_2D, *bt_texture);
+
+				glBegin(GL_QUADS);
+				//couleur neutre
+				glColor3ub(255,255,255);
+				//coordonée de la texture
+				glTexCoord2f(0.5, 1);
+				//Cordonnée du quadrilatère 
+				glVertex2f(492, 121);
+
+				glTexCoord2f(0.5, 0);
+				glVertex2f(492, 68);
+
+				glTexCoord2f(0, 0);
+				glVertex2f(300, 68);
+
+				glTexCoord2f(0, 1);
+				glVertex2f(300, 121);
+
+				glEnd();
+
+			//Déblinder la texture
+			glBindTexture(GL_TEXTURE_2D, 0);
+			//Désactive le texturage 2D
+			glDisable(GL_TEXTURE_2D);
+
+		}
+		else {
+
+			//Active le texturage 2D
+			glEnable(GL_TEXTURE_2D);
+			//appel de la texture
+			glBindTexture(GL_TEXTURE_2D, *bt_texture);
+
+				glBegin(GL_QUADS);
+				//couleur neutre
+				glColor3ub(255,255,255);
+				//coordonée de la texture
+				glTexCoord2f(1, 1);
+				//Cordonnée du quadrilatère 
+				glVertex2f(492, 121);
+
+				glTexCoord2f(1, 0);
+				glVertex2f(492, 68);
+
+				glTexCoord2f(0.5, 0);
+				glVertex2f(300, 68);
+
+				glTexCoord2f(0.5, 1);
+				glVertex2f(300, 121);
+
+				glEnd();
+
+			//Déblinder la texture
+			glBindTexture(GL_TEXTURE_2D, 0);
+			//Désactive le texturage 2D
+			glDisable(GL_TEXTURE_2D);
+
+		}
 
 	}
 	else {
@@ -398,31 +463,34 @@ int drawHelp (GLuint* texture, GLuint* spriteButton, GLuint* spriteButtonMenu, i
 /* Dessine du chemin et des noeuds. Prend en paramètre la liste de noeud et la map.	*
 *  Retourne 0 en cas d'erreur et 1 sinon.						*/
 
-int drawRoad (LNode* p_lnode, Map* map) {
+int drawRoad (Map* map) {
 
-	if(p_lnode != NULL) {
+	if(map != NULL) {
 
-		Node* p_tmp = p_lnode->p_head;
+		Node* p_tmp = map->list_node->p_head;
 
 		while(p_tmp->p_next != NULL) {
 		
 			glBegin(GL_LINES);
-				glColor3ub(0,0,255);
+				glColor3ub(29,168,194);
 				glVertex2d(p_tmp->x, p_tmp->y);
 				glVertex2d(p_tmp->p_next->x, p_tmp->p_next->y);
 			glEnd();
 
-			glBegin(GL_POINTS);
-				glColor3ub(255,0,0);
-				glVertex2d(p_tmp->x, p_tmp->y);
-			glEnd();
+			glPushMatrix();
+				glColor3ub((map->node).r,(map->node).g,(map->node).b);
+				glTranslatef(p_tmp->x,p_tmp->y, 0.0);
+				drawDisque(5);
+			glPopMatrix();
 
-			p_tmp = p_tmp->p_next;
+			glColor3ub(255,255,255);
+
+			p_tmp = p_tmp->p_next;					
 
 		}
 	}
 	else {
-		fprintf(stderr, "Erreur liste de noeud n'existe pas\n");
+		fprintf(stderr, "Erreur la carte n'existe pas\n");
 		return 0;
 	}
 
@@ -1695,6 +1763,144 @@ int drawPVMonster(LMonster* p_lmonster) {
 
 }
 
+/******************** Dessiner GameOver / Win ********************/
+/* Affiche Game Over ou Win. Prend en paramètre les textures.		*/
+
+int drawGameOverWin(GLuint* texture, GLuint* spriteButton) {
+
+	if(texture != NULL) {
+
+		//Active le texturage 2D
+		glEnable(GL_TEXTURE_2D);
+		//appel de la texture
+		glBindTexture(GL_TEXTURE_2D, *texture);
+
+			glBegin(GL_QUADS);
+			//couleur neutre
+			glColor3ub(255,255,255);
+			//coordonée de la texture
+			glTexCoord2f(1, 1);
+			//Cordonnée du quadrilatère 
+			glVertex2f(800, 660);
+
+			glTexCoord2f(1, 0);
+			glVertex2f(800, 0);
+
+			glTexCoord2f(0, 0);
+			glVertex2f(0, 0);
+
+			glTexCoord2f(0, 1);
+			glVertex2f(0, 660);
+
+			glEnd();
+
+		//Déblinder la texture
+		glBindTexture(GL_TEXTURE_2D, 0);
+		//Désactive le texturage 2D
+		glDisable(GL_TEXTURE_2D);
+
+		/** Bouton jouer **/
+
+		//Active le texturage 2D
+		glEnable(GL_TEXTURE_2D);
+		//appel de la texture
+		glBindTexture(GL_TEXTURE_2D, *spriteButton);
+
+			glBegin(GL_QUADS);
+			//couleur neutre
+			glColor3ub(255,255,255);
+			//coordonée de la texture
+			glTexCoord2f(1, 0.25);
+			//Cordonnée du quadrilatère 
+			glVertex2f(514, 352);
+
+			glTexCoord2f(1, 0);
+			glVertex2f(514, 296);
+
+			glTexCoord2f(0, 0);
+			glVertex2f(272, 296);
+
+			glTexCoord2f(0, 0.25);
+			glVertex2f(272, 352);
+
+			glEnd();
+
+		//Déblinder la texture
+		glBindTexture(GL_TEXTURE_2D, 0);
+		//Désactive le texturage 2D
+		glDisable(GL_TEXTURE_2D);
+
+		/** Bouton aide **/
+
+		//Active le texturage 2D
+		glEnable(GL_TEXTURE_2D);
+		//appel de la texture
+		glBindTexture(GL_TEXTURE_2D, *spriteButton);
+
+			glBegin(GL_QUADS);
+			//couleur neutre
+			glColor3ub(255,255,255);
+			//coordonée de la texture
+			glTexCoord2f(1, 0.5);
+			//Cordonnée du quadrilatère 
+			glVertex2f(514, 421);
+
+			glTexCoord2f(1, 0.25);
+			glVertex2f(514, 364);
+
+			glTexCoord2f(0, 0.25);
+			glVertex2f(272, 364);
+
+			glTexCoord2f(0, 0.5);
+			glVertex2f(272, 421);
+
+			glEnd();
+
+		//Déblinder la texture
+		glBindTexture(GL_TEXTURE_2D, 0);
+		//Désactive le texturage 2D
+		glDisable(GL_TEXTURE_2D);
+
+		/** Bouton changer de carte **/
+
+		//Active le texturage 2D
+		glEnable(GL_TEXTURE_2D);
+		//appel de la texture
+		glBindTexture(GL_TEXTURE_2D, *spriteButton);
+
+			glBegin(GL_QUADS);
+			//couleur neutre
+			glColor3ub(255,255,255);
+			//coordonée de la texture
+			glTexCoord2f(1, 0.75);
+			//Cordonnée du quadrilatère 
+			glVertex2f(514, 490);
+
+			glTexCoord2f(1, 0.5);
+			glVertex2f(514, 432);
+
+			glTexCoord2f(0, 0.5);
+			glVertex2f(272, 432);
+
+			glTexCoord2f(0, 0.75);
+			glVertex2f(272, 490);
+
+			glEnd();
+
+		//Déblinder la texture
+		glBindTexture(GL_TEXTURE_2D, 0);
+		//Désactive le texturage 2D
+		glDisable(GL_TEXTURE_2D);
+
+	}
+	else {
+		fprintf(stderr, "Erreur la texture n'existe pas\n");
+		return 0;
+	}
+
+	return 1;
+
+}
 
 
 /************* Dessiner un cercle en fonction de son rayon plein *************/

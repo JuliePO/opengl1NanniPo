@@ -79,9 +79,9 @@ int main(int argc, char** argv) {
 	loadTexture("./images/menu-map.png", &menuMap, imgMenuMap);
 
 	//Texture menuMap button
-	/*GLuint menuMapButton;
+	GLuint menuMapButton;
 	SDL_Surface* imgMenuMapButton = NULL;
-	loadTexture("./images/map1/sprite_button_menu.png", &menuMapButton, imgMenuMapButton);*/
+	loadTexture("./images/sprite_bt-texture.png", &menuMapButton, imgMenuMapButton);
 
 
 	//Texture menuPrincipal
@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
 	GLuint menuPrincipalButton;
 	SDL_Surface* imgMenuPrincipalButton = NULL;
 
-	Map* map;
+	Map* map = NULL;
 
 	//La carte
 	GLuint texture;
@@ -129,6 +129,14 @@ int main(int argc, char** argv) {
 	//Texture fond menu up
 	GLuint fondMenuUp;
 	SDL_Surface* imgFondMenuUp = NULL;
+
+	//Texture fond Game Over
+	GLuint fondGameOver;
+	SDL_Surface* imgFondGameOver = NULL;
+	
+	//Texture fond Win
+	GLuint fondWin;
+	SDL_Surface* imgFondWin = NULL;
 
 
 	//Initialisation de l'interface
@@ -174,7 +182,11 @@ int main(int argc, char** argv) {
 		glMatrixMode(GL_MODELVIEW);
 
 		if(nbMenu == 0)
-			drawMenuMap (&menuMap);
+			drawMenuMap (&menuMap, &menuMapButton, nbtexture);
+		else if(nbMenu == 4)
+			drawGameOverWin(&fondGameOver, &menuPrincipalButton);
+		else if(nbMenu == 5)
+			drawGameOverWin(&fondWin, &menuPrincipalButton);
 		else if(nbMenu == 1) {
 			
 			//Charge les textures de la première carte
@@ -189,8 +201,8 @@ int main(int argc, char** argv) {
 				//Texture de la carte
 
 				loadMapTexture(map, &texture, imgMap);
-				if(argc == 3)
-					loadTexture("./images/map1.ppm", &texture, imgMap);
+				if(nbtexture == 1)
+					loadTexture("./images/map1/map1.ppm", &texture, imgMap);
 				//Texture aide
 				loadTexture("./images/map1/help.png", &help, imgHelp);
 
@@ -209,6 +221,12 @@ int main(int argc, char** argv) {
 				loadTexture("./images/map1/sprite_button1.png", &spriteButton, imgSpriteButton);
 				//Texture fond menu up
 				loadTexture("./images/map1/fondMenuUp.png", &fondMenuUp, imgFondMenuUp);
+
+				//Texture fond Game Over
+				loadTexture("./images/map1/GameOver.png", &fondGameOver, imgFondGameOver);
+				//Texture fond Win
+				loadTexture("./images/map1/YouWin.png", &fondWin, imgFondWin);
+
 			}
 			//Charge les textures de la deuxième carte
 			else if(nbMap == 2) {
@@ -221,8 +239,8 @@ int main(int argc, char** argv) {
 				//Texture de la carte
 
 				loadMapTexture(map, &texture, imgMap);
-				if(argc == 3)
-					loadTexture("./images/map2.ppm", &texture, imgMap);
+				if(nbtexture == 1)
+					loadTexture("./images/map2/map2.ppm", &texture, imgMap);
 				//Texture aide
 				loadTexture("./images/map2/help.png", &help, imgHelp);
 
@@ -241,6 +259,10 @@ int main(int argc, char** argv) {
 				loadTexture("./images/map2/sprite_button1.png", &spriteButton, imgSpriteButton);
 				//Texture fond menu up
 				loadTexture("./images/map2/fondMenuUp.png", &fondMenuUp, imgFondMenuUp);
+				//Texture fond Game Over
+				loadTexture("./images/map2/GameOver.png", &fondGameOver, imgFondGameOver);
+				//Texture fond Win
+				loadTexture("./images/map2/YouWin.png", &fondWin, imgFondWin);
 			}
 
 			drawMenuPrincipale (&menuPrincipal, &menuPrincipalButton);
@@ -261,6 +283,11 @@ int main(int argc, char** argv) {
 				drawMenuLeft(&spriteMenu, &fondMenu, interface);
 				//Dessin de l'interface (données du joueur)
 				drawInterface (&spriteButton, interface);
+
+				if(nbtexture == 0) {
+					//Dessin du chemin et noeud
+					drawRoad (map);
+				}
 
 				//Si proprité = 1
 				if(propriete == 1) {
@@ -414,6 +441,19 @@ int main(int argc, char** argv) {
 						}
 						p_lmonster = removeMonster(p_lmonster, p_lmonster->p_head);
 						udapteLife(interface);
+						if(interface->life <= 0) {
+							freeAll(p_lmonster, p_lshot, p_ltower, p_lfileTower, map, interface);
+							play = 0;
+							testMouse = 0;
+							testTower = 0;
+							j = 0;
+							i = 0;
+							nb_monster = 0;
+							propriete = 0;
+							aide = 0;
+	
+							nbMenu = 4;
+						}
 					}
 
 					while(i < 3) {
@@ -455,7 +495,7 @@ int main(int argc, char** argv) {
 					if(e.button.button == SDL_BUTTON_LEFT) {
 						if(nbMenu != 3) {
 							//test click menu principal
-							clickMenuPrincipale(e.button.x, e.button.y, &nbMenu, &nbMap); 
+							clickMenuPrincipale(e.button.x, e.button.y, &nbMenu, &nbMap, &nbtexture); 
 						}
 						else {
 

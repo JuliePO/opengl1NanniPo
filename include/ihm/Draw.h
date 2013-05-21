@@ -13,7 +13,7 @@
 
 /************* Prototypes des fonctions *************/
 //Dessin menu Map
-int drawMenuMap (GLuint*);
+int drawMenuMap (GLuint*, GLuint*, int);
 //Dessin du menu principal
 int drawMenuPrincipale (GLuint*, GLuint*);
 //Dessine la carte
@@ -21,7 +21,7 @@ int drawMap (GLuint*);
 //Dessin de l'aide
 int drawHelp (GLuint*, GLuint*, GLuint*, int);
 //Dessin du chemin et des noeuds
-int drawRoad (LNode*, Map*);
+int drawRoad (Map*);
 //Dessin le menu du haut
 int drawMenuUp (GLuint*, GLuint*, int);
 //Dessin du menu de gauche
@@ -32,6 +32,8 @@ int drawInterface (GLuint*, Interface*);
 int drawProprieteTower (GLuint*, GLuint*, Tower*, Interface*);
 //Affiche les propriétés du monstre
 int drawProprieteMonster (GLuint*, Monster*);
+//Affiche GameOver / Win
+int drawGameOverWin (GLuint*, GLuint*);
 
 //Dessin des tours
 int drawTower (GLuint*, LTower*, LMonster*, Tower*, int, int);
