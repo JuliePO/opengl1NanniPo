@@ -55,6 +55,7 @@ int main(int argc, char** argv) {
 	int testTower = 0;
 	int nbMenu = 0;
 	int nbMap = 0;
+	int nbtexture = 0;
 
 	/* Initialisation */
 	if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
@@ -86,12 +87,10 @@ int main(int argc, char** argv) {
 	//Texture menuPrincipal
 	GLuint menuPrincipal;
 	SDL_Surface* imgMenuPrincipal = NULL;
-	loadTexture("./images/map1/MenuPrincipal.png", &menuPrincipal, imgMenuPrincipal);
 
 	//Texture menuPrincipal button
 	GLuint menuPrincipalButton;
 	SDL_Surface* imgMenuPrincipalButton = NULL;
-	loadTexture("./images/map1/sprite_button_menu.png", &menuPrincipalButton, imgMenuPrincipalButton);
 
 	Map* map;
 
@@ -131,61 +130,6 @@ int main(int argc, char** argv) {
 	GLuint fondMenuUp;
 	SDL_Surface* imgFondMenuUp = NULL;
 
-	if(nbMap == 1) {
-
-		//La carte
-		map = newMap ("./data/IDTMap1.idt");
-		//Texture de la carte
-
-		loadMapTexture(map, &texture, imgMap);
-		if(argc == 3)
-			loadTexture("./images/map1.ppm", &texture, imgMap);
-		//Texture aide
-		loadTexture("./images/map1/help.png", &help, imgHelp);
-
-		//Texture des monstres
-		loadTexture("./images/map1/sprite_monster.png", &monster, imgMonster);
-		//Texture des tours
-		loadTexture("./images/map1/sprite_tour.png", &tower, imgTower);
-
-		//Texture des shots	
-		loadTexture("./images/shot.png", &shot, imgShot);
-		//Texture menu
-		loadTexture("./images/map1/sprite_menu1.png", &spriteMenu, imgButtonMenu);
-		//Texture fond menu
-		loadTexture("./images/fondMenu.png", &fondMenu, imgFondMenu);
-		//Texture pour les boutons
-		loadTexture("./images/map1/sprite_button1.png", &spriteButton, imgSpriteButton);
-		//Texture fond menu up
-		loadTexture("./images/map1/fondMenuUp.png", &fondMenuUp, imgFondMenuUp);
-	}
-	else {
-		//La carte
-		map = newMap ("./data/IDTMap2.idt");
-		//Texture de la carte
-
-		loadMapTexture(map, &texture, imgMap);
-		if(argc == 3)
-			loadTexture("./images/map2.ppm", &texture, imgMap);
-		//Texture aide
-		loadTexture("./images/map2/help.png", &help, imgHelp);
-
-		//Texture des monstres
-		loadTexture("./images/map2/sprite_monster.png", &monster, imgMonster);
-		//Texture des tours
-		loadTexture("./images/map2/sprite_tour.png", &tower, imgTower);
-
-		//Texture des shots	
-		loadTexture("./images/shot.png", &shot, imgShot);
-		//Texture menu
-		loadTexture("./images/map2/sprite_menu1.png", &spriteMenu, imgButtonMenu);
-		//Texture fond menu
-		loadTexture("./images/fondMenu.png", &fondMenu, imgFondMenu);
-		//Texture pour les boutons
-		loadTexture("./images/map2/sprite_button1.png", &spriteButton, imgSpriteButton);
-		//Texture fond menu up
-		loadTexture("./images/map2/fondMenuUp.png", &fondMenuUp, imgFondMenuUp);
-	}
 
 	//Initialisation de l'interface
 	Interface* interface = newInterface();
@@ -232,6 +176,73 @@ int main(int argc, char** argv) {
 		if(nbMenu == 0)
 			drawMenuMap (&menuMap);
 		else if(nbMenu == 1) {
+			
+			//Charge les textures de la première carte
+			if(nbMap == 1) {
+
+				loadTexture("./images/map1/MenuPrincipal.png", &menuPrincipal, imgMenuPrincipal);
+
+				loadTexture("./images/map1/sprite_button_menu.png", &menuPrincipalButton, imgMenuPrincipalButton);
+
+				//La carte
+				map = newMap ("./data/IDTMap1.idt");
+				//Texture de la carte
+
+				loadMapTexture(map, &texture, imgMap);
+				if(argc == 3)
+					loadTexture("./images/map1.ppm", &texture, imgMap);
+				//Texture aide
+				loadTexture("./images/map1/help.png", &help, imgHelp);
+
+				//Texture des monstres
+				loadTexture("./images/map1/sprite_monster.png", &monster, imgMonster);
+				//Texture des tours
+				loadTexture("./images/map1/sprite_tour.png", &tower, imgTower);
+
+				//Texture des shots	
+				loadTexture("./images/shot.png", &shot, imgShot);
+				//Texture menu
+				loadTexture("./images/map1/sprite_menu1.png", &spriteMenu, imgButtonMenu);
+				//Texture fond menu
+				loadTexture("./images/fondMenu.png", &fondMenu, imgFondMenu);
+				//Texture pour les boutons
+				loadTexture("./images/map1/sprite_button1.png", &spriteButton, imgSpriteButton);
+				//Texture fond menu up
+				loadTexture("./images/map1/fondMenuUp.png", &fondMenuUp, imgFondMenuUp);
+			}
+			//Charge les textures de la deuxième carte
+			else if(nbMap == 2) {
+				loadTexture("./images/map2/MenuPrincipal.png", &menuPrincipal, imgMenuPrincipal);
+
+				loadTexture("./images/map2/sprite_button_menu.png", &menuPrincipalButton, imgMenuPrincipalButton);
+
+				//La carte
+				map = newMap ("./data/IDTMap2.idt");
+				//Texture de la carte
+
+				loadMapTexture(map, &texture, imgMap);
+				if(argc == 3)
+					loadTexture("./images/map2.ppm", &texture, imgMap);
+				//Texture aide
+				loadTexture("./images/map2/help.png", &help, imgHelp);
+
+				//Texture des monstres
+				loadTexture("./images/map2/sprite_monster.png", &monster, imgMonster);
+				//Texture des tours
+				loadTexture("./images/map2/sprite_tour.png", &tower, imgTower);
+
+				//Texture des shots	
+				loadTexture("./images/shot.png", &shot, imgShot);
+				//Texture menu
+				loadTexture("./images/map2/sprite_menu1.png", &spriteMenu, imgButtonMenu);
+				//Texture fond menu
+				loadTexture("./images/fondMenu.png", &fondMenu, imgFondMenu);
+				//Texture pour les boutons
+				loadTexture("./images/map2/sprite_button1.png", &spriteButton, imgSpriteButton);
+				//Texture fond menu up
+				loadTexture("./images/map2/fondMenuUp.png", &fondMenuUp, imgFondMenuUp);
+			}
+
 			drawMenuPrincipale (&menuPrincipal, &menuPrincipalButton);
 		}
 		else if(nbMenu == 2) 
@@ -240,21 +251,30 @@ int main(int argc, char** argv) {
 			//Afficher l'aide
 			if(aide == 1)
 				drawHelp (&help, &spriteButton, &menuPrincipalButton, nbMenu);
+			//Affiche la carte et les différents élements du jeu
 			else {
+				//Dessin de la carte
 				drawMap(&texture);
+				//Dessin du menu du dessus
 				drawMenuUp(&spriteButton, &fondMenuUp, play);
+				//Dessin du menu de gauche (les tours)
 				drawMenuLeft(&spriteMenu, &fondMenu, interface);
+				//Dessin de l'interface (données du joueur)
 				drawInterface (&spriteButton, interface);
 
+				//Si proprité = 1
 				if(propriete == 1) {
+					//Affiche les propriétés de la tours
 					drawProprieteTower(&tower, &spriteMenu, pTower, interface);
 					pMonster = NULL;
 				}
+				//Si propriété = 2
 				else if(propriete == 2) {
 
 					pTower = NULL;
 					if(pMonster != NULL) {
 						if(pMonster->pv > 0) {
+							//Affiche les propriété du monstre
 							drawProprieteMonster(&monster, pMonster);
 						}
 						else {
@@ -266,54 +286,73 @@ int main(int argc, char** argv) {
 						propriete = 0;
 				}
 
+				//Si ce n'est pas en pause
 				if(play != 1) {
 
+					//ajoute un monstre à chaque fois que j est un muliple de 50
 					if(j%pace == 0){
 						j=0;
+						//S'il y a moins ou 10 monstres
 						if(nb_monster < 10) {
 
+							//Si le joueur est au niveau 0
 							if(interface->lvl == 0)
+								//Ajoute un monstre c1 (champignon)
 								addMonster(p_lmonster, interface->lvl, "C1", pvMax, resistance, "M", pace, points, gain, map->list_node->p_head);
+							//Si le joueur est à un niveau entre 1 et 3
 							else if(interface->lvl > 0 && interface->lvl <= 3) {
+								//Random entre 1 et 2
 								random = rand()%(3-1) +1;
 	
 								if(random == 1)
-									addMonster(p_lmonster, interface->lvl, "C1", pvMax, resistance, "M", pace, points, gain, map->list_node->p_head);
+									//Ajoute un monstre c1 (champignon)
+									addMonster(p_lmonster, interface->lvl, "C1", pvMax + 20, resistance, "M", pace, points, gain, map->list_node->p_head);
 								else
-									addMonster(p_lmonster, interface->lvl, "C2", 120, 2, "H", 40, 15, 10, map->list_node->p_head);
+									//Ajoute un monstre c2 (champignon)
+									addMonster(p_lmonster, interface->lvl, "C2", 100, 1, "H", 40, 15, 10, map->list_node->p_head);
 							
 							}
+							//Si le joueur est à un niveau entre 4 et 5
 							else if(interface->lvl > 3 && interface->lvl <= 5) {
-
+								//Random entre 1 et 3
 								random = rand()%(4-1) +1;
 
 								if(random == 1)
-									addMonster(p_lmonster, interface->lvl, "C1", pvMax, resistance, "M", pace, points, gain, map->list_node->p_head);
+									//Ajoute un monstre c1 (champignon)
+									addMonster(p_lmonster, interface->lvl, "C1", pvMax + 40, resistance, "M", pace, points, gain, map->list_node->p_head);
 								else if(random == 2)
+									//Ajoute un monstre c2 (champignon)
 									addMonster(p_lmonster, interface->lvl, "C2", 120, 2, "H", 45, 15, 10, map->list_node->p_head);
 								else
-									addMonster(p_lmonster, interface->lvl, "P", 140, 2, "L", 40, 20, 20, map->list_node->p_head);
+									//Ajoute un monstre P (puce)
+									addMonster(p_lmonster, interface->lvl, "P", 140, 4, "L", 40, 20, 20, map->list_node->p_head);
 
 							}
+							//Si le joueur est à un niveau suppérieur à 5
 							else if(interface->lvl > 5) {
-
+								//Random entre 1 et 4
 								random = rand()%(5-1) +1;
 
 								if(random == 1)
-									addMonster(p_lmonster, interface->lvl, "C1", pvMax, resistance, "M", pace, points, gain, map->list_node->p_head);
+									//Ajoute un monstre c1 (champignon)
+									addMonster(p_lmonster, interface->lvl, "C1", pvMax + 60, resistance, "M", pace, points, gain, map->list_node->p_head);
 								else if(random == 2)
-									addMonster(p_lmonster, interface->lvl, "C2", 120, 2, "H", 45, 15, 10, map->list_node->p_head);
+									//Ajoute un monstre c2 (champignon)
+									addMonster(p_lmonster, interface->lvl, "C2", 140, 2, "H", 45, 15, 10, map->list_node->p_head);
 								else if(random == 3)
-									addMonster(p_lmonster, interface->lvl, "P", 140, 2, "L", 40, 20, 20, map->list_node->p_head);
+									//Ajoute un monstre P (puce)
+									addMonster(p_lmonster, interface->lvl, "P", 160, 3, "L", 40, 20, 20, map->list_node->p_head);
 								else 
-									addMonster(p_lmonster, interface->lvl, "F", 160, 2, "R", 35, 30, 30, map->list_node->p_head);
+									//Ajoute un monstre F (fourmi)
+									addMonster(p_lmonster, interface->lvl, "F", 160, 5, "R", 35, 30, 30, map->list_node->p_head);
 
 							}
 
 							nb_monster ++;
 						}
+						//S'il n'y a plus de monstre
 						else if(nb_monster == 10 && p_lmonster->length == 0) {
-							updateLvl(interface);
+							updateLvl(interface); //Monte de niveau
 							nb_monster ++;
 						}
 						else if(nb_monster > 10 && nb_monster <= 15) 
@@ -330,6 +369,7 @@ int main(int argc, char** argv) {
 					//Parcours la liste de tours
 					while(p_temp != NULL){
 
+						// Si p_temp = au pointeur du dernier de la liste
 						if(p_temp == p_ltower->p_tail) {
 							if(testMouse == 0) {
 								if((p_temp->compteur)%(p_temp->rate) == 0) {
@@ -352,11 +392,12 @@ int main(int argc, char** argv) {
 					}
 				}
 
-
+				//Dessiner les tours
 				drawTower(&tower, p_ltower, p_lmonster, pTower, testMouse, testTower);
-
+				//Dessiner les monstres
 				drawMonster(&monster, p_lmonster, play);
 
+				//Si le jeu n'est pas en pause
 				if(play != 1) {
 
 					//Bouger le monstre
@@ -376,16 +417,16 @@ int main(int argc, char** argv) {
 					}
 
 					while(i < 3) {
-						drawShot(&shot, p_lshot);
-						moveShot(p_lshot);
-						collisionMissile(p_lshot, p_lmonster, interface, pMonster, &propriete);
+						drawShot(&shot, p_lshot); //dessin du shot
+						moveShot(p_lshot); //Bouger le shot
+						collisionMissile(p_lshot, p_lmonster, interface, pMonster, &propriete); //test de collision
 						i++;
 					}
 					i = 0;
 
 				}
 				else {
-					drawShot(&shot, p_lshot);
+					drawShot(&shot, p_lshot); //dessin du shot
 				}
 			}
 		}
@@ -413,11 +454,13 @@ int main(int argc, char** argv) {
 				case SDL_MOUSEBUTTONDOWN :
 					if(e.button.button == SDL_BUTTON_LEFT) {
 						if(nbMenu != 3) {
-							clickMenuPrincipale(e.button.x, e.button.y, &nbMenu, &nbMap);
+							//test click menu principal
+							clickMenuPrincipale(e.button.x, e.button.y, &nbMenu, &nbMap); 
 						}
 						else {
 
 							if(testMouse == 0) {
+								//test click sur le menu de la tour
 								if(clickMenuTour(p_ltower, p_lfileTower, interface, e.button.x, e.button.y) == 1)
 									testMouse = 1;
 							}
@@ -427,16 +470,21 @@ int main(int argc, char** argv) {
 							}
 
 							if(pTower != NULL && propriete == 1) {
+								//Test click pour supprimer une tour
 								clickTourDelete(p_ltower, p_lshot, pTower, interface, e.button.x, e.button.y, &propriete);
+								//Test click pour upgrade une tour
 								clickTourUpgrate(pTower, interface, e.button.x, e.button.y, &propriete);
 							}
 
+							//test click play / pause / avance rapide
 							play = clickTime(e.button.x, e.button.y, play);
-							loop = clickExit(e.button.x, e.button.y, aide);
-
+							//Test click exit
+							loop = clickExit(p_lmonster, p_lshot, p_ltower, p_lfileTower, map, interface, e.button.x, e.button.y, aide);
+							//Test click sur une tower
 							pTower = clickTower(p_ltower, e.button.x, e.button.y, &propriete);
+							//Test click sur un monstre
 							pMonster = clickMonster(p_lmonster, e.button.x, e.button.y, &propriete);
-
+							//Test click aide
 							aide = clickAide(e.button.x, e.button.y, aide);
 						}
 					}
@@ -444,6 +492,7 @@ int main(int argc, char** argv) {
 
 				case SDL_MOUSEMOTION :
 					if(testMouse == 1) {
+						//Bouger la tour et test si elle est sur une zone constructible ou non
 						if(moveTower(p_ltower, p_ltower->p_tail, map->list_pixels, e.button.x, e.button.y) == 1)
 							testTower = 1;
 						else
@@ -456,6 +505,7 @@ int main(int argc, char** argv) {
 			    			case 'q' : 
 			    			case SDLK_ESCAPE : 
 							loop = 0;
+							freeAll(p_lmonster, p_lshot, p_ltower, p_lfileTower, map, interface);
 							break;
 
 			    			default : break;
@@ -484,10 +534,20 @@ int main(int argc, char** argv) {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	/*SDL_FreeSurface(image);*/
-	/*glDeleteTextures(1, &shot);
-	glDeleteTextures(1, &texture);
-	glDeleteTextures(1, &monster);*/
+	freeTexture(&menuMap, imgMenuMap);
+	//freeTexture(&menuMapButton, imgMenuMapButton);
+	freeTexture(&menuPrincipal, imgMenuPrincipal);
+	freeTexture(&menuPrincipalButton, imgMenuPrincipalButton);
+	freeTexture(&texture, imgMap);
+	freeTexture(&help, imgHelp);
+	freeTexture(&monster, imgMonster);
+	freeTexture(&tower, imgTower);
+	freeTexture(&shot, imgShot);
+	freeTexture(&spriteMenu, imgButtonMenu);
+	freeTexture(&fondMenu, imgFondMenu);
+	freeTexture(&spriteButton, imgSpriteButton);
+	freeTexture(&fondMenuUp, imgFondMenuUp);
+
 	SDL_Quit();
 	return EXIT_SUCCESS;
 }

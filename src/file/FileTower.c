@@ -655,7 +655,7 @@ LFileTower* removeFileTower(LFileTower* p_lfileTower, FileTower* p_courant) {
 }
 
 
-/************* Supprimer la liste de missiles *************/
+/************* Supprimer la liste de fileTower *************/
 /* Supprime la liste de missiles. Prend en paramètre un pointeur vers la liste de missiles 	*/
 
 void freeAllFileTower (LFileTower* p_lfileTower) {

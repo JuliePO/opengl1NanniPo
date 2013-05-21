@@ -4,7 +4,12 @@
 #include "element/Monster.h"
 #include "element/Tower.h"
 #include "element/Shot.h"
+
 #include "ihm/Node.h"
+#include "ihm/Draw.h"
+#include "ihm/Interface.h"
+#include "file/Texture.h"
+#include "file/Map.h"
 
 /************* Prototypes des fonctions *************/
 //Dessin menu Map
@@ -15,6 +20,8 @@ int drawMenuPrincipale (GLuint*, GLuint*);
 int drawMap (GLuint*);
 //Dessin de l'aide
 int drawHelp (GLuint*, GLuint*, GLuint*, int);
+//Dessin du chemin et des noeuds
+int drawRoad (LNode*, Map*);
 //Dessin le menu du haut
 int drawMenuUp (GLuint*, GLuint*, int);
 //Dessin du menu de gauche

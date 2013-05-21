@@ -56,5 +56,7 @@ int changeColorNode(Image*, unsigned char*, Map*);
 int changeColorIn(Image*, unsigned char*, Map*);
 //Change la couleur de la sortie
 int changeColorOut(Image*, unsigned char*, Map*);
+//Libère la mémoire alloué pour la carte
+void freeMap (Map*);
 
 #endif

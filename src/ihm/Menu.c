@@ -21,7 +21,7 @@ void clickMenuPrincipale(float x, float y, int* nbMenu, int* nbMap) {
 
 	if(*nbMenu == 0) {
 		//map 1
-		if(x <= 514 && x >= 365 && y <= 483 && y >= 162) {
+		if(x <= 366 && x >= 43 && y <= 483 && y >= 162) {
 			*nbMap = 1;
 			*nbMenu = 1;
 		}
@@ -41,7 +41,7 @@ void clickMenuPrincipale(float x, float y, int* nbMenu, int* nbMap) {
 			*nbMenu = 2;
 		//bouton changer de menu
 		else if(x <= 514 && x >= 272 && y <= 490 && y >= 432)
-			*nbMenu = 2;
+			*nbMenu = 0;
 	}
 	else if(*nbMenu == 2) {
 	
@@ -241,11 +241,13 @@ int clickTime(float x, float y, int play) {
 
 /*********************** Clique sur le menu : fermer ***********************/
 /* fermer : retourne 0 si on a cliqué sur le bouton avance rapide sinon retourne 1 	*/
-int clickExit(float x, float y, int aide) {
+int clickExit(LMonster* p_lmonster, LShot* p_lshot, LTower* p_ltower, LFileTower* p_lfileTower, Map* map, Interface* interface, float x, float y, int aide) {
 	
 	if(aide == 0) {
-		if(x <= 790 && x >= 760 && y <= 45 && y >= 15)
+		if(x <= 790 && x >= 760 && y <= 45 && y >= 15) {
+			freeAll (p_lmonster, p_lshot, p_ltower, p_lfileTower, map, interface);
 			return 0;
+		}
 	}
 
 	return 1;
@@ -340,6 +342,18 @@ Monster* clickMonster(LMonster* p_lmonster, float x, float y, int* propriete) {
 /*********************** Supprime tous ***********************/
 /* Supprime tous. Prend en paramètre 	*/
 
-void freeAll () {
-	
+void freeAll (LMonster* p_lmonster, LShot* p_lshot, LTower* p_ltower, LFileTower* p_lfileTower, Map* map, Interface* interface) {
+
+	//Liblère la liste de missiles
+	freeAllShot (p_lshot);
+	//Libère la liste de monstres
+	freeAllMonsters (p_lmonster);
+	//Libère la liste de tours
+	freeAllTower (p_ltower);
+	//Libère la liste de fileTower
+	freeAllFileTower(p_lfileTower);
+	//Libère la map
+	freeMap(map);
+	//Libère l'interface
+	freeInterface(interface);
 }

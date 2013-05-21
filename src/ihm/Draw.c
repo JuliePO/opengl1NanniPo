@@ -15,6 +15,7 @@
 #include "ihm/Draw.h"
 #include "ihm/Interface.h"
 #include "file/Texture.h"
+#include "file/Map.h"
 
 #define pi 3.14
 
@@ -386,6 +387,42 @@ int drawHelp (GLuint* texture, GLuint* spriteButton, GLuint* spriteButtonMenu, i
 	}
 	else {
 		fprintf(stderr, "Erreur la texture de la map n'existe pas\n");
+		return 0;
+	}
+
+	return 1;
+
+}
+
+/*********************** Dessiner du chemin et des noeuds ***********************/
+/* Dessine du chemin et des noeuds. Prend en paramètre la liste de noeud et la map.	*
+*  Retourne 0 en cas d'erreur et 1 sinon.						*/
+
+int drawRoad (LNode* p_lnode, Map* map) {
+
+	if(p_lnode != NULL) {
+
+		Node* p_tmp = p_lnode->p_head;
+
+		while(p_tmp->p_next != NULL) {
+		
+			glBegin(GL_LINES);
+				glColor3ub(0,0,255);
+				glVertex2d(p_tmp->x, p_tmp->y);
+				glVertex2d(p_tmp->p_next->x, p_tmp->p_next->y);
+			glEnd();
+
+			glBegin(GL_POINTS);
+				glColor3ub(255,0,0);
+				glVertex2d(p_tmp->x, p_tmp->y);
+			glEnd();
+
+			p_tmp = p_tmp->p_next;
+
+		}
+	}
+	else {
+		fprintf(stderr, "Erreur liste de noeud n'existe pas\n");
 		return 0;
 	}
 
@@ -1029,7 +1066,7 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, Tower* p_courant, Int
 		else if(strcmp("R", p_courant->type_tower) == 0) 
 			towerNumber = 3;
 
-		float x1 = 0.666, x2 = 1, y1 = (towerNumber * (1.0/4.0)) + 0;
+		float x1 = 0, x2 = 1, y1 = (towerNumber * (1.0/4.0)) + 0;
 		float y2 = (towerNumber * (1.0/4.0)) + 0.25;
 
 		//Active le texturage 2D
@@ -1136,7 +1173,7 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, Tower* p_courant, Int
 			glDisable(GL_TEXTURE_2D);
 
 
-			int money;
+			int money = 0;
 			//Si c'est une tour hybride
 			if(strcmp("H", p_courant->type_tower) == 0) {
 				money = 20;
@@ -1369,7 +1406,7 @@ int drawTower (GLuint* tower, LTower* p_ltower, LMonster* p_lmonster, Tower* p_c
 					else if(strcmp("R", p_temp->type_tower) == 0) 
 						towerNumber = 3;
 
-					float x1 = 0.666, x2 = 1, y1 = (towerNumber * (1.0/4.0)) + 0;
+					float x1 = 0, x2 = 1, y1 = (towerNumber * (1.0/4.0)) + 0;
 					float y2 = (towerNumber * (1.0/4.0)) + 0.25;
 
 					glBegin(GL_QUADS);
