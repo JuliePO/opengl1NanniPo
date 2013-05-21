@@ -30,7 +30,13 @@ typedef struct struct_lnode {
 }LNode;
 
 /************* Appel de fonction *************/
+//Initialisation de la liste de noeuds
 LNode* new_LNode(void);
+//Ajouter un noeud à la liste de noeuds
 int addNode(LNode*, float, float);
+//Supprimer un noeud
+LNode* removeNode(LNode*, Node*);
+//Supprimer la liste de noeuds
+void freeAllNode (LNode*);
 
 #endif

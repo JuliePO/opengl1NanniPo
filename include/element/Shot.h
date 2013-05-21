@@ -18,9 +18,15 @@ typedef struct struct_shot {
 
 	//Ennemie visé
 	Monster* target;
-
+	
 	//Tour d'origine
 	Tower* tower;
+
+	//puissance
+	int power;
+
+	//Type tower
+	char* type_tower;
 
 	//Pointer vers l'élément précédent
 	struct struct_shot* p_prev;
@@ -51,8 +57,10 @@ int inSight (LShot*, LMonster*, Tower*);
 //Bouger le missile
 int moveShot(LShot*);
 //Vérifie s'il y a une collision avec le missile
-int collisionMissile(LShot*, LMonster*, Interface* interface);
+int collisionMissile(LShot*, LMonster*, Interface* interface, Monster*, int*);
 //Supprimer un missile à la liste
 LShot* removeShot(LShot*, Shot*);
+//Supprimer la liste de missiles
+void freeAllShot (LShot*);
 
 #endif

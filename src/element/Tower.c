@@ -106,31 +106,43 @@ int upgrateTower(Tower* p_courant, Interface* interface) {
 			
 			//Si c'est une tour hybride
 			if(strcmp("H", p_courant->type_tower) == 0) {
-				interface->money -= 20;
-				p_courant->power += 5;
-				p_courant->rate += 2;
-				p_courant->range += 3;
+
+				if(interface->money >= 20) {
+					interface->money -= 20;
+					p_courant->power += 5;
+					p_courant->rate += 2;
+					p_courant->range += 3;
+				}
 			}
 			//Si c'est une tour mitrailette 
 			else if(strcmp("M", p_courant->type_tower) == 0) {
-				interface->money -= 30;
-				p_courant->power += 2;
-				p_courant->rate += 4;
-				p_courant->range += 3;
+
+				if(interface->money >= 30) {
+					interface->money -= 30;
+					p_courant->power += 2;
+					p_courant->rate += 4;
+					p_courant->range += 3;
+				}
 			}
 			//Si c'est une tour laser 
 			else if(strcmp("L", p_courant->type_tower) == 0) {
-				interface->money -= 40;
-				p_courant->power += 4;
-				p_courant->rate += 4;
-				p_courant->range += 2;
+
+				if(interface->money >= 40) {
+					interface->money -= 40;
+					p_courant->power += 4;
+					p_courant->rate += 4;
+					p_courant->range += 2;
+				}
 			}
 			//Si c'est une tour rocket 
 			else if(strcmp("R", p_courant->type_tower) == 0) {
-				interface->money -= 50;
-				p_courant->power += 5;
-				p_courant->rate += 2;
-				p_courant->range += 2;
+				
+				if(interface->money >= 50) {
+					interface->money -= 50;
+					p_courant->power += 5;
+					p_courant->rate += 2;
+					p_courant->range += 2;
+				}
 			}
 
 			p_courant->lvl ++;
@@ -341,8 +353,8 @@ int moveTower(LTower* p_ltower, Tower* p_courant, LNode* l_node, float x, float 
 			p_courant->y = y;
 		
 			Point2D point1, point2;
-			point1.x = x + 20; point1.y = y + 20;
-			point2.x = x - 20; point2.y = y - 20;
+			point1.x = x + 15; point1.y = y + 15;
+			point2.x = x - 15; point2.y = y - 15;
 
 			if(verificationConstruct(l_node, point1, point2) == 1) {
 
@@ -361,10 +373,11 @@ int moveTower(LTower* p_ltower, Tower* p_courant, LNode* l_node, float x, float 
 
 						//Vérifie qu'il ne se trouve pas sur une autre tour (pas d'intersection)
 						if(intersectionCarres (point1, point2, point3, point4) == 0)
-							return 1;
+							p_tmp = p_tmp->p_next;
 						else
 							return 0;
 					}
+					return 1;
 				}
 				//Sinon pas besoin de faire la vérification pour les collisions de quads
 				else
@@ -447,3 +460,18 @@ LTower* removeTower(LTower* p_ltower, Tower* p_courant) {
 	return p_ltower; 
 }
 
+/************* Supprimer la liste de tours *************/
+/* Supprime la liste de tours. Prend en paramètre un pointeur vers la liste de tours 	*/
+
+void freeAllTower (LTower* p_ltower) {
+	//Si la liste n'est pas vide
+	if (p_ltower->length != 0) {
+
+		//Tant que la liste n'est pas vide
+		while (p_ltower->p_head != NULL) {
+			p_ltower = removeTower(p_ltower, p_ltower->p_head);
+		}
+		
+	}
+	free(p_ltower);
+}

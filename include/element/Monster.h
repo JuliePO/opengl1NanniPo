@@ -33,11 +33,11 @@ typedef struct struct_monster {
 	char* type;
 
 	//point de vie
-	float pv;
-	float pvMax;
+	int pv;
+	int pvMax;
 
 	//résistance
-	float resistance;
+	int resistance;
 
 	//Nombre de point gagner à chaque fois q'un monstre meurt
 	int points;
@@ -49,7 +49,7 @@ typedef struct struct_monster {
 	char* type_tower;
 
 	//vitesse de déplacement
-	float pace;
+	int pace;
 
 	//Pointer vers l'élément précédent
 	struct struct_monster* p_prev;
@@ -75,12 +75,16 @@ typedef struct struct_lmonster {
 //Initialisation de la liste de monstre
 LMonster* new_LMonster(void);
 //Ajouter un monstre en fin de liste
-int addMonster(LMonster* , char* , float , float , char* , float , int, int, Node*);
+int addMonster(LMonster* , int, char* , int , int , char* , int , int, int, Node*);
+//Monte de niveau le monstre
+int upgrateMonster (Monster*, int);
 //Fait bouger le monstre
 int moveMonster(LMonster* , Node*);
 //Calcule l'erreur de déplacement
 void calculErreur(Monster*);
 //Supprime le monstre
 LMonster* removeMonster(LMonster*, Monster*);
+//Supprime toute la liste de monstres
+void freeAllMonsters (LMonster*);
 
 #endif

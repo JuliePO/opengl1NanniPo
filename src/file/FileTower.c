@@ -653,3 +653,20 @@ LFileTower* removeFileTower(LFileTower* p_lfileTower, FileTower* p_courant) {
 	// on retourne notre nouvelle liste
 	return p_lfileTower; 
 }
+
+
+/************* Supprimer la liste de missiles *************/
+/* Supprime la liste de missiles. Prend en paramètre un pointeur vers la liste de missiles 	*/
+
+void freeAllFileTower (LFileTower* p_lfileTower) {
+	//Si la liste n'est pas vide
+	if (p_lfileTower->length != 0) {
+
+		//Tant que la liste n'est pas vide
+		while (p_lfileTower->p_head != NULL) {
+			p_lfileTower = removeFileTower(p_lfileTower, p_lfileTower->p_head);
+		}
+		
+	}
+	free(p_lfileTower);
+}

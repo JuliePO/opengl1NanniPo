@@ -34,4 +34,7 @@ int updateLvl(Interface*);
 int updateMoney(Interface*, int);
 //Mise à jour du nombre de vie
 int udapteLife(Interface*);
+//Supprime l'interface
+void freeInterface (Interface*);
+
 #endif

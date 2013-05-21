@@ -49,5 +49,7 @@ int verificationFileTower(LFileTower*, char*);
 int addFileTower(LFileTower*, int, int, char*, int, int);
 //Supprimer une tour de la liste
 LFileTower* removeFileTower(LFileTower*, FileTower*);
+//Supprimer la liste de tour
+void freeAllFileTower (LFileTower*);
 
 #endif

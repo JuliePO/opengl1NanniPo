@@ -36,7 +36,7 @@ LMonster* new_LMonster(void) {
 *  un type de tour et la vitesse de déplacement, les points gagnés et le gain d'argent si le monstre	*
 *  est tué. Retourne 0 en cas d'erreur et 1 sinon.							*/
 
-int addMonster(LMonster* p_lmonster, char* type, float pvMax, float resistance, char* type_tower, float pace, int points, int gain, Node* p_head) {
+int addMonster(LMonster* p_lmonster, int lvl, char* type, int pvMax, int resistance, char* type_tower, int pace, int points, int gain, Node* p_head) {
 
 	// On vérifie si notre liste a été allouée
 	if (p_lmonster != NULL) {
@@ -61,6 +61,9 @@ int addMonster(LMonster* p_lmonster, char* type, float pvMax, float resistance, 
 			new_monster->y = p_head->y; //position y
 			new_monster->node_prev = p_head; //Pointeur vers le premier noeud
 			new_monster->node_next = p_head->p_next; //Pointeur vers le second noeud
+
+			//Monte de niveau le monstre
+			upgrateMonster (new_monster, lvl);
 
 			//Vérifie le déplacement pour savoir dans quelle sens il se déplace et pour donner l'erreur
 			calculErreur(new_monster);
@@ -104,6 +107,28 @@ int addMonster(LMonster* p_lmonster, char* type, float pvMax, float resistance, 
 	}
 
 	return 1; 
+}
+
+/************* Monste de niveau le monstre **************/
+/* Monte de niveau le monstre (vitesse, pvMax, resistance, points, gain). Prend en paramètre 		*
+*  un pointeur vers le monstre et un pointeur vers l'interface. Retourne 0 en cas d'erreur et 1 sinon.	 */
+int upgrateMonster (Monster* monster, int lvl) {
+
+	if(monster != NULL) {
+		
+		monster->pace -= lvl * 2;
+		monster->pvMax += lvl * 20;
+		monster->pv += lvl * 20;
+		monster->resistance += lvl * 2;
+		monster->points += lvl * 5;
+		monster->gain += lvl * 5;
+
+	}
+	else {
+		fprintf(stderr, "Erreur ce monstre n'existe pas\n");
+		return 0;
+	}
+	return 1;
 }
 
 /************* Deplacer les monstres *************/
@@ -433,5 +458,21 @@ LMonster* removeMonster(LMonster* p_lmonster, Monster* p_courant) {
 
 	// on retourne notre nouvelle liste
 	return p_lmonster; 
+}
+
+/************* Supprimer tous les monstres *************/
+/* Supprime la liste de monstre et les monstre. Prend en paramètre la liste de monstre.	 	*/
+
+void freeAllMonsters (LMonster* p_lmonster) {
+	//Si la liste n'est pas vide
+	if (p_lmonster->length != 0) {
+
+		//Tant que la liste n'est pas vide
+		while (p_lmonster->p_head != NULL) {
+			p_lmonster = removeMonster(p_lmonster, p_lmonster->p_head);
+		}
+		
+	}
+	free(p_lmonster);
 }
 

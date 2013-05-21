@@ -127,3 +127,13 @@ int udapteLife(Interface* interface) {
 	
 	return 1;
 }
+
+/************* Supprimer l'interface  ***********/
+/* Supprime l'interface. Prend en paramètre un pointeur vers l'interface  	*/
+
+void freeInterface (Interface* interface) {
+	//Si l'interface existe
+	if (interface != NULL) {
+		free(interface);
+	}
+}

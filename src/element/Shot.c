@@ -54,6 +54,8 @@ int addShot(LShot* p_lshot, Monster* target, Tower* tower) {
 					new_shot->y = tower->y;
 					new_shot->target = target;
 					new_shot->tower = tower;
+					new_shot->type_tower = tower->type_tower;
+					new_shot->power = tower->power;
 	
 					//Pointer vers le missile suivant à NULL car on rajoute à la fin de la liste	
 					new_shot->p_next = NULL; 
@@ -245,17 +247,18 @@ int moveShot(LShot* p_lshot) {
 				point_target.y = p_tmp->target->y;
 			}
 			else {
-				point_target.x = -10;
-				point_target.y = -10;
+				point_target.x = 810;
+				point_target.y = 100;
 			}
 
 			point_shot.x = p_tmp->x;
 			point_shot.y = p_tmp->y;
 
+			//Créer un vecteur avec le la position du missile et la position de l'ennemie
 			Vector2D vector = Vector(point_shot, point_target);
-
+			//Normalise le vecteur pour avoir une norme de 1
 			vector = Normalize(vector);
-
+			//Ajoute le vecteur normaliser au point qui représente la position du missile pour le déplacer
 			Point2D result = PointPlusVector(point_shot, vector);
 
 			p_tmp->x = result.x;
@@ -278,7 +281,7 @@ int moveShot(LShot* p_lshot) {
 *  déduit les points de vie du monstre. Prend en paramètre la liste de monstre et le monstre.   *
 *  Retourne 0 en cas d'erreur et 1 sinon.							*/
 
-int collisionMissile(LShot* p_lshot, LMonster* p_lmonster, Interface* interface) {
+int collisionMissile(LShot* p_lshot, LMonster* p_lmonster, Interface* interface, Monster* monster, int* propriete) {
 
 	//On vérifie si notre liste a été allouée
 	if(p_lshot != NULL) {
@@ -299,9 +302,8 @@ int collisionMissile(LShot* p_lshot, LMonster* p_lmonster, Interface* interface)
 				
 			if(p_tmp->target == NULL) {
 
-				if(p_tmp->x < 180 || p_tmp->x > 800 || p_tmp->y < 40 || p_tmp->y < 660) {
+				if(p_tmp->x < 180 || p_tmp->x > 800 || p_tmp->y < 40 || p_tmp->y > 660)
 					p_lshot = removeShot(p_lshot, p_tmp);
-				}
 	
 				p_tmp = p_tmp->p_next;
 			}
@@ -314,10 +316,10 @@ int collisionMissile(LShot* p_lshot, LMonster* p_lmonster, Interface* interface)
 				if(intersectionCarres(point1, point2, pointC1, pointC2) == 1) {
 
 					//Vériie s'il est plus résistant à ce type de tour
-					if(strcmp(p_tmp->tower->type_tower, p_tmp->target->type_tower) == 0) 
-						p_tmp->target->pv -= ((p_tmp->tower->power) - (p_tmp->target->resistance)); //retire des points de vie en fonction de la résistance
+					if(strcmp(p_tmp->type_tower, p_tmp->target->type_tower) == 0) 
+						p_tmp->target->pv -= ((p_tmp->power) - (p_tmp->target->resistance)); //retire des points de vie en fonction de la résistance
 					else
-						p_tmp->target->pv -= p_tmp->tower->power; //retire des points de vie
+						p_tmp->target->pv -= p_tmp->power; //retire des points de vie
 
 					if(p_tmp->target->pv <= 0){
 					
@@ -339,6 +341,11 @@ int collisionMissile(LShot* p_lshot, LMonster* p_lmonster, Interface* interface)
 
 							p_temp = p_temp->p_next;
 
+						}
+
+						if(monster == p_tmp->target) {
+							monster = NULL;
+							*propriete = 0;
 						}
 						//retire le monstre de la liste de monstre
 						p_lmonster = removeMonster(p_lmonster, p_tmp->target);
@@ -425,4 +432,20 @@ LShot* removeShot(LShot* p_lshot, Shot* p_courant) {
 
 	// on retourne notre nouvelle liste
 	return p_lshot; 
+}
+
+/************* Supprimer la liste de missiles *************/
+/* Supprime la liste de missiles. Prend en paramètre un pointeur vers la liste de missiles 	*/
+
+void freeAllShot (LShot* p_lshot) {
+	//Si la liste n'est pas vide
+	if (p_lshot->length != 0) {
+
+		//Tant que la liste n'est pas vide
+		while (p_lshot->p_head != NULL) {
+			p_lshot = removeShot(p_lshot, p_lshot->p_head);
+		}
+		
+	}
+	free(p_lshot);
 }
