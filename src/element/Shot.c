@@ -316,8 +316,13 @@ int collisionMissile(LShot* p_lshot, LMonster* p_lmonster, Interface* interface,
 				if(intersectionCarres(point1, point2, pointC1, pointC2) == 1) {
 
 					//Vériie s'il est plus résistant à ce type de tour
-					if(strcmp(p_tmp->type_tower, p_tmp->target->type_tower) == 0) 
-						p_tmp->target->pv -= ((p_tmp->power) - (p_tmp->target->resistance)); //retire des points de vie en fonction de la résistance
+					if(strcmp(p_tmp->type_tower, p_tmp->target->type_tower) == 0) {
+						if((p_tmp->power) > (p_tmp->target->resistance))
+							p_tmp->target->pv -= ((p_tmp->power) - (p_tmp->target->resistance)); //retire des points de vie en fonction de la résistance
+						else 
+							p_tmp->target->pv -= ((p_tmp->power) - ((p_tmp->power) - 1));
+
+					}
 					else
 						p_tmp->target->pv -= p_tmp->power; //retire des points de vie
 
@@ -432,6 +437,21 @@ LShot* removeShot(LShot* p_lshot, Shot* p_courant) {
 
 	// on retourne notre nouvelle liste
 	return p_lshot; 
+}
+
+/************* Supprimer tous les missiles de la liste *************/
+/* Supprime la liste de missiles. Prend en paramètre un pointeur vers la liste de missiles 	*/
+
+void removeAllShot (LShot* p_lshot) {
+	//Si la liste n'est pas vide
+	if (p_lshot->length != 0) {
+
+		//Tant que la liste n'est pas vide
+		while (p_lshot->p_head != NULL) {
+			p_lshot = removeShot(p_lshot, p_lshot->p_head);
+		}
+		
+	}
 }
 
 /************* Supprimer la liste de missiles *************/

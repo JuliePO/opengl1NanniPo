@@ -86,13 +86,13 @@ int clickMenuTour(LTower* p_ltower, LFileTower* p_lfileTower, Interface* interfa
 		//Si le niveau est suppérieur à 3
 		if(interface->lvl >= 3) {
 			if(x <= 190 && x >= 10 && y <= 230 && y >= 180)
-				type = "L";
+				type = "R";
 		}
 
 		//Si le niveau est suppérieur à 5
 		if(interface->lvl >= 5) {
 			if(x <= 190 && x >= 10 && y <= 285 && y >= 235)
-				type = "R";
+				type = "L";
 		}
 
 
@@ -188,10 +188,20 @@ int clickTourUpgrate(Tower* p_courant, Interface* interface, float x, float y, i
 
 			if(*propriete == 1) {
 
-				if(x <= 190 && x >= 10 && y <= 595 && y >= 545) {
+				//Monter de niveau la tour
+				if(x <= 190 && x >= 10 && y <= 595 && y >= 545)
 					upgrateTower(p_courant, interface);
-					*propriete = 1;
-				}
+				//Monter la cadence de la tour
+				else if(x <= 190 && x >= 165 && y <= 395 && y >= 372)
+					upgradeRateT(p_courant, interface);
+				//Monter le périmètre d'action de la tour
+				else if(x <= 190 && x >= 165 && y <= 420 && y >= 397)
+					upgradeRangeT(p_courant, interface);
+				//Monter la puissance de la tour
+				else if(x <= 190 && x >= 165 && y <= 445 && y >= 422)
+					upgradePowerT(p_courant, interface);					
+
+				*propriete = 1;
 			}
 
 		}
@@ -212,37 +222,57 @@ int clickTourUpgrate(Tower* p_courant, Interface* interface, float x, float y, i
 
 /*********************** Clique sur le menu : pause/play/avanceRapide ***********************/
 /* Pause : retourne 2 si on a cliqué sur le bouton avance rapide, 0 sur play ou 1 sur pause sinon retourne 0 	*/
-int clickTime(float x, float y, int play) {
+int clickTime(float x, float y, int play, int* nbMonster, int* j) {
 	
-	//si c'est play
-	if(play == 0) {
-		//Si clique sur pause	
-		if(x <= 720 && x >= 690 && y <= 45 && y >= 15)
-			return 1;
-		//Si clique sur avance rapide
-		else if(x <= 685 && x >= 655 && y <= 45 && y >= 15)
-			return 2;
-
-	}
-	//si c'est en pause
-	else if(play == 1) {
+	if(*nbMonster > 10) {
 
 		//Si clique sur play
-		if(x <= 720 && x >= 690 && y <= 45 && y >= 15) 
-			return 0;
-		//Si clique sur avance rapide
-		else if(x <= 685 && x >= 655 && y <= 45 && y >= 15)
-			return 2;
-		else
-			return 1;
+		if(play == 0) {
+			//Si clique sur pause	
+			if(x <= 720 && x >= 690 && y <= 45 && y >= 15)
+				return 1;
+		}
+		else {
+			if(x <= 720 && x >= 690 && y <= 45 && y >= 15) {
+				*nbMonster = 0;
+				*j = 0;
+				return 0;
+			}
+		}
+
 	}
-	//sinon avance rapide
 	else {
-		//Si clique sur play
-		if(x <= 720 && x >= 690 && y <= 45 && y >= 15) 
-			return 0;
-		else
-			return 2;
+
+		//si c'est play
+		if(play == 0) {
+			//Si clique sur pause	
+			if(x <= 720 && x >= 690 && y <= 45 && y >= 15)
+				return 1;
+			//Si clique sur avance rapide
+			else if(x <= 685 && x >= 655 && y <= 45 && y >= 15)
+				return 2;
+
+		}
+		//si c'est en pause
+		else if(play == 1) {
+
+			//Si clique sur play
+			if(x <= 720 && x >= 690 && y <= 45 && y >= 15) 
+				return 0;
+			//Si clique sur avance rapide
+			else if(x <= 685 && x >= 655 && y <= 45 && y >= 15)
+				return 2;
+			else
+				return 1;
+		}
+		//sinon avance rapide
+		else {
+			//Si clique sur play
+			if(x <= 720 && x >= 690 && y <= 45 && y >= 15) 
+				return 0;
+			else
+				return 2;
+		}
 	}
 
 	return 0;
@@ -346,6 +376,21 @@ Monster* clickMonster(LMonster* p_lmonster, float x, float y, int* propriete) {
 
 	return NULL;
 
+}
+
+/*********************** Réinitialise l'interface ***********************/
+/* Supprime tous. Prend en paramètre 	*/
+
+void initAll (LMonster* p_lmonster, LShot* p_lshot, LTower* p_ltower, Interface* interface) {
+
+	//Retire les missiles de la liste
+	removeAllShot(p_lshot);
+	//Retire les monstres de la liste
+	removeAllMonsters(p_lmonster);
+	//Retire les tours de la liste
+	removeAllTower(p_ltower);
+	//Réinitialise l'interface
+	initInterface(interface);
 }
 
 /*********************** Supprime tous ***********************/

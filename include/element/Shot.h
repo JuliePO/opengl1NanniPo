@@ -60,6 +60,8 @@ int moveShot(LShot*);
 int collisionMissile(LShot*, LMonster*, Interface* interface, Monster*, int*);
 //Supprimer un missile à la liste
 LShot* removeShot(LShot*, Shot*);
+//Supprime tous les missiles de la liste
+void removeAllShot (LShot*);
 //Supprimer la liste de missiles
 void freeAllShot (LShot*);
 

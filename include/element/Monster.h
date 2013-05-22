@@ -79,11 +79,13 @@ int addMonster(LMonster* , int, char* , int , int , char* , int , int, int, Node
 //Monte de niveau le monstre
 int upgrateMonster (Monster*, int);
 //Fait bouger le monstre
-int moveMonster(LMonster* , Node*);
+int moveMonster(LMonster* , Node*, int);
 //Calcule l'erreur de déplacement
 void calculErreur(Monster*);
 //Supprime le monstre
 LMonster* removeMonster(LMonster*, Monster*);
+//Supprime tous les monstres de la liste
+void removeAllMonsters (LMonster*);
 //Supprime toute la liste de monstres
 void freeAllMonsters (LMonster*);
 

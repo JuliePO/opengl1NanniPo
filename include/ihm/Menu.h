@@ -18,7 +18,7 @@ int clickTourDelete(LTower*, LShot*, Tower*, Interface*, float, float, int*);
 //click monte de niveau une tour
 int clickTourUpgrate(Tower*, Interface*, float, float, int*);
 //click avance rapide / play / pause
-int clickTime(float, float, int);
+int clickTime(float, float, int, int*, int*);
 //click fermer
 int clickExit(LMonster*, LShot*, LTower*, LFileTower*, Map*, Interface*, float, float, int);
 //click aide
@@ -27,6 +27,8 @@ int clickAide(float, float, int);
 Tower* clickTower(LTower*, float, float, int*);
 //click sur monstre : afficher les propriétés
 Monster* clickMonster(LMonster*, float, float, int*);
+//Supprime les monstres, tours et missiles de leurs liste et réinitialise la l'interface
+void initAll (LMonster*, LShot*, LTower*, Interface*);
 //Free tous les élements
 void freeAll (LMonster*, LShot*, LTower*, LFileTower*, Map*, Interface*);
 

@@ -115,13 +115,12 @@ int addMonster(LMonster* p_lmonster, int lvl, char* type, int pvMax, int resista
 int upgrateMonster (Monster* monster, int lvl) {
 
 	if(monster != NULL) {
-		
-		monster->pace -= lvl * 2;
+
 		monster->pvMax += lvl * 20;
 		monster->pv += lvl * 20;
 		monster->resistance += lvl * 2;
-		monster->points += lvl * 5;
-		monster->gain += lvl * 5;
+		monster->points += lvl * 2;
+		monster->gain += lvl * 3;
 
 	}
 	else {
@@ -135,7 +134,7 @@ int upgrateMonster (Monster* monster, int lvl) {
 /* Deplace les monstre : Vérifie s'il se déplace à l'horizontal, vertical ou autrement puis le déplace. Prend en paramètre la liste de	*
 *  monstres et et le dernier noeud de la carte.	Retourne 0 en cas d'erreur et 1 sinon et 2 s'il est arrivé à la fin. 			*/
 
-int moveMonster(LMonster* p_lmonster, Node* p_tail){
+int moveMonster(LMonster* p_lmonster, Node* p_tail, int k){
 
 	// On vérifie si notre liste a été allouée
 	if (p_lmonster != NULL) {	
@@ -146,134 +145,139 @@ int moveMonster(LMonster* p_lmonster, Node* p_tail){
 		//Parcours la liste de monstres
 		while(p_tmp != NULL){
 
-			//S'il avance selon l'axe des y
-			if(p_tmp->node_prev->x == p_tmp->node_next->x) {
+			//Vitesse de déplacement du monstre
+			if(k%(p_tmp->pace) == 0) {
+
+				//S'il avance selon l'axe des y
+				if(p_tmp->node_prev->x == p_tmp->node_next->x) {
 			
-				//S'il va vers le bas
-				if(p_tmp->sens == 3)
-					(p_tmp->y)++; //Fait avancer le monstre vers le haut
-				//Sinon il avance vers le haut
-				else
-					(p_tmp->y)--; //Fait avancer le monstre vers le haut
-			}
-			//S'il avance selon l'axe des x
-			else if(p_tmp->node_prev->y == p_tmp->node_next->y) {
+					//S'il va vers le bas
+					if(p_tmp->sens == 3)
+						(p_tmp->y)++; //Fait avancer le monstre vers le haut
+					//Sinon il avance vers le haut
+					else
+						(p_tmp->y)--; //Fait avancer le monstre vers le haut
+				}
+				//S'il avance selon l'axe des x
+				else if(p_tmp->node_prev->y == p_tmp->node_next->y) {
 
-				//S'il va vers la droite
-				if(p_tmp->sens == 2)
-					(p_tmp->x)++; //Fait avancer le monstre vers le haut
-				//Sinon il avance vers la gauche
-				else
-					(p_tmp->x)--; //Fait avancer le monstre vers le haut
+					//S'il va vers la droite
+					if(p_tmp->sens == 2)
+						(p_tmp->x)++; //Fait avancer le monstre vers le haut
+					//Sinon il avance vers la gauche
+					else
+						(p_tmp->x)--; //Fait avancer le monstre vers le haut
 
-			}
-			//S'il avance sur l'axe des x et des y
-			else {
+				}
+				//S'il avance sur l'axe des x et des y
+				else {
 
-				float dx, dy;
-				dx = ((p_tmp->node_next->x) - (p_tmp->node_prev->x))*2;
-				dy = ((p_tmp->node_next->y) - (p_tmp->node_prev->y))*2;
+					float dx, dy;
+					dx = ((p_tmp->node_next->x) - (p_tmp->node_prev->x))*2;
+					dy = ((p_tmp->node_next->y) - (p_tmp->node_prev->y))*2;
 				
 
-				if(dx > 0) {
+					if(dx > 0) {
 
-					if(dy > 0) {
-						//Si la longueur entre les deux points et plus grande que la hauteur entre les deux points
-						if(dx >= dy) {
+						if(dy > 0) {
+							//Si la longueur entre les deux points et plus grande que la hauteur entre les deux points
+							if(dx >= dy) {
 
-							(p_tmp->x)++;
-							p_tmp->e -= dy;
+								(p_tmp->x)++;
+								p_tmp->e -= dy;
 						
-							if(p_tmp->e <= 0) {
+								if(p_tmp->e <= 0) {
+									(p_tmp->y)++;
+									p_tmp->e += dx;
+								}
+
+							}
+							//Si la hauteur entre les deux points et plus grande que la longueur entre les deux points
+							else {
 								(p_tmp->y)++;
-								p_tmp->e += dx;
-							}
+								p_tmp->e -= dx;
 
+								if(p_tmp->e <= 0) {
+									(p_tmp->x)++;
+									p_tmp->e += dy;
+								}
+
+							}
 						}
-						//Si la hauteur entre les deux points et plus grande que la longueur entre les deux points
 						else {
-							(p_tmp->y)++;
-							p_tmp->e -= dx;
-
-							if(p_tmp->e <= 0) {
-								(p_tmp->x)++;
-								p_tmp->e += dy;
-							}
-
-						}
-					}
-					else {
 				
-						if(dx >= -dy){
-							(p_tmp->x)++;
-							p_tmp->e += dy;
-
-							if(p_tmp->e <= 0) {
-								(p_tmp->y)--;
-								p_tmp->e += dx;
-							}
-
-						}
-						else {
-							(p_tmp->y)--;
-							p_tmp->e += dx;
-
-							if(p_tmp->e > 0) {
+							if(dx >= -dy){
 								(p_tmp->x)++;
 								p_tmp->e += dy;
+
+								if(p_tmp->e <= 0) {
+									(p_tmp->y)--;
+									p_tmp->e += dx;
+								}
+
 							}
-						}
-
-					}
-				}
-				// dx < 0
-				else {
-
-					if(dy > 0) {
-
-						if(-dx >= dy) {
-
-							(p_tmp->x)--;
-							p_tmp->e += dy;
-
-							if(p_tmp->e >= 0) {
-								(p_tmp->y)++;
-								p_tmp->e += dx;
-							}
-
-						}
-						else {
-							(p_tmp->y)++;
-							p_tmp->e += dx;
-
-							if(p_tmp->e <= 0) {
-								(p_tmp->x)--;
-								p_tmp->e += dy;
-							}
-
-						}
-					}
-					else {
-
-
-						if(dx <= dy) {
-
-							(p_tmp->x)--;
-							p_tmp->e -= dy;
-
-							if(p_tmp->e >= 0) {
+							else {
 								(p_tmp->y)--;
 								p_tmp->e += dx;
+
+								if(p_tmp->e > 0) {
+									(p_tmp->x)++;
+									p_tmp->e += dy;
+								}
 							}
 
 						}
-						else {
-							(p_tmp->y)--;
-							p_tmp->e -= dy;
+					}
+					// dx < 0
+					else {
 
-							if(p_tmp->e >= 0) {
+						if(dy > 0) {
+
+							if(-dx >= dy) {
+
 								(p_tmp->x)--;
 								p_tmp->e += dy;
+
+								if(p_tmp->e >= 0) {
+									(p_tmp->y)++;
+									p_tmp->e += dx;
+								}
+
+							}
+							else {
+								(p_tmp->y)++;
+								p_tmp->e += dx;
+
+								if(p_tmp->e <= 0) {
+									(p_tmp->x)--;
+									p_tmp->e += dy;
+								}
+
+							}
+						}
+						else {
+
+
+							if(dx <= dy) {
+
+								(p_tmp->x)--;
+								p_tmp->e -= dy;
+
+								if(p_tmp->e >= 0) {
+									(p_tmp->y)--;
+									p_tmp->e += dx;
+								}
+
+							}
+							else {
+								(p_tmp->y)--;
+								p_tmp->e -= dy;
+
+								if(p_tmp->e >= 0) {
+									(p_tmp->x)--;
+									p_tmp->e += dy;
+								}
+
 							}
 
 						}
@@ -282,30 +286,29 @@ int moveMonster(LMonster* p_lmonster, Node* p_tail){
 
 				}
 
-			}
+				//S'il est arrivé au noeud suivant change les noeuds précédent et suivant
+				if(p_tmp->x == p_tmp->node_next->x && p_tmp->y == p_tmp->node_next->y) {
 
-			//S'il est arrivé au noeud suivant change les noeuds précédent et suivant
-			if(p_tmp->x == p_tmp->node_next->x && p_tmp->y == p_tmp->node_next->y) {
+					if(p_tmp->x == p_tail->x && p_tmp->y == p_tail->y)
+						return 2;
+					else {
+						p_tmp->node_prev = p_tmp->node_next;
+						p_tmp->node_next = p_tmp->node_next->p_next;
 
-				if(p_tmp->x == p_tail->x && p_tmp->y == p_tail->y)
-					return 2;
-				else {
-					p_tmp->node_prev = p_tmp->node_next;
-					p_tmp->node_next = p_tmp->node_next->p_next;
-
-					calculErreur(p_tmp);
+						calculErreur(p_tmp);
+					}
 				}
 			}
 
 			p_tmp = p_tmp->p_next;
 
 		}
-
 	}
 	else {
 		fprintf(stderr, "Cette liste de monstres n'existe pas");
 		return 0;
 	}
+
 	return 1;
 }
 
@@ -460,7 +463,22 @@ LMonster* removeMonster(LMonster* p_lmonster, Monster* p_courant) {
 	return p_lmonster; 
 }
 
-/************* Supprimer tous les monstres *************/
+/************* Supprimer tous les monstres de la liste *************/
+/* Supprime la liste de monstre et les monstre. Prend en paramètre la liste de monstre.	 	*/
+
+void removeAllMonsters (LMonster* p_lmonster) {
+	//Si la liste n'est pas vide
+	if (p_lmonster->length != 0) {
+
+		//Tant que la liste n'est pas vide
+		while (p_lmonster->p_head != NULL) {
+			p_lmonster = removeMonster(p_lmonster, p_lmonster->p_head);
+		}
+		
+	}
+}
+
+/************* Supprimer la liste de monstres *************/
 /* Supprime la liste de monstre et les monstre. Prend en paramètre la liste de monstre.	 	*/
 
 void freeAllMonsters (LMonster* p_lmonster) {

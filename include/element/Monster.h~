@@ -2,6 +2,7 @@
 #define ITD_MONSTER_H_
 
 #include "ihm/Node.h"
+#include "ihm/Interface.h"
 
 /************* STRUCTURE DU MONSTRE *************/
 /* Liste doublement chainée pour pouvoir naviger dans la liste de monstres	*
@@ -79,10 +80,16 @@ int addMonster(LMonster* , int, char* , int , int , char* , int , int, int, Node
 //Monte de niveau le monstre
 int upgrateMonster (Monster*, int);
 //Fait bouger le monstre
-int moveMonster(LMonster* , Node*);
+int moveMonster(LMonster* , Node*, int);
 //Calcule l'erreur de déplacement
 void calculErreur(Monster*);
+//Apparition des monstres
+int apparitionMonster(LMonster*, Interface*, int, int, int*);
 //Supprime le monstre
 LMonster* removeMonster(LMonster*, Monster*);
+//Supprime tous les monstres de la liste
+void removeAllMonsters (LMonster*);
+//Supprime toute la liste de monstres
+void freeAllMonsters (LMonster*);
 
 #endif

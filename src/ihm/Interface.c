@@ -73,7 +73,7 @@ int updateLvl(Interface* interface) {
 	
 		interface->lvl ++;
 		interface->money += (interface->lvl) * 20;
-		interface->score += (interface->lvl) * 20;
+		interface->score += (interface->lvl) * 5;
 
 		//Augmente la vie tous les 5 niveaux
 		if((interface->lvl) % 5 == 0)
@@ -126,6 +126,20 @@ int udapteLife(Interface* interface) {
 	}
 	
 	return 1;
+}
+
+/************* Réinitialise l'interface  ***********/
+/* Réinitialise l'interface. Prend en paramètre un pointeur vers l'interface.  	*/
+
+void initInterface (Interface* interface) {
+	//Si l'interface existe
+	if (interface != NULL) {
+		interface->money = 200;
+		interface->score = 0;
+		interface->lvl = 0;
+		interface->nbMonster = 0;
+		interface->life = 3;
+	}
 }
 
 /************* Supprimer l'interface  ***********/

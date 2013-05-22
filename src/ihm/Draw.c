@@ -1024,7 +1024,7 @@ int drawInterface (GLuint* spriteButton, Interface* interface) {
 			//Convertie un int en un string
 			sprintf(machaine,"%d",interface->score);
 
-			writeString(280, 35,  "Score : ");
+			writeString(280, 35,  "Score ");
 			//Affiche la chaine de caractère
 			writeString(335, 35,  machaine);
 
@@ -1065,7 +1065,7 @@ int drawInterface (GLuint* spriteButton, Interface* interface) {
 			glDisable(GL_TEXTURE_2D);
 
 
-			/**** nombre de monstre ****/
+			/**** nombre de vie ****/
 			//Convertie un int en un string
 			sprintf(machaine,"%d",interface->life);
 			//Affiche la chaine de caractère
@@ -1119,7 +1119,7 @@ int drawInterface (GLuint* spriteButton, Interface* interface) {
 /* Dessine les propriétés des tours. Prend en paramètre un pointeur vers la tour courante 		*
 *  Retourne 0 en cas d'erreur, 1 sinon. 								*/
 
-int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, Tower* p_courant, Interface* interface) {
+int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, GLuint* btPlus, Tower* p_courant, Interface* interface) {
 
 	if(p_courant != NULL) {
 
@@ -1130,9 +1130,9 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, Tower* p_courant, Int
 		else if(strcmp("M", p_courant->type_tower) == 0) 
 			towerNumber = 1;
 		else if(strcmp("L", p_courant->type_tower) == 0) 
-			towerNumber = 2;
-		else if(strcmp("R", p_courant->type_tower) == 0) 
 			towerNumber = 3;
+		else if(strcmp("R", p_courant->type_tower) == 0) 
+			towerNumber = 2;
 
 		float x1 = 0, x2 = 1, y1 = (towerNumber * (1.0/4.0)) + 0;
 		float y2 = (towerNumber * (1.0/4.0)) + 0.25;
@@ -1174,6 +1174,8 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, Tower* p_courant, Int
 		//Si la chaine de caracteres à bien été alloué
 		if(machaine != NULL) {
 
+			int money = 0;
+
 			/**** Niveau ****/
 			//Convertie un int en un string
 			sprintf(machaine,"%d",p_courant->lvl);
@@ -1182,7 +1184,8 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, Tower* p_courant, Int
 			//Affiche la chaine de caractère
 			writeString(120, 365,  machaine);
 
-			/**** Money ****/
+			/**** Cadence ****/
+			glColor4f(255,255,255, 1);
 			//Convertie un int en un string
 			sprintf(machaine,"%d",p_courant->rate);
 
@@ -1190,7 +1193,57 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, Tower* p_courant, Int
 			//Affiche la chaine de caractère
 			writeString(120, 390,  machaine);
 
-			/**** Score ****/
+			//Si c'est une tour hybride
+			if(strcmp("H", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 20;
+			}
+			//Si c'est une tour mitrailette 
+			else if(strcmp("M", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 40;
+			}
+			//Si c'est une tour laser 
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 40;
+			}
+			//Si c'est une tour rocket 
+			else if(strcmp("L", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 50;
+			}
+
+			if(interface->money >= money)
+				glColor4f(255,255,255, 1);
+			else 
+				glColor4f(255,255,255, 0.5);
+
+			//Active le texturage 2D
+			glEnable(GL_TEXTURE_2D);
+			//appel de la texture
+			glBindTexture(GL_TEXTURE_2D, *btPlus);
+
+				glBegin(GL_QUADS);
+				//coordonée de la texture
+				glTexCoord2f(1, 1);
+				//Cordonnée du quadrilatère 
+				glVertex2f(190, 395);
+
+				glTexCoord2f(1, 0);
+				glVertex2f(190, 372);
+
+				glTexCoord2f(0, 0);
+				glVertex2f(165, 372);
+
+				glTexCoord2f(0, 1);
+				glVertex2f(165, 395);
+
+				glEnd();
+
+			//Déblinder la texture
+			glBindTexture(GL_TEXTURE_2D, 0);
+			//Désactive le texturage 2D
+			glDisable(GL_TEXTURE_2D);
+
+			/**** Périmètre d'action ****/
+			glColor4f(255,255,255, 1);
 			//Convertie un int en un string
 			sprintf(machaine,"%d",p_courant->range);
 
@@ -1198,20 +1251,124 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, Tower* p_courant, Int
 			//Affiche la chaine de caractère
 			writeString(120, 415,  machaine);
 
-			/**** nombre de monstre ****/
+			//Si c'est une tour hybride
+			if(strcmp("H", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 20;
+			}
+			//Si c'est une tour mitrailette 
+			else if(strcmp("M", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 50;
+			}
+			//Si c'est une tour laser 
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 30;
+			}
+			//Si c'est une tour rocket 
+			else if(strcmp("L", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 50;
+			}
+
+			if(interface->money >= money)
+				glColor4f(255,255,255, 1);
+			else 
+				glColor4f(255,255,255, 0.5);
+
+			//Active le texturage 2D
+			glEnable(GL_TEXTURE_2D);
+			//appel de la texture
+			glBindTexture(GL_TEXTURE_2D, *btPlus);
+
+				glBegin(GL_QUADS);
+				//coordonée de la texture
+				glTexCoord2f(1, 1);
+				//Cordonnée du quadrilatère 
+				glVertex2f(190, 420);
+
+				glTexCoord2f(1, 0);
+				glVertex2f(190, 397);
+
+				glTexCoord2f(0, 0);
+				glVertex2f(165, 397);
+
+				glTexCoord2f(0, 1);
+				glVertex2f(165, 420);
+
+				glEnd();
+
+			//Déblinder la texture
+			glBindTexture(GL_TEXTURE_2D, 0);
+			//Désactive le texturage 2D
+			glDisable(GL_TEXTURE_2D);
+
+			/**** puissance ****/
+
+			glColor4f(255,255,255, 1);
 			//Convertie un int en un string
-			sprintf(machaine,"%d",p_courant->rate);
+			sprintf(machaine,"%d",p_courant->power);
 
 			writeString(20, 440,  "Puissance : ");
 			//Affiche la chaine de caractère
 			writeString(120, 440,  machaine);
 
+			//Si c'est une tour hybride
+			if(strcmp("H", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 20;
+			}
+			//Si c'est une tour mitrailette 
+			else if(strcmp("M", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 30;
+			}
+			//Si c'est une tour laser 
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 20;
+			}
+			//Si c'est une tour rocket 
+			else if(strcmp("L", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 30;
+			}
 
-			/**** nombre de monstre ****/
+			if(interface->money >= money)
+				glColor4f(255,255,255, 1);
+			else 
+				glColor4f(255,255,255, 0.5);
+
+			//Active le texturage 2D
+			glEnable(GL_TEXTURE_2D);
+			//appel de la texture
+			glBindTexture(GL_TEXTURE_2D, *btPlus);
+
+				glBegin(GL_QUADS);
+				//coordonée de la texture
+				glTexCoord2f(1, 1);
+				//Cordonnée du quadrilatère 
+				glVertex2f(190, 445);
+
+				glTexCoord2f(1, 0);
+				glVertex2f(190, 422);
+
+				glTexCoord2f(0, 0);
+				glVertex2f(165, 422);
+
+				glTexCoord2f(0, 1);
+				glVertex2f(165, 445);
+
+				glEnd();
+
+			//Déblinder la texture
+			glBindTexture(GL_TEXTURE_2D, 0);
+			//Désactive le texturage 2D
+			glDisable(GL_TEXTURE_2D);
+
+
+			/**** type de la tour ****/
+			glColor4f(255,255,255, 1);
 			writeString(20, 465,  "Type : ");
 			//Affiche la chaine de caractère
 			writeString(120, 465,  p_courant->type_tower);
 
+			
+			/*** Bouton supprimer ****/
+			glColor4f(255,255,255, 1);			
 
 			//Active le texturage 2D
 			glEnable(GL_TEXTURE_2D);
@@ -1241,22 +1398,21 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, Tower* p_courant, Int
 			glDisable(GL_TEXTURE_2D);
 
 
-			int money = 0;
 			//Si c'est une tour hybride
 			if(strcmp("H", p_courant->type_tower) == 0) {
-				money = 20;
+				money = (p_courant->lvl) * 20;
 			}
 			//Si c'est une tour mitrailette 
 			else if(strcmp("M", p_courant->type_tower) == 0) {
-				money = 30;
+				money = (p_courant->lvl) * 30;
 			}
 			//Si c'est une tour laser 
-			else if(strcmp("L", p_courant->type_tower) == 0) {
-				money = 20;
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 20;
 			}
 			//Si c'est une tour rocket 
-			else if(strcmp("R", p_courant->type_tower) == 0) {
-				money = 30;
+			else if(strcmp("L", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 30;
 			}
 
 			if(interface->money >= money)
@@ -1470,9 +1626,9 @@ int drawTower (GLuint* tower, LTower* p_ltower, LMonster* p_lmonster, Tower* p_c
 					else if(strcmp("M", p_temp->type_tower) == 0) 
 						towerNumber = 1;
 					else if(strcmp("L", p_temp->type_tower) == 0) 
-						towerNumber = 2;
-					else if(strcmp("R", p_temp->type_tower) == 0) 
 						towerNumber = 3;
+					else if(strcmp("R", p_temp->type_tower) == 0) 
+						towerNumber = 2;
 
 					float x1 = 0, x2 = 1, y1 = (towerNumber * (1.0/4.0)) + 0;
 					float y2 = (towerNumber * (1.0/4.0)) + 0.25;
@@ -1900,6 +2056,198 @@ int drawGameOverWin(GLuint* texture, GLuint* spriteButton) {
 
 	return 1;
 
+}
+
+/************ Faire apparaitre un monstre sur la map **************/
+/* Fait apparaitre un monstre sur la map. Prend en paramètre un pointeur vers la liste de monstre, un pointeur vers 	*
+*  l'interface, un pointeur vers la map, un int, un int (apparition) et int nombre de monstre. Retourne 0 en cas 	*
+*  d'erreur et 1 sinon.													*/
+
+int apparitionMonster(LMonster* p_lmonster, Interface* interface, Map* map, int apparition, int j, int* nb_monster) {
+
+	if(p_lmonster != NULL) {
+
+		if(interface != NULL) {
+
+			int random;
+
+			//ajoute un monstre à chaque fois que j est un muliple de 50
+			if(j%apparition == 0){
+
+				fprintf(stderr, "%d \n", *nb_monster);
+
+				//S'il y a moins ou 10 monstres
+				if((*nb_monster) < 10) {
+
+					//Si le joueur est au niveau 0
+					if(interface->lvl == 0)
+						//Ajoute un monstre c1 (champignon)
+						addMonster(p_lmonster, interface->lvl, "C1", 50, 5, "M", 3, 10, 5, map->list_node->p_head);
+					//Si le joueur est à un niveau entre 1 et 3
+					else if(interface->lvl > 0 && interface->lvl <= 3) {
+
+						//Random entre 1 et 2
+						random = rand()%(3-1) +1;
+
+						if(random == 1)
+							//Ajoute un monstre c1 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C1", 100, 5, "M", 3, 10, 5, map->list_node->p_head);
+						else
+							//Ajoute un monstre c2 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C2", 120, 3, "H", 2, 15, 5, map->list_node->p_head);
+					
+					}
+					//Si le joueur est à un niveau entre 4 et 5
+					else if(interface->lvl > 3 && interface->lvl <= 5) {
+						apparition = 100;
+
+						//Random entre 1 et 3
+						random = rand()%(4-1) +1;
+
+						if(random == 1)
+							//Ajoute un monstre c1 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C1", 250, 8, "M", 3, 10, 5, map->list_node->p_head);
+						else if(random == 2)
+							//Ajoute un monstre c2 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C2", 200, 8, "H", 2, 15, 5, map->list_node->p_head);
+						else
+							//Ajoute un monstre P (puce)
+							addMonster(p_lmonster, interface->lvl, "P", 250, 8, "L", 1, 20, 5, map->list_node->p_head);
+
+					}
+					//Si le joueur est à un niveau suppérieur à 6 à 8
+					else if(interface->lvl > 5 && interface->lvl <= 8) {
+						apparition = 50;
+
+						//Random entre 1 et 4
+						random = rand()%(5-1) +1;
+
+						if(random == 1)
+							//Ajoute un monstre c1 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C1", 150, 8, "M", 2, 10, 5, map->list_node->p_head);
+						else if(random == 2)
+							//Ajoute un monstre c2 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C2", 200, 5, "H", 1, 15, 5, map->list_node->p_head);
+						else if(random == 3)
+							//Ajoute un monstre P (puce)
+							addMonster(p_lmonster, interface->lvl, "P", 250, 10, "L", 1, 20, 5, map->list_node->p_head);
+						else 
+							//Ajoute un monstre F (fourmi)
+							addMonster(p_lmonster, interface->lvl, "F", 300, 10, "R", 1, 30, 5, map->list_node->p_head);
+
+					}
+					//Si le joueur est à un niveau suppérieur à 9 à 12
+					else if(interface->lvl > 8 && interface->lvl <= 12) {
+						apparition = 50;
+
+						//Random entre 1 et 5
+						random = rand()%(6-1) +1;
+
+						if(random == 1)
+							//Ajoute un monstre c1 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C1",200, 10, "M", 1, 10, 5, map->list_node->p_head);
+						else if(random == 2  || random == 4)
+							//Ajoute un monstre c2 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C2", 250, 10, "H", 1, 15, 5, map->list_node->p_head);
+						else if(random == 3)
+							//Ajoute un monstre P (puce)
+							addMonster(p_lmonster, interface->lvl, "P", 300, 10, "L", 1, 20, 5, map->list_node->p_head);
+						else 
+							//Ajoute un monstre F (fourmi)
+							addMonster(p_lmonster, interface->lvl, "F", 350, 10, "R", 1, 30, 5, map->list_node->p_head);
+
+					}
+					//Si le joueur est à un niveau suppérieur à 9 à 12
+					else if(interface->lvl > 8 && interface->lvl <= 12) {
+						apparition = 50;
+
+						//Random entre 1 et 6
+						random = rand()%(7-1) +1;
+
+						if(random == 1)
+							//Ajoute un monstre c1 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C1", 250, 10, "M", 1, 10, 5, map->list_node->p_head);
+						else if(random == 2 || random == 4)
+							//Ajoute un monstre c2 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C2", 300, 15, "H", 1, 15, 5, map->list_node->p_head);
+						else if(random == 3  || random == 5)
+							//Ajoute un monstre P (puce)
+							addMonster(p_lmonster, interface->lvl, "P", 350, 15, "L", 1, 20, 5, map->list_node->p_head);
+						else 
+							//Ajoute un monstre F (fourmi)
+							addMonster(p_lmonster, interface->lvl, "F", 400, 15, "R", 1, 30, 5, map->list_node->p_head);
+
+					}
+					//Si le joueur est à un niveau suppérieur à 13 à 15
+					else if(interface->lvl > 12 && interface->lvl <= 15) {
+						apparition = 50;
+
+						//Random entre 1 et 7
+						random = rand()%(8-1) +1;
+
+						if(random == 1)
+							//Ajoute un monstre c1 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C1", 300, 10, "M", 1, 10, 5, map->list_node->p_head);
+						else if(random == 2 || random == 4)
+							//Ajoute un monstre c2 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C2", 350, 20, "H", 1, 15, 5, map->list_node->p_head);
+						else if(random == 3 || random == 5)
+							//Ajoute un monstre P (puce)
+							addMonster(p_lmonster, interface->lvl, "P", 400, 20, "L", 1, 20, 5, map->list_node->p_head);
+						else 
+							//Ajoute un monstre F (fourmi)
+							addMonster(p_lmonster, interface->lvl, "F", 450, 20, "R", 1, 30, 5, map->list_node->p_head);
+
+					}
+					//Si le joueur est à un niveau suppérieur à 13 à 15
+					else if(interface->lvl > 12 && interface->lvl <= 15) {
+						apparition = 30;
+
+						//Random entre 1 et 8
+						random = rand()%(9-1) +1;
+
+						if(random == 1)
+							//Ajoute un monstre c1 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C1", 350, 15, "M", 1, 10, 5, map->list_node->p_head);
+						else if(random == 2 || random == 4)
+							//Ajoute un monstre c2 (champignon)
+							addMonster(p_lmonster, interface->lvl, "C2", 400, 25, "H", 1, 15, 5, map->list_node->p_head);
+						else if(random == 3 || random == 5)
+							//Ajoute un monstre P (puce)
+							addMonster(p_lmonster, interface->lvl, "P", 450, 25, "L", 1, 20, 5, map->list_node->p_head);
+						else 
+							//Ajoute un monstre F (fourmi)
+							addMonster(p_lmonster, interface->lvl, "F", 500, 25, "R", 1, 30, 5, map->list_node->p_head);
+
+					}
+					
+
+					(*nb_monster)++;
+				}
+				//S'il n'y a plus de monstre
+				else if(*nb_monster == 10 && p_lmonster->length == 0) {
+					updateLvl(interface); //Monte de niveau
+					(*nb_monster)++;
+				}
+				else if(*nb_monster > 10 && *nb_monster <= 15) 
+					(*nb_monster)++;
+				else if(*nb_monster == 16) 
+					*nb_monster = 0;
+
+			}
+
+		}
+		else {
+			fprintf(stderr, "Erreur avec l'interface\n");
+			return 0;
+		}
+	}
+	else {
+		fprintf(stderr, "Erreur avec la liste de monstre\n");
+		return 0;
+	}
+
+	return 1;
 }
 
 

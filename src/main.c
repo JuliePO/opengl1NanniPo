@@ -125,6 +125,10 @@ int main(int argc, char** argv) {
 	//Texture pour les boutons
 	GLuint spriteButton;
 	SDL_Surface* imgSpriteButton = NULL;
+	
+	//Bouton plus ou upgrate les tours
+	GLuint btPlus;
+	SDL_Surface* imgbtPlus = NULL;
 
 	//Texture fond menu up
 	GLuint fondMenuUp;
@@ -154,21 +158,16 @@ int main(int argc, char** argv) {
 
 	int i = 0;
 	int nb_monster = 0, j = 0;
+	int k = 0;
 	int propriete = 0;
 	int aide = 0;
+	int apparition = 130;
 
 	//Pour afficher les propriétés
 	Tower* pTower = NULL;
 	Monster* pMonster = NULL;
 
 	int random;
-
-	int pvMax, resistance, pace, points, gain;
-	pvMax = 50;
-	resistance = 5;
-	pace = 50;
-	points = 10;
-	gain = 5;
 
 	int loop = 1;
 
@@ -219,6 +218,8 @@ int main(int argc, char** argv) {
 				loadTexture("./images/fondMenu.png", &fondMenu, imgFondMenu);
 				//Texture pour les boutons
 				loadTexture("./images/map1/sprite_button1.png", &spriteButton, imgSpriteButton);
+				//Bouton plus ou upgrate les tours
+				loadTexture("./images/map1/bt_plus.png", &btPlus, imgbtPlus);
 				//Texture fond menu up
 				loadTexture("./images/map1/fondMenuUp.png", &fondMenuUp, imgFondMenuUp);
 
@@ -257,6 +258,8 @@ int main(int argc, char** argv) {
 				loadTexture("./images/fondMenu.png", &fondMenu, imgFondMenu);
 				//Texture pour les boutons
 				loadTexture("./images/map2/sprite_button1.png", &spriteButton, imgSpriteButton);
+				//Bouton plus ou upgrate les tours
+				loadTexture("./images/map2/bt_plus.png", &btPlus, imgbtPlus);
 				//Texture fond menu up
 				loadTexture("./images/map2/fondMenuUp.png", &fondMenuUp, imgFondMenuUp);
 				//Texture fond Game Over
@@ -292,7 +295,7 @@ int main(int argc, char** argv) {
 				//Si proprité = 1
 				if(propriete == 1) {
 					//Affiche les propriétés de la tours
-					drawProprieteTower(&tower, &spriteMenu, pTower, interface);
+					drawProprieteTower(&tower, &spriteMenu, &btPlus, pTower, interface);
 					pMonster = NULL;
 				}
 				//Si propriété = 2
@@ -316,83 +319,11 @@ int main(int argc, char** argv) {
 				//Si ce n'est pas en pause
 				if(play != 1) {
 
-					//ajoute un monstre à chaque fois que j est un muliple de 50
-					if(j%pace == 0){
-						j=0;
-						//S'il y a moins ou 10 monstres
-						if(nb_monster < 10) {
-
-							//Si le joueur est au niveau 0
-							if(interface->lvl == 0)
-								//Ajoute un monstre c1 (champignon)
-								addMonster(p_lmonster, interface->lvl, "C1", pvMax, resistance, "M", pace, points, gain, map->list_node->p_head);
-							//Si le joueur est à un niveau entre 1 et 3
-							else if(interface->lvl > 0 && interface->lvl <= 3) {
-								//Random entre 1 et 2
-								random = rand()%(3-1) +1;
-	
-								if(random == 1)
-									//Ajoute un monstre c1 (champignon)
-									addMonster(p_lmonster, interface->lvl, "C1", pvMax + 20, resistance, "M", pace, points, gain, map->list_node->p_head);
-								else
-									//Ajoute un monstre c2 (champignon)
-									addMonster(p_lmonster, interface->lvl, "C2", 100, 1, "H", 40, 15, 10, map->list_node->p_head);
-							
-							}
-							//Si le joueur est à un niveau entre 4 et 5
-							else if(interface->lvl > 3 && interface->lvl <= 5) {
-								//Random entre 1 et 3
-								random = rand()%(4-1) +1;
-
-								if(random == 1)
-									//Ajoute un monstre c1 (champignon)
-									addMonster(p_lmonster, interface->lvl, "C1", pvMax + 100, resistance, "M", pace, points, gain, map->list_node->p_head);
-								else if(random == 2)
-									//Ajoute un monstre c2 (champignon)
-									addMonster(p_lmonster, interface->lvl, "C2", 120, 2, "H", 45, 15, 10, map->list_node->p_head);
-								else
-									//Ajoute un monstre P (puce)
-									addMonster(p_lmonster, interface->lvl, "P", 140, 8, "L", 40, 20, 20, map->list_node->p_head);
-
-							}
-							//Si le joueur est à un niveau suppérieur à 5
-							else if(interface->lvl > 5) {
-								//Random entre 1 et 4
-								random = rand()%(5-1) +1;
-
-								if(random == 1)
-									//Ajoute un monstre c1 (champignon)
-									addMonster(p_lmonster, interface->lvl, "C1", pvMax + 100, resistance, "M", pace, points, gain, map->list_node->p_head);
-								else if(random == 2)
-									//Ajoute un monstre c2 (champignon)
-									addMonster(p_lmonster, interface->lvl, "C2", 160, 2, "H", 45, 15, 10, map->list_node->p_head);
-								else if(random == 3)
-									//Ajoute un monstre P (puce)
-									addMonster(p_lmonster, interface->lvl, "P", 180, 10, "L", 40, 20, 20, map->list_node->p_head);
-								else 
-									//Ajoute un monstre F (fourmi)
-									addMonster(p_lmonster, interface->lvl, "F", 200, 10, "R", 35, 30, 30, map->list_node->p_head);
-
-							}
-
-							nb_monster ++;
-						}
-						//S'il n'y a plus de monstre
-						else if(nb_monster == 10 && p_lmonster->length == 0) {
-							updateLvl(interface); //Monte de niveau
-							nb_monster ++;
-						}
-						else if(nb_monster > 10 && nb_monster <= 15) 
-							nb_monster ++;
-						else if(nb_monster == 16) 
-							nb_monster = 0;
-
-					}
+					apparitionMonster(p_lmonster, interface, map, apparition, j, &nb_monster);
 
 					//Si lvl 19 (20 vagues) et plus de monstre alors gagner
 					if(interface->lvl == 20 && p_lmonster->length == 0) {
 
-						freeAll(p_lmonster, p_lshot, p_ltower, p_lfileTower, map, interface);
 						play = 0;
 						testMouse = 0;
 						testTower = 0;
@@ -401,6 +332,7 @@ int main(int argc, char** argv) {
 						nb_monster = 0;
 						propriete = 0;
 						aide = 0;
+						initAll(p_lmonster, p_lshot, p_ltower, interface);
 
 						nbMenu = 5;
 					}
@@ -445,7 +377,7 @@ int main(int argc, char** argv) {
 				if(play != 1) {
 
 					//Bouger le monstre
-					if(moveMonster(p_lmonster, map->list_node->p_tail) == 2) {
+					if(moveMonster(p_lmonster, map->list_node->p_tail, k) == 2) {
 
 						//Pointeur shot temporaire pour parcourir la liste
 						Shot *p_tempS = p_lshot->p_head;
@@ -459,7 +391,6 @@ int main(int argc, char** argv) {
 						p_lmonster = removeMonster(p_lmonster, p_lmonster->p_head);
 						udapteLife(interface);
 						if(interface->life <= 0) {
-							freeAll(p_lmonster, p_lshot, p_ltower, p_lfileTower, map, interface);
 							play = 0;
 							testMouse = 0;
 							testTower = 0;
@@ -468,6 +399,8 @@ int main(int argc, char** argv) {
 							nb_monster = 0;
 							propriete = 0;
 							aide = 0;
+
+							initAll(p_lmonster, p_lshot, p_ltower, interface);
 	
 							nbMenu = 4;
 						}
@@ -480,6 +413,7 @@ int main(int argc, char** argv) {
 						i++;
 					}
 					i = 0;
+					k++;
 
 				}
 				else {
@@ -534,7 +468,7 @@ int main(int argc, char** argv) {
 							}
 
 							//test click play / pause / avance rapide
-							play = clickTime(e.button.x, e.button.y, play);
+							play = clickTime(e.button.x, e.button.y, play, &nb_monster, &j);
 							//Test click exit
 							loop = clickExit(p_lmonster, p_lshot, p_ltower, p_lfileTower, map, interface, e.button.x, e.button.y, aide);
 							//Test click sur une tower
@@ -559,6 +493,26 @@ int main(int argc, char** argv) {
 
 				case SDL_KEYDOWN:
 			  		switch(e.key.keysym.sym){
+						case 'p' :
+							if(play == 0)
+								play = 1;
+							else
+								play = 0;
+							break;
+				
+						case 'a' :
+							play = 2;
+							break;
+
+						case 't' :
+							pTower = p_ltower->p_tail;
+							propriete = 1;
+							break;
+
+						case 'h' :
+							aide = 1;
+							break;
+
 			    			case 'q' : 
 			    			case SDLK_ESCAPE : 
 							loop = 0;
@@ -591,8 +545,9 @@ int main(int argc, char** argv) {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
+	//Free toutes les textures
 	freeTexture(&menuMap, imgMenuMap);
-	//freeTexture(&menuMapButton, imgMenuMapButton);
+	freeTexture(&menuMapButton, imgMenuMapButton);
 	freeTexture(&menuPrincipal, imgMenuPrincipal);
 	freeTexture(&menuPrincipalButton, imgMenuPrincipalButton);
 	freeTexture(&texture, imgMap);
@@ -603,7 +558,10 @@ int main(int argc, char** argv) {
 	freeTexture(&spriteMenu, imgButtonMenu);
 	freeTexture(&fondMenu, imgFondMenu);
 	freeTexture(&spriteButton, imgSpriteButton);
+	freeTexture(&btPlus, imgbtPlus);
 	freeTexture(&fondMenuUp, imgFondMenuUp);
+	freeTexture(&fondGameOver, imgFondGameOver);
+	freeTexture(&fondWin, imgFondWin);
 
 	SDL_Quit();
 	return EXIT_SUCCESS;

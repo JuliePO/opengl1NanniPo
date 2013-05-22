@@ -27,9 +27,6 @@ typedef struct struct_tower {
 	//compteur
 	int compteur;
 
-	//animation compteur
-	int animation;
-
 	//porté de la tour
 	int range;
 

@@ -23,8 +23,16 @@ $(BIN):$(OBJ)
 	@echo "**** $@ ****"
 	@mkdir -p $(BIN_PATH)
 	$(CC) -o $(BIN_PATH)/$(BIN) $(OBJ) $(LDFLAGS)
-	@echo "******* Compilation OK *******"
-	@echo "******* Pour ouvrir le fichier taper : ./$(BIN_PATH)/$(BIN) *******"
+	@echo "******* Compilation OK *******\n"
+	@echo "Commande clavier : \n"
+	@echo "[p] : Mettre le jeu en pause / play\n"
+	@echo "[a] : Mettre le jeu en avance rapide\n"
+	@echo "[t] : Afficher les proprietes de la derniere tour\n"
+	@echo "[h] : Afficher l'aide\n"
+	@echo "Cliquez sur texture pour avoir une carte sans l'affichage des noeuds de chaque chemin et des zones constructibles.\n"
+	@echo "*******************************************************************\n"
+	@echo "******* Pour ouvrir le fichier taper : ./$(BIN_PATH)/$(BIN) *******\n"
+	@echo "*******************************************************************\n"
 
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c

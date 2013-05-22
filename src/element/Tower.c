@@ -176,19 +176,23 @@ int upgradePowerT(Tower* p_courant, Interface* interface) {
 
 			//Si c'est une tour hybride
 			if(strcmp("H", p_courant->type_tower) == 0) {
-				interface->money -= 20;
+				if(interface->money >= (p_courant->lvl * 20))
+					interface->money -= (p_courant->lvl * 20);
 			}
 			//Si c'est une tour mitrailette 
 			else if(strcmp("M", p_courant->type_tower) == 0) {
-				interface->money -= 30;
+				if(interface->money >= (p_courant->lvl * 30))
+					interface->money -= (p_courant->lvl * 30);
 			}
 			//Si c'est une tour laser 
-			else if(strcmp("L", p_courant->type_tower) == 0) {
-				interface->money -= 20;
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				if(interface->money >= (p_courant->lvl * 20))
+					interface->money -= (p_courant->lvl * 20);
 			}
 			//Si c'est une tour rocket 
-			else if(strcmp("R", p_courant->type_tower) == 0) {
-				interface->money -= 30;
+			else if(strcmp("L", p_courant->type_tower) == 0) {
+				if(interface->money >= (p_courant->lvl * 30))
+					interface->money -= (p_courant->lvl * 30);
 			}
 		}
 		else {
@@ -216,19 +220,23 @@ int upgradeRateT(Tower* p_courant, Interface* interface) {
 
 			//Si c'est une tour hybride
 			if(strcmp("H", p_courant->type_tower) == 0) {
-				interface->money -= 20;
+				if(interface->money >= (p_courant->lvl * 20))
+					interface->money -= (p_courant->lvl * 20);
 			}
 			//Si c'est une tour mitrailette 
 			else if(strcmp("M", p_courant->type_tower) == 0) {
-				interface->money -= 40;
+				if(interface->money >= (p_courant->lvl * 40))
+					interface->money -= (p_courant->lvl * 40);
 			}
 			//Si c'est une tour laser 
-			else if(strcmp("L", p_courant->type_tower) == 0) {
-				interface->money -= 40;
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				if(interface->money >= (p_courant->lvl * 40))
+					interface->money -= (p_courant->lvl * 40);
 			}
 			//Si c'est une tour rocket 
-			else if(strcmp("R", p_courant->type_tower) == 0) {
-				interface->money -= 50;
+			else if(strcmp("L", p_courant->type_tower) == 0) {
+				if(interface->money >= (p_courant->lvl * 50))
+					interface->money -= (p_courant->lvl * 50);
 			}
 		}
 		else {
@@ -256,19 +264,23 @@ int upgradeRangeT(Tower* p_courant, Interface* interface) {
 
 			//Si c'est une tour hybride
 			if(strcmp("H", p_courant->type_tower) == 0) {
-				interface->money -= 20;
+				if(interface->money >= (p_courant->lvl * 20))
+					interface->money -= (p_courant->lvl * 20);
 			}
 			//Si c'est une tour mitrailette 
 			else if(strcmp("M", p_courant->type_tower) == 0) {
-				interface->money -= 50;
+				if(interface->money >= (p_courant->lvl * 50))
+					interface->money -= (p_courant->lvl * 50);
 			}
 			//Si c'est une tour laser 
-			else if(strcmp("L", p_courant->type_tower) == 0) {
-				interface->money -= 30;
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				if(interface->money >= (p_courant->lvl * 30))
+					interface->money -= (p_courant->lvl * 30);
 			}
 			//Si c'est une tour rocket 
-			else if(strcmp("R", p_courant->type_tower) == 0) {
-				interface->money -= 50;
+			else if(strcmp("L", p_courant->type_tower) == 0) {
+				if(interface->money >= (p_courant->lvl * 50))
+					interface->money -= (p_courant->lvl * 50);
 			}
 		}
 		else {
@@ -458,6 +470,21 @@ LTower* removeTower(LTower* p_ltower, Tower* p_courant) {
 
 	// on retourne notre nouvelle liste
 	return p_ltower; 
+}
+
+/************* Supprimer toutes les tours de la liste  *************/
+/* Supprime la liste de tours. Prend en paramètre un pointeur vers la liste de tours 	*/
+
+void removeAllTower (LTower* p_ltower) {
+	//Si la liste n'est pas vide
+	if (p_ltower->length != 0) {
+
+		//Tant que la liste n'est pas vide
+		while (p_ltower->p_head != NULL) {
+			p_ltower = removeTower(p_ltower, p_ltower->p_head);
+		}
+		
+	}
 }
 
 /************* Supprimer la liste de tours *************/

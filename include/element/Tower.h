@@ -74,6 +74,8 @@ int verificationConstruct(LNode*, Point2D, Point2D);
 int moveTower(LTower*, Tower*, LNode*, float, float);
 //Supprimer une tour de la liste
 LTower* removeTower(LTower*, Tower*);
+//Supprime toutes les tours de la liste
+void removeAllTower (LTower*);
 //Suprime la liste de tours
 void freeAllTower (LTower*);
 
