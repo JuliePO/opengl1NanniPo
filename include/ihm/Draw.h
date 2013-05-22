@@ -45,7 +45,7 @@ int drawMonster(GLuint*, LMonster*, int);
 int drawPVMonster(LMonster*);
 
 //Apparition des monstres
-int apparitionMonster(LMonster*, Interface*, Map*, int, int, int*);
+int apparitionMonster(LMonster*, Interface*, Map*, int*, int, int*);
 
 //Dessiner un disque
 void drawDisque(float);

@@ -319,7 +319,7 @@ int main(int argc, char** argv) {
 				//Si ce n'est pas en pause
 				if(play != 1) {
 
-					apparitionMonster(p_lmonster, interface, map, apparition, j, &nb_monster);
+					apparitionMonster(p_lmonster, interface, map, &apparition, j, &nb_monster);
 
 					//Si lvl 19 (20 vagues) et plus de monstre alors gagner
 					if(interface->lvl == 20 && p_lmonster->length == 0) {

@@ -370,6 +370,9 @@ int moveTower(LTower* p_ltower, Tower* p_courant, LNode* l_node, float x, float 
 
 			if(verificationConstruct(l_node, point1, point2) == 1) {
 
+				point1.x = x + 20; point1.y = y + 20;
+				point2.x = x - 20; point2.y = y - 20;
+
 				//Si ce n'est pas le premier de la liste
 				if(p_courant->p_prev != NULL){
 

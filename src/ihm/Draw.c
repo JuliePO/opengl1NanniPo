@@ -2063,7 +2063,7 @@ int drawGameOverWin(GLuint* texture, GLuint* spriteButton) {
 *  l'interface, un pointeur vers la map, un int, un int (apparition) et int nombre de monstre. Retourne 0 en cas 	*
 *  d'erreur et 1 sinon.													*/
 
-int apparitionMonster(LMonster* p_lmonster, Interface* interface, Map* map, int apparition, int j, int* nb_monster) {
+int apparitionMonster(LMonster* p_lmonster, Interface* interface, Map* map, int* apparition, int j, int* nb_monster) {
 
 	if(p_lmonster != NULL) {
 
@@ -2072,9 +2072,7 @@ int apparitionMonster(LMonster* p_lmonster, Interface* interface, Map* map, int 
 			int random;
 
 			//ajoute un monstre à chaque fois que j est un muliple de 50
-			if(j%apparition == 0){
-
-				fprintf(stderr, "%d \n", *nb_monster);
+			if(j%(*apparition) == 0){
 
 				//S'il y a moins ou 10 monstres
 				if((*nb_monster) < 10) {
@@ -2099,7 +2097,7 @@ int apparitionMonster(LMonster* p_lmonster, Interface* interface, Map* map, int 
 					}
 					//Si le joueur est à un niveau entre 4 et 5
 					else if(interface->lvl > 3 && interface->lvl <= 5) {
-						apparition = 100;
+						(*apparition) = 100;
 
 						//Random entre 1 et 3
 						random = rand()%(4-1) +1;
@@ -2117,7 +2115,7 @@ int apparitionMonster(LMonster* p_lmonster, Interface* interface, Map* map, int 
 					}
 					//Si le joueur est à un niveau suppérieur à 6 à 8
 					else if(interface->lvl > 5 && interface->lvl <= 8) {
-						apparition = 50;
+						(*apparition) = 50;
 
 						//Random entre 1 et 4
 						random = rand()%(5-1) +1;
@@ -2138,7 +2136,7 @@ int apparitionMonster(LMonster* p_lmonster, Interface* interface, Map* map, int 
 					}
 					//Si le joueur est à un niveau suppérieur à 9 à 12
 					else if(interface->lvl > 8 && interface->lvl <= 12) {
-						apparition = 50;
+						(*apparition) = 50;
 
 						//Random entre 1 et 5
 						random = rand()%(6-1) +1;
@@ -2159,7 +2157,7 @@ int apparitionMonster(LMonster* p_lmonster, Interface* interface, Map* map, int 
 					}
 					//Si le joueur est à un niveau suppérieur à 9 à 12
 					else if(interface->lvl > 8 && interface->lvl <= 12) {
-						apparition = 50;
+						(*apparition) = 50;
 
 						//Random entre 1 et 6
 						random = rand()%(7-1) +1;
@@ -2180,7 +2178,7 @@ int apparitionMonster(LMonster* p_lmonster, Interface* interface, Map* map, int 
 					}
 					//Si le joueur est à un niveau suppérieur à 13 à 15
 					else if(interface->lvl > 12 && interface->lvl <= 15) {
-						apparition = 50;
+						(*apparition) = 50;
 
 						//Random entre 1 et 7
 						random = rand()%(8-1) +1;
@@ -2201,7 +2199,7 @@ int apparitionMonster(LMonster* p_lmonster, Interface* interface, Map* map, int 
 					}
 					//Si le joueur est à un niveau suppérieur à 13 à 15
 					else if(interface->lvl > 12 && interface->lvl <= 15) {
-						apparition = 30;
+						(*apparition) = 30;
 
 						//Random entre 1 et 8
 						random = rand()%(9-1) +1;
