@@ -378,6 +378,77 @@ Monster* clickMonster(LMonster* p_lmonster, float x, float y, int* propriete) {
 
 }
 
+/*********************** Click tuto ***********************/
+/* Click tutorial. Prend en paramètre un pointeur sur une tour, la position du click, et 3 int (tuto, testMouse et testTower.	*
+*  Retourne un valeur pour le tutoriel (avancement dans le tutoriel) et 0 si c'est fini.					*/
+int clickTuto(Tower* p_courant, float x, float y, int tuto, int testMouse, int testTower) {
+
+	if(tuto != 6) {
+		//Passer le tutoriel
+		if(x <= 190 && x >= 165 && y <= 445 && y >= 422)
+			return 0;
+	}
+	else {
+
+		if(tuto == 1) {
+				return 2;
+		}
+		else if(tuto == 2) {
+			if(testMouse == 1) {
+				return 3;
+			}
+		}
+		else if(tuto == 3) {
+			if(testTower == 1)
+				return 4;
+		}
+		else if(tuto == 4) {
+			if(p_courant == NULL)
+				return 5;
+			else
+				return 4;
+		}
+		else if(tuto == 5){
+			if(p_courant == NULL)
+				return 6;
+			else
+				return 5;
+		}
+		else if(tuto == 6)
+				return 0;
+	}
+
+	return 0;
+
+}
+
+/*********************** Mouvement de la souris ***********************/
+/* Au mouvement de la souris regarde si se trouve sur l'un des boutons upgrade, si oui retourne un chiffre.	*/
+int mouseInfo(float x, float y, int testMouse, int propriete) {
+
+	if(propriete == 1) {
+	
+		if(testMouse == 0) {
+			//Améliorer power
+			if(x <= 190 && x >= 165 && y <= 445 && y >= 422)
+				return 1;
+			//Améliorer range
+			else if(x <= 190 && x >= 165 && y <= 420 && y >= 397) 
+				return 2;
+			//Améliorer cadence
+			else if(x <= 190 && x >= 165 && y <= 395 && y >= 372)
+				return 3;
+			//Tout améliorer
+			else if(x <= 190 && x >= 10 && y <= 595 && y >= 545)
+				return 4;
+		
+		}
+	}
+
+	return 0;
+
+}
+
 /*********************** Réinitialise l'interface ***********************/
 /* Supprime tous. Prend en paramètre 	*/
 

@@ -27,6 +27,13 @@ int clickAide(float, float, int);
 Tower* clickTower(LTower*, float, float, int*);
 //click sur monstre : afficher les propriétés
 Monster* clickMonster(LMonster*, float, float, int*);
+
+//click tutorial
+int clickTuto(Tower* p_courant, float, float, int, int, int);
+
+//Mouvement de la souris affiche information
+int mouseInfo(float, float, int, int);
+
 //Supprime les monstres, tours et missiles de leurs liste et réinitialise la l'interface
 void initAll (LMonster*, LShot*, LTower*, Interface*);
 //Free tous les élements

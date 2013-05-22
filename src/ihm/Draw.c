@@ -977,19 +977,20 @@ int drawInterface (GLuint* spriteButton, Interface* interface) {
 		//Si la chaine de caracteres à bien été alloué
 		if(machaine != NULL) {
 
+			glColor3ub(255,255,255);
 			/**** Niveau ****/
 			//Convertie un int en un string
 			sprintf(machaine,"%d",interface->lvl);
 
-			writeString(40, 35,  "Niveau : ");
+			writeString(40, 40,  "Niveau : ");
 			//Affiche la chaine de caractère
-			writeString(110, 35,  machaine);
+			writeString(110, 40,  machaine);
 
 			/**** Money ****/
 			//Convertie un int en un string
 			sprintf(machaine,"%d",interface->money);
 			//Affiche la chaine de caractère
-			writeString(180, 35,  machaine);
+			writeString(180, 40,  machaine);
 
 			//Active le texturage 2D
 			glEnable(GL_TEXTURE_2D);
@@ -1024,16 +1025,16 @@ int drawInterface (GLuint* spriteButton, Interface* interface) {
 			//Convertie un int en un string
 			sprintf(machaine,"%d",interface->score);
 
-			writeString(280, 35,  "Score ");
+			writeString(280, 40,  "Score ");
 			//Affiche la chaine de caractère
-			writeString(335, 35,  machaine);
+			writeString(335, 40,  machaine);
 
 			/**** nombre de monstre ****/
 			//Convertie un int en un string
 			sprintf(machaine,"%d",interface->nbMonster);
 
 			//Affiche la chaine de caractère
-			writeString(470, 35,  machaine);
+			writeString(470, 40,  machaine);
 
 			//Active le texturage 2D
 			glEnable(GL_TEXTURE_2D);
@@ -1069,7 +1070,7 @@ int drawInterface (GLuint* spriteButton, Interface* interface) {
 			//Convertie un int en un string
 			sprintf(machaine,"%d",interface->life);
 			//Affiche la chaine de caractère
-			writeString(600, 35,  machaine);
+			writeString(600, 40,  machaine);
 
 			//Active le texturage 2D
 			glEnable(GL_TEXTURE_2D);
@@ -1199,15 +1200,15 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, GLuint* btPlus, Tower
 			}
 			//Si c'est une tour mitrailette 
 			else if(strcmp("M", p_courant->type_tower) == 0) {
-				money = (p_courant->lvl) * 40;
-			}
-			//Si c'est une tour laser 
-			else if(strcmp("R", p_courant->type_tower) == 0) {
-				money = (p_courant->lvl) * 40;
+				money = (p_courant->lvl) * 50;
 			}
 			//Si c'est une tour rocket 
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 60;
+			}
+			//Si c'est une tour laser 
 			else if(strcmp("L", p_courant->type_tower) == 0) {
-				money = (p_courant->lvl) * 50;
+				money = (p_courant->lvl) * 70;
 			}
 
 			if(interface->money >= money)
@@ -1259,13 +1260,13 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, GLuint* btPlus, Tower
 			else if(strcmp("M", p_courant->type_tower) == 0) {
 				money = (p_courant->lvl) * 50;
 			}
-			//Si c'est une tour laser 
-			else if(strcmp("R", p_courant->type_tower) == 0) {
-				money = (p_courant->lvl) * 30;
-			}
 			//Si c'est une tour rocket 
-			else if(strcmp("L", p_courant->type_tower) == 0) {
+			else if(strcmp("R", p_courant->type_tower) == 0) {
 				money = (p_courant->lvl) * 50;
+			}
+			//Si c'est une tour laser 
+			else if(strcmp("L", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 60;
 			}
 
 			if(interface->money >= money)
@@ -1318,13 +1319,13 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, GLuint* btPlus, Tower
 			else if(strcmp("M", p_courant->type_tower) == 0) {
 				money = (p_courant->lvl) * 30;
 			}
-			//Si c'est une tour laser 
-			else if(strcmp("R", p_courant->type_tower) == 0) {
-				money = (p_courant->lvl) * 20;
-			}
 			//Si c'est une tour rocket 
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 50;
+			}
+			//Si c'est une tour laser 
 			else if(strcmp("L", p_courant->type_tower) == 0) {
-				money = (p_courant->lvl) * 30;
+				money = (p_courant->lvl) * 70;
 			}
 
 			if(interface->money >= money)
@@ -1362,9 +1363,21 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, GLuint* btPlus, Tower
 
 			/**** type de la tour ****/
 			glColor4f(255,255,255, 1);
+			char* typeTour = "";
+
+			//Choisir le bon monstre dans le sprite
+			if(strcmp("H", p_courant->type_tower) == 0) 
+				typeTour = "Hybride";
+			else if(strcmp("M", p_courant->type_tower) == 0) 
+				typeTour = "Mitraillette";
+			else if(strcmp("L", p_courant->type_tower) == 0) 
+				typeTour = "Laser";
+			else if(strcmp("R", p_courant->type_tower) == 0) 
+				typeTour = "Rocket";
+
 			writeString(20, 465,  "Type : ");
 			//Affiche la chaine de caractère
-			writeString(120, 465,  p_courant->type_tower);
+			writeString(80, 465,  typeTour);
 
 			
 			/*** Bouton supprimer ****/
@@ -1397,22 +1410,23 @@ int drawProprieteTower (GLuint* tower, GLuint* spriteMenu, GLuint* btPlus, Tower
 			//Désactive le texturage 2D
 			glDisable(GL_TEXTURE_2D);
 
+			/*** bouton améliorer **/
 
 			//Si c'est une tour hybride
 			if(strcmp("H", p_courant->type_tower) == 0) {
-				money = (p_courant->lvl) * 20;
+				money = (p_courant->lvl) * 50;
 			}
 			//Si c'est une tour mitrailette 
 			else if(strcmp("M", p_courant->type_tower) == 0) {
-				money = (p_courant->lvl) * 30;
-			}
-			//Si c'est une tour laser 
-			else if(strcmp("R", p_courant->type_tower) == 0) {
-				money = (p_courant->lvl) * 20;
+				money = (p_courant->lvl) * 100;
 			}
 			//Si c'est une tour rocket 
+			else if(strcmp("R", p_courant->type_tower) == 0) {
+				money = (p_courant->lvl) * 150;
+			}
+			//Si c'est une tour laser 
 			else if(strcmp("L", p_courant->type_tower) == 0) {
-				money = (p_courant->lvl) * 30;
+				money = (p_courant->lvl) * 200;
 			}
 
 			if(interface->money >= money)
@@ -1532,10 +1546,22 @@ int drawProprieteMonster (GLuint* monster, Monster* p_courant) {
 			writeString(120, 390,  machaine);
 
 			/**** Resistant à tel type de tour ****/
+			char* typeTour = "";
+
+			//Choisir le bon monstre dans le sprite
+			if(strcmp("H", p_courant->type_tower) == 0) 
+				typeTour = "Hybride";
+			else if(strcmp("M", p_courant->type_tower) == 0) 
+				typeTour = "Mitraillette";
+			else if(strcmp("L", p_courant->type_tower) == 0) 
+				typeTour = "Laser";
+			else if(strcmp("R", p_courant->type_tower) == 0) 
+				typeTour = "Rocket";
+
 			//Convertie un int en un string
-			writeString(20, 415,  "Resistant a : ");
+			writeString(20, 415,  "Resiste : ");
 			//Affiche la chaine de caractère
-			writeString(120, 415,  p_courant->type_tower);
+			writeString(100, 415,  typeTour);
 
 			/**** Resistance ****/
 			//Convertie un int en un string
@@ -1547,9 +1573,21 @@ int drawProprieteMonster (GLuint* monster, Monster* p_courant) {
 
 
 			/**** nombre de monstre ****/
+			char* type = "";
+
+			//Choisir le bon monstre dans le sprite
+			if(strcmp("C1", p_courant->type) == 0) 
+				type = "Champi";
+			else if(strcmp("C2", p_courant->type) == 0) 
+				type = "Champi";
+			else if(strcmp("P", p_courant->type) == 0) 
+				type = "Puse";
+			else if(strcmp("F", p_courant->type) == 0) 
+				type = "Fourmi";
+
 			writeString(20, 465,  "Type : ");
 			//Affiche la chaine de caractère
-			writeString(120, 465,  p_courant->type);
+			writeString(120, 465,  type);
 
 		}
 		else {
@@ -1918,6 +1956,196 @@ int drawPVMonster(LMonster* p_lmonster) {
 	return 1;
 
 }
+
+/******************** Dessiner le tutoriel ********************/
+/* Dessiner le tutoriel. Prend en paramètre un int (tutoriel). 	*
+*  Retourne 0 en cas d'erreur et 1 sinon.			*/
+int drawTutorial(int tuto) {
+	
+	if(tuto == 1) {
+		glColor4f(0,0,0, 0.5);
+		drawRectangle (200, 500, 800, 660);
+		glColor4f(255,255,255, 1);
+		writeString(230, 540,  "Bonjour ^^ Bienvenue sur le jeu IMAC TOWER DEFENSE !!");
+		writeString(230, 560,  "Nous allons vous expliquez comment fonctionne le jeu");	
+		writeString(230, 580,  "Vous pouvez passez le tutoriel en cliquant sur le bouton ");	
+		writeString(230, 600,  "passer en haut à droite");				
+	}
+	else if(tuto == 2) {
+		glColor4f(0,0,0, 0.5);
+		drawRectangle (200, 70, 450, 120);
+		glColor4f(255,255,255, 1);
+		writeString(230, 90,  "<- Cliquez sur une tour ");
+		writeString(250, 110,  "et placez là sur le terrain");				
+	}
+	else if(tuto == 3) {
+		glColor4f(0,0,0, 0.5);
+		drawRectangle (200, 500, 800, 660);
+		glColor4f(255,255,255, 1);
+		writeString(230, 540,  "Attention vous ne pouvez placer les tours que sur les ");
+		writeString(230, 560,  "zones constructibles, c'est-a-dire quand le disque en ");	
+		writeString(230, 580,  "dessous de la tour est vert. Vous ne pouvez pas non plus ");	
+		writeString(230, 600,  "placer une tour sur une autre tour.");
+	}
+	else if(tuto == 4) {
+		glColor4f(0,0,0, 0.5);
+		drawRectangle (200, 500, 800, 660);
+		glColor4f(255,255,255, 1);
+		writeString(230, 540,  "Il y a différents types de tours : ");
+		writeString(230, 560,  "Hybrides : tours normales ");	
+		writeString(230, 580,  "Mittrailletes : qui tire sur tous les monstres a leur portee ");	
+		writeString(230, 600,  "Rocket : puissante mais lente");
+		writeString(230, 620,  "Laser : tire tres rapidement mais moins puissante");
+	}
+	else if(tuto == 5) {
+		glColor4f(0,0,0, 0.5);
+		drawRectangle (200, 500, 800, 660);
+		glColor4f(255,255,255, 1);
+		writeString(230, 540,  "Cliquez sur les tours ou monstres pour afficher leurs");
+		writeString(230, 560,  "caracteristiques et leur type.");	
+		writeString(230, 580,  "Chaque monstre resiste aussi a un type de tour en particulier");	
+		writeString(230, 600,  "les tires de ce type de tour seront donc moins puissant");
+		writeString(230, 620,  "Vous savez tous vous pouvez maintenant commencer a jouer");
+	}
+	else if(tuto == 6) {
+		glColor4f(0,0,0, 0.5);
+		drawRectangle (600, 60, 800, 120);
+		glColor4f(255,255,255, 1);
+		writeString(610, 80,  "Cliquez sur play pour");
+		writeString(610, 100,  "lancer le jeu");
+	}
+
+	return 0;
+
+}
+
+/******************** Dessiner un rectangle avec nombre d'argent besoin pour upgrade une tour ********************/
+/* Affiche un rectangle avec nombre d'argent besoin pour upgrade une tour Prend en paramètre les textures.		*/
+int drawMoney(Tower* p_courant, int infoMoney) {
+
+	if(p_courant != NULL) {
+		
+		int money = 0;
+
+		//Alloue de la mémoire pour une chaine de caractère
+		char* machaine = malloc(20*sizeof(char));
+
+		//Si la chaine de caracteres à bien été alloué
+		if(machaine != NULL) {
+
+			switch(infoMoney) {
+				//Puissance
+				case 1 :
+					//Si c'est une tour hybride
+					if(strcmp("H", p_courant->type_tower) == 0)
+						money = (p_courant->lvl * 20);
+					//Si c'est une tour mitrailette 
+					else if(strcmp("M", p_courant->type_tower) == 0) 
+						money = (p_courant->lvl * 30);
+					//Si c'est une tour laser 
+					else if(strcmp("L", p_courant->type_tower) == 0) 
+						money = (p_courant->lvl * 50);
+					//Si c'est une tour rocket 
+					else if(strcmp("R", p_courant->type_tower) == 0) 
+						money -= (p_courant->lvl * 70);
+
+					glColor4f(0,0,0, 0.5);
+					drawRectangle (195, 422, 325, 445);
+					glColor4f(255,255,255, 1);
+					//Convertie un int en un string
+					sprintf(machaine,"%d",money);
+					writeString(205, 440,  "Money :");				
+					writeString(280, 440,  machaine);
+					break;
+				//Range
+				case 2 : 
+					//Si c'est une tour hybride
+					if(strcmp("H", p_courant->type_tower) == 0)
+						money = (p_courant->lvl * 20);
+					//Si c'est une tour mitrailette 
+					else if(strcmp("M", p_courant->type_tower) == 0) 
+						money = (p_courant->lvl * 50);
+					//Si c'est une tour laser 
+					else if(strcmp("L", p_courant->type_tower) == 0) 
+						money = (p_courant->lvl * 50);
+					//Si c'est une tour rocket 
+					else if(strcmp("R", p_courant->type_tower) == 0) 
+						money -= (p_courant->lvl * 60);
+
+					glColor4f(0,0,0, 0.5);
+					drawRectangle (195, 397, 325, 420);
+					glColor4f(255,255,255, 1);
+					//Convertie un int en un string
+					sprintf(machaine,"%d",money);
+					writeString(205, 415,  "Money :");				
+					writeString(280, 415,  machaine);
+				
+					break;
+				//Cadence
+				case 3 : 
+					//Si c'est une tour hybride
+					if(strcmp("H", p_courant->type_tower) == 0)
+						money = (p_courant->lvl * 20);
+					//Si c'est une tour mitrailette 
+					else if(strcmp("M", p_courant->type_tower) == 0) 
+						money = (p_courant->lvl * 50);
+					//Si c'est une tour laser 
+					else if(strcmp("L", p_courant->type_tower) == 0) 
+						money = (p_courant->lvl * 60);
+					//Si c'est une tour rocket 
+					else if(strcmp("R", p_courant->type_tower) == 0) 
+						money -= (p_courant->lvl * 70);
+
+					glColor4f(0,0,0, 0.5);
+					drawRectangle (195, 372, 325, 395);
+					glColor4f(255,255,255, 1);
+					//Convertie un int en un string
+					sprintf(machaine,"%d",money);
+					writeString(205, 390,  "Money :");				
+					writeString(280, 390,  machaine);
+	
+					break;
+				//lvl
+				case 4 : 
+					//Si c'est une tour hybride
+					if(strcmp("H", p_courant->type_tower) == 0)
+						money = (p_courant->lvl * 50);
+					//Si c'est une tour mitrailette 
+					else if(strcmp("M", p_courant->type_tower) == 0) 
+						money = (p_courant->lvl * 100);
+					//Si c'est une tour laser 
+					else if(strcmp("L", p_courant->type_tower) == 0) 
+						money = (p_courant->lvl * 200);
+					//Si c'est une tour rocket 
+					else if(strcmp("R", p_courant->type_tower) == 0) 
+						money -= (p_courant->lvl * 150);
+
+					glColor4f(0,0,0, 0.5);
+					drawRectangle (195, 585, 325, 555);
+					glColor4f(255,255,255, 1);
+					//Convertie un int en un string
+					sprintf(machaine,"%d",money);
+					writeString(205, 575,  "Money :");				
+					writeString(280, 575,  machaine);
+					break;
+
+			}
+		}
+		else {
+			fprintf(stderr, "Erreur d'allocation memoire pour la chaine de caractère\n");
+			return 0;
+		}
+
+	}
+	else {
+		fprintf(stderr, "Erreur cette tour n'existe pas\n");
+		return 0;
+	}	
+
+	return 1;
+
+}
+
 
 /******************** Dessiner GameOver / Win ********************/
 /* Affiche Game Over ou Win. Prend en paramètre les textures.		*/

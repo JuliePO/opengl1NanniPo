@@ -44,6 +44,12 @@ int drawMonster(GLuint*, LMonster*, int);
 //Dessine la barre de pv des monstres
 int drawPVMonster(LMonster*);
 
+//Dessin du tutorial
+int drawTutorial(int);
+
+//Dessiner un rectangle avec nombre d'argent besoin pour upgrade une tour
+int drawMoney(Tower*, int);
+
 //Apparition des monstres
 int apparitionMonster(LMonster*, Interface*, Map*, int*, int, int*);
 

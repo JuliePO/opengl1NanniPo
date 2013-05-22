@@ -56,6 +56,7 @@ int main(int argc, char** argv) {
 	int nbMenu = 0;
 	int nbMap = 0;
 	int nbtexture = 0;
+	int tuto = 1;
 
 	/* Initialisation */
 	if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
@@ -162,12 +163,11 @@ int main(int argc, char** argv) {
 	int propriete = 0;
 	int aide = 0;
 	int apparition = 130;
+	int infoMoney = 0;
 
 	//Pour afficher les propriétés
 	Tower* pTower = NULL;
 	Monster* pMonster = NULL;
-
-	int random;
 
 	int loop = 1;
 
@@ -316,6 +316,12 @@ int main(int argc, char** argv) {
 						propriete = 0;
 				}
 
+				//Si c'est le tuto alors le jeu est en pause
+				if(tuto != 0) 
+					play = 1;
+				else
+					play = 0;
+
 				//Si ce n'est pas en pause
 				if(play != 1) {
 
@@ -419,6 +425,12 @@ int main(int argc, char** argv) {
 				else {
 					drawShot(&shot, p_lshot); //dessin du shot
 				}
+
+				if(infoMoney != 0)
+					drawMoney(pTower, infoMoney);
+
+				if(tuto != 0) 
+					drawTutorial(tuto);
 			}
 		}
 		
@@ -477,6 +489,8 @@ int main(int argc, char** argv) {
 							pMonster = clickMonster(p_lmonster, e.button.x, e.button.y, &propriete);
 							//Test click aide
 							aide = clickAide(e.button.x, e.button.y, aide);
+							//Test ckick tuto
+							tuto = clickTuto(pTower, e.button.x, e.button.y, tuto, testMouse, testTower);
 						}
 					}
 					break;
@@ -489,6 +503,9 @@ int main(int argc, char** argv) {
 						else
 							testTower = 0;
 					}
+
+					infoMoney = mouseInfo(e.button.x, e.button.y, testMouse, propriete);					
+
 					break;
 
 				case SDL_KEYDOWN:

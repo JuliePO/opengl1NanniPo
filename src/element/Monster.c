@@ -116,11 +116,10 @@ int upgrateMonster (Monster* monster, int lvl) {
 
 	if(monster != NULL) {
 
-		monster->pvMax += lvl * 20;
-		monster->pv += lvl * 20;
-		monster->resistance += lvl * 2;
+		monster->pvMax += lvl * 50;
+		monster->pv += lvl * 50;
+		monster->resistance += lvl * 10;
 		monster->points += lvl * 2;
-		monster->gain += lvl * 3;
 
 	}
 	else {
