@@ -385,38 +385,36 @@ int clickTuto(Tower* p_courant, float x, float y, int tuto, int testMouse, int t
 
 	if(tuto != 6) {
 		//Passer le tutoriel
-		if(x <= 190 && x >= 165 && y <= 445 && y >= 422)
+		if(x <= 0 && x >= 10 && y <= 0 && y >= 10)
 			return 0;
 	}
-	else {
 
-		if(tuto == 1) {
-				return 2;
-		}
-		else if(tuto == 2) {
-			if(testMouse == 1) {
-				return 3;
-			}
-		}
-		else if(tuto == 3) {
-			if(testTower == 1)
-				return 4;
-		}
-		else if(tuto == 4) {
-			if(p_courant == NULL)
-				return 5;
-			else
-				return 4;
-		}
-		else if(tuto == 5){
-			if(p_courant == NULL)
-				return 6;
-			else
-				return 5;
-		}
-		else if(tuto == 6)
-				return 0;
+	if(tuto == 1) {
+			return 2;
 	}
+	else if(tuto == 2) {
+		if(testMouse == 1) {
+			return 3;
+		}
+	}
+	else if(tuto == 3) {
+		if(testTower == 1)
+			return 4;
+	}
+	else if(tuto == 4) {
+		if(p_courant == NULL)
+			return 5;
+		else
+			return 4;
+	}
+	else if(tuto == 5){
+		if(p_courant == NULL)
+			return 6;
+		else
+			return 5;
+	}
+	else if(tuto == 6)
+			return 0;
 
 	return 0;
 
