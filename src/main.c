@@ -57,6 +57,7 @@ int main(int argc, char** argv) {
 	int nbMap = 0;
 	int nbtexture = 0;
 	int tuto = 1;
+	int tutoend = 0;
 
 	/* Initialisation */
 	if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
@@ -143,6 +144,10 @@ int main(int argc, char** argv) {
 	GLuint fondWin;
 	SDL_Surface* imgFondWin = NULL;
 
+	//Texture passer les tuto
+	GLuint fondTuto;
+	SDL_Surface* imgFondTuto = NULL;
+
 
 	//Initialisation de l'interface
 	Interface* interface = newInterface();
@@ -227,6 +232,8 @@ int main(int argc, char** argv) {
 				loadTexture("./images/map1/GameOver.png", &fondGameOver, imgFondGameOver);
 				//Texture fond Win
 				loadTexture("./images/map1/YouWin.png", &fondWin, imgFondWin);
+				//Texture fond Tuto
+				loadTexture("./images/btTuto.png", &fondTuto, imgFondTuto);
 
 			}
 			//Charge les textures de la deuxième carte
@@ -266,6 +273,8 @@ int main(int argc, char** argv) {
 				loadTexture("./images/map2/GameOver.png", &fondGameOver, imgFondGameOver);
 				//Texture fond Win
 				loadTexture("./images/map2/YouWin.png", &fondWin, imgFondWin);
+				//Texture fond Tuto
+				loadTexture("./images/btTuto.png", &fondTuto, imgFondTuto);
 			}
 
 			drawMenuPrincipale (&menuPrincipal, &menuPrincipalButton);
@@ -319,8 +328,10 @@ int main(int argc, char** argv) {
 				//Si c'est le tuto alors le jeu est en pause
 				if(tuto != 0) 
 					play = 1;
-				else
+				else if(tuto == 0 && tutoend == 1) {
 					play = 0;
+					tutoend=0;
+				}
 
 				//Si ce n'est pas en pause
 				if(play != 1) {
@@ -430,7 +441,7 @@ int main(int argc, char** argv) {
 					drawMoney(pTower, infoMoney);
 
 				if(tuto != 0) 
-					drawTutorial(tuto);
+					drawTutorial(&fondTuto, tuto);
 			}
 		}
 		
@@ -490,7 +501,7 @@ int main(int argc, char** argv) {
 							//Test click aide
 							aide = clickAide(e.button.x, e.button.y, aide);
 							//Test ckick tuto
-							tuto = clickTuto(pTower, e.button.x, e.button.y, tuto, testMouse, testTower);
+							tuto = clickTuto(pTower, e.button.x, e.button.y, tuto, testMouse, testTower, &tutoend);
 						}
 					}
 					break;
@@ -579,6 +590,7 @@ int main(int argc, char** argv) {
 	freeTexture(&fondMenuUp, imgFondMenuUp);
 	freeTexture(&fondGameOver, imgFondGameOver);
 	freeTexture(&fondWin, imgFondWin);
+	freeTexture(&fondTuto, imgFondTuto);
 
 	SDL_Quit();
 	return EXIT_SUCCESS;

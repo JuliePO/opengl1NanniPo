@@ -45,7 +45,7 @@ int drawMonster(GLuint*, LMonster*, int);
 int drawPVMonster(LMonster*);
 
 //Dessin du tutorial
-int drawTutorial(int);
+int drawTutorial(GLuint*, int);
 
 //Dessiner un rectangle avec nombre d'argent besoin pour upgrade une tour
 int drawMoney(Tower*, int);

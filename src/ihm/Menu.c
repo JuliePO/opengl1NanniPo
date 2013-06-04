@@ -381,25 +381,30 @@ Monster* clickMonster(LMonster* p_lmonster, float x, float y, int* propriete) {
 /*********************** Click tuto ***********************/
 /* Click tutorial. Prend en paramètre un pointeur sur une tour, la position du click, et 3 int (tuto, testMouse et testTower.	*
 *  Retourne un valeur pour le tutoriel (avancement dans le tutoriel) et 0 si c'est fini.					*/
-int clickTuto(Tower* p_courant, float x, float y, int tuto, int testMouse, int testTower) {
+int clickTuto(Tower* p_courant, float x, float y, int tuto, int testMouse, int testTower, int* tutoend) {
 
 	if(tuto != 6) {
 		//Passer le tutoriel
-		if(x <= 0 && x >= 10 && y <= 0 && y >= 10)
+		if(x <= 780 && x >= 680 && y <= 141 && y >= 80) {
+			*tutoend = 1;
 			return 0;
+		}
 	}
 
 	if(tuto == 1) {
 			return 2;
 	}
 	else if(tuto == 2) {
-		if(testMouse == 1) {
+		if(testMouse == 1) 
 			return 3;
-		}
+		else
+			return 2;
 	}
 	else if(tuto == 3) {
 		if(testTower == 1)
 			return 4;
+		else
+			return 3;
 	}
 	else if(tuto == 4) {
 		if(p_courant == NULL)
@@ -413,8 +418,10 @@ int clickTuto(Tower* p_courant, float x, float y, int tuto, int testMouse, int t
 		else
 			return 5;
 	}
-	else if(tuto == 6)
-			return 0;
+	else if(tuto == 6) {
+		*tutoend = 1;
+		return 0;
+	}
 
 	return 0;
 

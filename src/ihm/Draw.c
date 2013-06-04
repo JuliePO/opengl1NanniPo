@@ -1960,7 +1960,40 @@ int drawPVMonster(LMonster* p_lmonster) {
 /******************** Dessiner le tutoriel ********************/
 /* Dessiner le tutoriel. Prend en paramètre un int (tutoriel). 	*
 *  Retourne 0 en cas d'erreur et 1 sinon.			*/
-int drawTutorial(int tuto) {
+int drawTutorial(GLuint* passTuto, int tuto) {
+
+	if(tuto != 6 && tuto != 0) {
+
+		//Active le texturage 2D
+		glEnable(GL_TEXTURE_2D);
+		//appel de la texture
+		glBindTexture(GL_TEXTURE_2D, *passTuto);
+	
+			glPushMatrix();
+				glBegin(GL_QUADS);
+
+					//coordonée de la texture
+					glTexCoord2f(1, 1);
+					//Cordonnée du quadrilatère 
+					glVertex2f(780, 141);
+
+					glTexCoord2f(1, 0);
+					glVertex2f(780, 80);
+
+					glTexCoord2f(0, 0);
+					glVertex2f(680, 80);
+
+					glTexCoord2f(0, 1);
+					glVertex2f(680, 141);
+
+				glEnd();
+			glPopMatrix();
+
+		//Déblinder la texture
+		glBindTexture(GL_TEXTURE_2D, 0);
+		//Désactive le texturage 2D
+		glDisable(GL_TEXTURE_2D);
+	}
 	
 	if(tuto == 1) {
 		glColor4f(0,0,0, 0.5);

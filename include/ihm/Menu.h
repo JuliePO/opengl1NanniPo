@@ -29,7 +29,7 @@ Tower* clickTower(LTower*, float, float, int*);
 Monster* clickMonster(LMonster*, float, float, int*);
 
 //click tutorial
-int clickTuto(Tower* p_courant, float, float, int, int, int);
+int clickTuto(Tower* p_courant, float, float, int, int, int, int*);
 
 //Mouvement de la souris affiche information
 int mouseInfo(float, float, int, int);
